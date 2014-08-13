@@ -1,0 +1,136 @@
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 15px; MARGIN: 8px 0px 0px; COLOR: #000000
+}
+H2 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 14px; PADDING-BOTTOM: 0px; MARGIN: 0px; WIDTH: 100%; COLOR: #044b80; PADDING-TOP: 0px
+}
+H3 {
+	MARGIN-TOP: 10px; FONT-WEIGHT: bold; FONT-SIZE: 12px; MARGIN-BOTTOM: 10px; PADDING-BOTTOM: 3px; WIDTH: 100%; COLOR: #cf0a04; BORDER-BOTTOM: #999999 1px dotted
+}
+H4 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; MARGIN: 0em; COLOR: #666666
+}
+H5 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-WEIGHT: bold; FONT-SIZE: 14px; PADDING-BOTTOM: 0px; MARGIN: 8px 0px 0px; COLOR: #666666; PADDING-TOP: 0px
+}
+H6 {
+	FONT-SIZE: 12px
+}
+HR {
+	MARGIN: 0em; HEIGHT: 1px
+}
+UL {
+	MARGIN: 2px
+}
+UL LI {
+	PADDING-RIGHT: 0px; BACKGROUND-POSITION: 1px 8px; PADDING-LEFT: 15px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/imagens/ponto.gif); PADDING-BOTTOM: 3px; MARGIN: 0px; LINE-HEIGHT: 1.3em; PADDING-TOP: 3px; BACKGROUND-REPEAT: no-repeat; LIST-STYLE-TYPE: none
+}
+UL LI UL LI {
+	PADDING-RIGHT: 2px; BACKGROUND-POSITION: 1px 10px; PADDING-LEFT: 12px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/imagens/ponto_MD.gif); PADDING-BOTTOM: 5px; MARGIN: 0px; LINE-HEIGHT: 1.3em; PADDING-TOP: 5px; BACKGROUND-REPEAT: no-repeat; LIST-STYLE-TYPE: none
+}
+UL LI UL LI UL LI {
+	PADDING-RIGHT: 2px; BACKGROUND-POSITION: 1px 10px; PADDING-LEFT: 12px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/imagens/ponto_PQ.gif); PADDING-BOTTOM: 5px; MARGIN: 0px; LINE-HEIGHT: 1.3em; PADDING-TOP: 5px; BACKGROUND-REPEAT: no-repeat; LIST-STYLE-TYPE: none
+}
+.fontePQ {
+	FONT-SIZE: 11px; COLOR: #333333; FONT-STYLE: normal
+}
+.fonteXPQ {
+	FONT-SIZE: 10px; COLOR: #333333; FONT-STYLE: normal
+}
+.fonteMD {
+	FONT-SIZE: 12px; FONT-STYLE: normal
+}
+.fonteGD {
+	FONT-SIZE: 14px; FONT-STYLE: normal
+}
+.fonteXGD {
+	FONT-SIZE: 16px; FONT-STYLE: normal
+}
+.fonteObs {
+	FONT-SIZE: 11px; COLOR: #cf0a04; MARGIN-BOTTOM: 11px
+}
+.tablePrincipal {
+	BACKGROUND-COLOR: #5fa08b
+}
+.botaoPadrao {
+	FONT-SIZE: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.inputPadrao {
+	FONT-SIZE: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.tableForm {
+	FONT-SIZE: 11px;
+	BACKGROUND-COLOR: #DCE1E7;
+	border: 1px solid #DCE1E7;
+}
+.tdFormTitulo {
+	BORDER-RIGHT: medium none; BORDER-TOP: medium none; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: medium none; COLOR: #333333; BORDER-BOTTOM: medium none; BACKGROUND-COLOR: #ECEFF4
+}
+.tdFormCampos1 {
+	FONT-SIZE: 11px; BACKGROUND-COLOR: #F6F7F9
+}
+.tdFormCampos2 {
+	FONT-SIZE: 11px; BACKGROUND-COLOR: #ffffff
+}
+.tdBordaCompleta {
+	BORDER-RIGHT: #457264 1px solid; BORDER-TOP: #457264 1px solid; BORDER-LEFT: #457264 1px solid; BORDER-BOTTOM: #457264 1px solid
+}
+.tdBordaSuperior {
+	BORDER-TOP: #cccccc 1px dotted; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none
+}
+.tdBordasPontilhadas {
+	BORDER-RIGHT: #999999 1px dotted; BORDER-TOP: #999999 1px dotted; BORDER-LEFT: #999999 1px dotted; BORDER-BOTTOM: #999999 1px dotted
+}
+.tdBordaPontilhadaInferior {
+BORDER-BOTTOM: 1px dotted #999999}
+.tdTituloSubSecao {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px
+}
+.tdPaginaTitulo {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #044b80;
+}
+.tdTituloMenuDestaque {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #044b80;
+}
+.tdPaginaTituloNoticias {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #044b80;
+}
+.linkDestaque {
+	FONT-WEIGHT: bold; FONT-SIZE: 11px; COLOR: #033961;
+}
+.texto-acompanhe-sefin {
+    color: #094278;
+    font-family: 'AllerRegular',"Trebuchet MS";
+    font-size: 12px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+#idCamada {
+	position:absolute;
+	left:50%;
+	top:40%;
+	margin-top:-215px;
+	margin-left:-300px;
+	width:600px;
+	height:430px;
+	z-index: 10;
+}
+
+img.borda_sombra {
+	padding:7px;
+	border:1px solid #DBDBDB;
+	box-shadow:4px 4px 8px #DBDBDB;
+	-webkit-box-shadow:4px 4px 8px #DBDBDB;
+	width: 220px;
+	height:165px
+}
+
+img.borda_sombraGD {
+	padding:4px;
+	border:1px solid #DBDBDB;
+	box-shadow: 4px 4px 8px #DBDBDB;
+	-webkit-box-shadow: 4px 4px 8px #DBDBDB;
+	
+}

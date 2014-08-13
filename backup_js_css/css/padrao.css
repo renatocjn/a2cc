@@ -1,0 +1,198 @@
+BODY {
+	BORDER-RIGHT: medium none; PADDING-RIGHT: 0px; BORDER-TOP: medium none; PADDING-LEFT: 0px; BACKGROUND-IMAGE: url(imagens/fundo_lateral.jpg); PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: medium none; PADDING-TOP: 0px; BORDER-BOTTOM: medium none; BACKGROUND-REPEAT: repeat-x; FONT-FAMILY: Arial, Helvetica, sans-serif; LIST-STYLE-TYPE: none
+}
+A {
+	COLOR: #333333; TEXT-DECORATION: none
+}
+A:hover {
+	TEXT-DECORATION: underline
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 15px; MARGIN: 8px 0px 0px; COLOR: #000000
+}
+H2 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 14px; PADDING-BOTTOM: 0px; MARGIN: 0px; WIDTH: 100%; COLOR: #044b80; PADDING-TOP: 0px
+}orm
+H3 {
+	MARGIN-TOP: 10px; FONT-WEIGHT: bold; FONT-SIZE: 12px; MARGIN-BOTTOM: 10px; PADDING-BOTTOM: 3px; WIDTH: 100%; COLOR: #cf0a04; BORDER-BOTTOM: #999999 1px dotted
+}
+H4 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; MARGIN: 0em; COLOR: #666666
+}
+H5 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-WEIGHT: bold; FONT-SIZE: 14px; PADDING-BOTTOM: 0px; MARGIN: 8px 0px 0px; COLOR: #666666; PADDING-TOP: 0px
+}
+H6 {
+	FONT-SIZE: 12px
+}
+HR {
+	MARGIN: 0em; HEIGHT: 1px
+}
+UL {
+	MARGIN: 2px
+}
+UL LI {
+	PADDING-RIGHT: 0px; BACKGROUND-POSITION: 1px 8px; PADDING-LEFT: 15px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/imagens/ponto.gif); PADDING-BOTTOM: 3px; MARGIN: 0px; LINE-HEIGHT: 1.3em; PADDING-TOP: 3px; BACKGROUND-REPEAT: no-repeat; LIST-STYLE-TYPE: none
+}
+UL LI UL LI {
+	PADDING-RIGHT: 2px; BACKGROUND-POSITION: 1px 10px; PADDING-LEFT: 12px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/imagens/ponto_MD.gif); PADDING-BOTTOM: 5px; MARGIN: 0px; LINE-HEIGHT: 1.3em; PADDING-TOP: 5px; BACKGROUND-REPEAT: no-repeat; LIST-STYLE-TYPE: none
+}
+UL LI UL LI UL LI {
+	PADDING-RIGHT: 2px; BACKGROUND-POSITION: 1px 10px; PADDING-LEFT: 12px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(/imagens/ponto_PQ.gif); PADDING-BOTTOM: 5px; MARGIN: 0px; LINE-HEIGHT: 1.3em; PADDING-TOP: 5px; BACKGROUND-REPEAT: no-repeat; LIST-STYLE-TYPE: none
+}
+.fontePQ {
+	FONT-SIZE: 11px; COLOR: #333333; FONT-STYLE: normal
+}
+.fontePQDestaque {
+	FONT-SIZE: 11px;
+	COLOR: #CE0B05;
+	FONT-STYLE: normal;
+	font-weight: bold;
+}
+.fonteXPQ {
+	FONT-SIZE: 10px; COLOR: #333333; FONT-STYLE: normal
+}
+.fonteMD {
+	FONT-SIZE: 12px; FONT-STYLE: normal
+}
+.fonteGD {
+	FONT-SIZE: 14px; FONT-STYLE: normal
+}
+.fonteXGD {
+	FONT-SIZE: 16px; FONT-STYLE: normal
+}
+.tablePrincipal {
+	BACKGROUND-COLOR: #5fa08b
+}
+.botaoPadrao {
+	FONT-SIZE: 10px
+}
+.inputPadrao {
+	FONT-SIZE: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-style: normal;
+}
+.tableForm {
+	FONT-SIZE: 11px;
+	BACKGROUND-COLOR: #DCE1E7;
+	border: 1px solid #DCE1E7;
+}
+.tdFormTitulo {
+	BORDER-RIGHT: medium none; BORDER-TOP: medium none; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: medium none; COLOR: #000000; BORDER-BOTTOM: medium none; BACKGROUND-COLOR: #ECEFF4
+}
+.tdFormCampos1 {
+	FONT-SIZE: 12px; BACKGROUND-COLOR:#F3F3F3
+}
+.tdFormCampos2 {
+	FONT-SIZE: 11px; BACKGROUND-COLOR: #ffffff
+}
+.tdBordaCompleta {
+	BORDER-RIGHT: #457264 1px solid; BORDER-TOP: #457264 1px solid; BORDER-LEFT: #457264 1px solid; BORDER-BOTTOM: #457264 1px solid
+}
+.tdBordaSuperior {
+	BORDER-TOP: #cccccc 1px dotted; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none
+}
+.tdBordasPontilhadas {
+	BORDER-RIGHT: #999999 1px dotted; BORDER-TOP: #999999 1px dotted; BORDER-LEFT: #999999 1px dotted; BORDER-BOTTOM: #999999 1px dotted
+}
+.tdBordaPontilhadaInferior {
+BORDER-BOTTOM: 1px dotted #999999}
+.tdTituloSubSecao {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px
+}
+.tdPaginaTitulo {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #044b80;
+}
+.tdPaginaTituloNoticias {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #044b80;
+}
+div.calendario {
+	width: 264px;
+	position: absolute;
+	background: #fff url('/img/fe/bg_calendario_sombra.gif') repeat-y right;
+	border-left: 1px solid #f6f6f6;
+	border-top: 1px solid #f6f6f6;	
+	display: none;
+}
+
+div.calendario a.fechar {
+	display: block;
+	position: absolute;
+	top: -19px;
+	right: 0px;
+	height: 18px;
+	text-decoration: none;
+	background: #fff;
+	width: 20px;
+	text-align:center;
+	vertical-align: center;
+	line-height: 18px;
+	color: #000;
+	font:bold 12px Tahoma;
+}
+
+div.calendario a.bt_controle_mes {
+	display: block;
+	height: 15px;
+	position: absolute;
+	top: 0px;
+	vertical-align: middle;
+	text-decoration: none;
+	color:#222;
+	line-height:15px;
+	vertical-align: middle;	
+}
+
+div.calendario a.bt_voltar_mes { left: 2px; }
+div.calendario a.bt_avancar_mes { right: 2px; }
+
+div.calendario p.nome_mes {
+	text-align: center;
+	display: block;
+	height: 18px;
+	background: #efeff0;
+	font-size: 12px;
+	font-weight: bold;
+	color: #6d6d6d;
+	line-height:18px;
+	vertical-align: middle;
+	margin: 0;
+}
+
+div.calendario ul {
+	margin:0;
+	padding:0;
+}
+div.calendario ul li {
+	display: block;
+	float: left;
+	width: 22px;
+	height: 17px;
+	text-align: center;
+	font-size: 11px;
+	line-height: 17px;
+	vertical-align: middle;
+}
+
+div.calendario ul li a { font-weight: bold; color:#6d6d6d; text-decoration:none; }
+div.calendario ul li a:hover { text-decoration: underline; }
+
+div.calendario ul li.semana {
+	background: #c0c7ca;
+	font-weight: bold;		
+	color: #fff;
+}
+
+div.calendario ul li.dia {
+	color: #999;
+}
+
+div.calendario ul li.default {	
+	background: #ececed;
+	color: #f00; 
+	font-weight: bold;
+}
+
+div.calendario ul li.default a { color: #f00; }
+
+div.exemplo { margin-bottom: 150px;

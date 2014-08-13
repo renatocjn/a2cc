@@ -1,0 +1,2 @@
+PHP Notice:  Undefined variable: sizes in /var/www/a2cON/benchmarking.php on line 17
+PHP Warning:  Invalid argument supplied for foreach() in /var/www/a2cON/benchmarking.php on line 17
