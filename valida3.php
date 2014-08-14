@@ -7,10 +7,7 @@ include_once("connecta1.php");
 protegePagina(true);
 
 if ($ssh_con->logged()) {
-	$url = $_SERVER['HTTP_HOST'];            // Get the server
-	$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-	$url .= "/"; 
-	header("Location: $url");
+	http_redirect('login.php');
 }
  
 
@@ -41,10 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	//utiliza a funcao da classe ssh_conecta
 	if ($ssh_con->login()) {
 		validaUsuario3($usuario, $senha);
-		$url = $_SERVER['HTTP_HOST'];            // Get the server
-		$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-		$url .= "/cenapad.php";
-		header("Location: $url");
+		http_redirect('cenapad.php');
 	} else {
 		expulsaVisitante1();
 	}

@@ -11,8 +11,5 @@
 	 
 	//Encerra a sessão
 	session_destroy();
-	$url = $_SERVER['HTTP_HOST'];            // Get the server
-	$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-	$url .= '/login.php'; 
-	header("Location: $url");
+	http_redirect('login.php');
 ?>

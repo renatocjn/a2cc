@@ -159,9 +159,9 @@ class opennebula_handler implements infra_handler {
 	
 	static function getCloudConnection() {
 		$cloud_connection = new ssh_conecta();
-		$cloud_connection->set_host('200.19.191.252');
-		$cloud_connection->set_port(22);
-		$cloud_connection->set_user('cenacloud02');
+		$cloud_connection->set_host('200.19.191.230');
+		$cloud_connection->set_port(33000);
+		$cloud_connection->set_user('controller');
 		$cloud_connection->set_passwd('senha.123');
 		if ($cloud_connection->login()) {
 			return $cloud_connection;

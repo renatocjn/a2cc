@@ -135,7 +135,7 @@ color: #b94a48;
 	margin-left: 12%;
 	min-height: 450px;
 	line-height: 150%;
-	text-align: justify;
+/*	text-align: justify;*/
 }
 
 .rodape {
@@ -881,6 +881,17 @@ ul.dropdown-menu li:hover {
 	-moz-box-shadow: 0 -1px 3px #ccc;
 	margin: 2px;
 }
+
+div.notice {
+	-moz-box-align: center;
+    -moz-box-pack: center;
+    text-align: left;
+    max-width: 100%;
+   	color: red;
+   	font-size: 200%;
+   	line-height: normal;
+}
+
 
 .hidden {
 	display: none;

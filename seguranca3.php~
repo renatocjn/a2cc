@@ -28,7 +28,7 @@ $_SG['validaSempre'] = false;       // Deseja validar o usuário e a senha a cad
 // Evita que, ao mudar os dados do usuário no banco de dado o mesmo contiue logado.
 
 // Informação do servidor de ssh
-$_SG['host_ssh'] = '200.19.191.252';
+$_SG['host_ssh'] = '200.19.191.230';
 //$_SG['port_ssh'] = '33000';
 
 //$_SG['host_ssh'] = '192.168.1.36';
@@ -57,10 +57,7 @@ if ($_SG['abreSessao'] == true) {
 	if (isset($_SESSION['to_login']) and $_SESSION['to_login']) {
 		unset($_SESSION['to_login']);
 		//session_unregister($_SESSION['to_login']); //session_unregister é deprecado!!
-		$url = $_SERVER['HTTP_HOST'];            // Get the server
-		$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-		$url .= $_SG['paginaLogin']; 
-		header("Location: ".$url);
+		http_redirect('login.php');
 	}
 }
 
@@ -118,24 +115,17 @@ function protegePagina($tela_login = false) {
 			expulsaVisitante($tela_login);
 		}
 	}
-}
+}	
 
 include_once('connecta1.php');
 //Marcus: 11092013 - Função para validar login e senha
 function expulsaVisitante1() 
 {
-
 	global $_SG;
-
 	// Remove as variáveis da sessão (caso elas existam)
 	unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
-	echo '<script type="text/javascript">alert("LOGIN ou SENHA incorreto!");</script>';
-	
-	$url = $_SERVER['HTTP_HOST'];            // Get the server
-	$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-	$url .= $_SG['paginaLogin']; 
-	header("Location: $url");
-	//echo '<script type="text/javascript">window.location.href="http://localhost/a2cON/login.php"</script>';
+	$_SESSION['notice'] = "LOGIN ou SENHA incorreto!";
+	http_redirect('login.php');
 	return true;
 }
 
@@ -152,10 +142,7 @@ function expulsaVisitante($tela_login = false) {
 		// Remove as variáveis da sessão (caso elas existam)
 		unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
 
-		$url = $_SERVER['HTTP_HOST'];            // Get the server
-	$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-	$url .= $_SG['paginaLogin']; 
-	header("Location: $url");
+		http_redirect('login.php');
 		//Manda para tela de login
 		//$_SESSION['to_login'] = true;
 		//echo "document.location.reload(true)";

@@ -11,10 +11,7 @@
 	protegePagina(true);
 	
 	if ($ssh_con->logged()) {
-		$url = $_SERVER['HTTP_HOST'];            // Get the server
-		$url .= rtrim(dirname($_SERVER['PHP_SELF']), '/\\'); // Get the current directory
-		$url .= '/cenapad.php'; 
-		header("Location: $url");
+		http_redirect('cenapad.php');
 	}
 	
 	//if(!(preg_match('/Chrome/', $_SERVER['HTTP_USER_AGENT']))){
@@ -27,13 +24,19 @@
 </head>
 <body>
 	<div class="container_16">
-
-
+		
 		<?php
 			include 'banner.php';
-			include 'menu_principal.php';
 		?>
+		
 		<div class="conteudo grid_14">
+		
+		<?php
+			if (isset($_SESSION['notice']) ) {
+				print '<div class="notice"> '.$_SESSION['notice'].' </div>';
+				unset($_SESSION['notice']);
+			}
+		?>
 			<form id="form1" name="form1" class="validate formLogin" method="post" onsubmit="return sem_branco(['campo_login', 'campo_senha'])" action="valida3.php">
 				<table>
 					<tr>
