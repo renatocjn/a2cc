@@ -484,3 +484,14 @@ img.app_img {
 	text-align: left;
 
 }
+
+div .help {
+	background-color: #99ccff;
+	max-width: 50%;
+	color: black;
+	margin-bottom: 10px
+}
+
+div .help .red {
+	color: red;
+}

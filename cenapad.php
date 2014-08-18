@@ -155,6 +155,7 @@
 			</ul>	
 			
 			<div id='norun' class="tab"> <input type='hidden' value='norun'>
+				<div class="help"> <span class="red"> IMPORTANTE: </span> <br> Neste formato de simulação não é executado nenhuma dinamica, isso é, o valor de 'run' é zerado no .conf final.</div>
 				 <ul>
 					<li> <a href="#start_norun"> Iniciar nova simulação </a> </li>
 					<li> <a href="#continue_norun"> Continuar simulação </a> </li>
@@ -197,9 +198,10 @@
 				</div>
 			</div>
 			<div id='multiplerun' class="tab"> <input type='hidden' value='multiplerun'>
+				<div class="help"> <span class="red"> IMPORTANTE: </span> <br> Neste Formato de simulação a quantidade total de passos definida no parametro 'run' é dividida igualmente entre a quantidade de divisões desejadas.</div>
 				<ul>
-					<li><a href="#start_multiplerun"> Iniciar nova simulação </a> </li>
-					<li><a href="#continue_multiplerun"> Continuar simulação </a> </li>
+					<li> <a href="#start_multiplerun"> Iniciar nova simulação </a> </li>
+					<li> <a href="#continue_multiplerun"> Continuar simulação </a> </li>
 				</ul>
 								
 				<div id="start_multiplerun"> <input type='hidden' value='start_multiplerun'> </div>
@@ -217,7 +219,6 @@
 						</tr>
 					</table>
 				</div>
-
 				<table> <tr>
 						<td> Numero de vezes que deseja dividir a execução </td>
 						<td> <input type="number" name="divisions" min="1" max="30"> </td>
@@ -318,7 +319,7 @@
 		<table width="100%">
 			<tr width="100%"> 
 				<td width="50%" align="right"> Descrição: </td> 
-				<td width="50%"> <textarea name="user_description" rows="3" cols="20" ></textarea>  </td>
+				<td width="50%"> <textarea name="user_description" rows="3" cols="20" > Não Funciona </textarea>  </td>
 			</tr> <tr width="100%">
 				<td width="50%"><input type="submit" id="submit_bttn" value="Simular" class="btn btnPrimary " id="enviar" /></td>
 				<td width="50%"><input type="reset" value="Cancelar" class="btn btnPrimary" /></td>
