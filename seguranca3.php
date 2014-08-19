@@ -1,4 +1,4 @@
-<? 
+<?php 
 /**
 * Sistema de segurança com acesso restrito a nuvem
 *
