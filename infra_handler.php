@@ -141,9 +141,15 @@ class openstack_handler implements infra_handler {
 		}
 		$outdir = "/root/jobs/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
+		
+		
+//		$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
+		unset($params['user_description']);
+		$this->connection->command('echo '.$application.' > '.$outdir.'.app');		
+
 		$r = run_app($params, $outdir, $this->connection);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-		$this->connection->command('echo '.$application.' > '.$outdir.'.app');
+		
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		$this->connection->command('nohup '.$r['cmd']." &> $outdir/job.log& echo $! > $outdir/.pid");
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log"); //benchmarking
@@ -270,9 +276,14 @@ class opennebula_handler implements infra_handler {
 		}
 		$outdir = "/root/jobs/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
+		
+		$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
+		unset($params['user_description']);
+		$this->connection->command('echo '.$application.' > '.$outdir.'.app');		
+
 		$r = run_app($params, $outdir, $this->connection);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-		$this->connection->command('echo '.$application.' > '.$outdir.'.app');
+		
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		$this->connection->command('nohup '.$r['cmd']." &> $outdir/job.log& echo $! > $outdir/.pid");
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log");
@@ -349,14 +360,17 @@ class cluster_handler implements infra_handler {
 		$outdir = $this->outdir.$id.'/';
 		$this->cluster_connection->command("mkdir -p $outdir");
 
-		$r = run_app($params, $outdir, $this->cluster_connection);		
+		$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
+		unset($params['user_description']);
+		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');		
+
+		$r = run_app($params, $outdir, $this->cluster_connection);
 		$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');
 		
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
-
+//		print($r['cmd']);
 		$this->cluster_connection->command('nohup srun -p gpu '.$r['cmd']." &> {$outdir}job.log& echo $! > $outdir.pid");
-//		$this->cluster_connection->command('srun -p long '.$r['cmd']." &> $outdir.job.log");
+//		print $this->cluster_connection->command('srun -p gpu '.$r['cmd']);
 		
 		return true;
 	}

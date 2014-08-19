@@ -17,7 +17,7 @@
 			die;
 		}
 		$app = $_POST['application'];
- 
+
 		unset($_POST['application']);
 		unset($_POST['cpu_count']);
 		$params = array_merge($_POST, $_FILES);

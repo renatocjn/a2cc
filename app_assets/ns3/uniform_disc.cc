@@ -139,7 +139,7 @@ MeshTest::Configure (int argc, char *argv[])
   
   CommandLine cmd;
   cmd.AddValue ("radius", "Size in meters of the disc. ", m_radius);
-  cmd.AddValue ("number-of-nodes", "Number of rows in the simulation. [6]", m_number_of_nodes);
+  cmd.AddValue ("number-of-nodes", "Number of rows in the simulation.", m_number_of_nodes);
   /*
    * As soon as starting node means that it sends a beacon,
    * simultaneous start is not good.

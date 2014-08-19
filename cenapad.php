@@ -257,7 +257,17 @@
 				<li><a href="#vannet"> Redes VANNETS </a> </li>
 				<li><a href="#generic"> Script Generico </a> </li>
 			</ul>
-			<div id='generic'> <input type='hidden' value='generic'> Não implementado! </div>
+			<div id='generic'> <input type='hidden' value='generic'>
+				<table>
+					<tr>
+						<td> Arquivo de script ns3 </td>
+						<td> <input name="scriptFile" type="file"> </td>
+					</tr>	<tr>
+						<td width="50%"> Parametros que devem ser passados ao script </td>
+						<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
+					</tr>
+				</table> 
+			</div>
 			<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
 			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div> 
 			<div id='mesh_tab' class='tab'>
@@ -267,49 +277,84 @@
 					<li> <a href="#uniform_disc"> Topologia em disco aleatorio </a> </li>
 				</ul>
 		
-				<div id='grid'>
-					<input type='hidden' value="grid">
+				<div id='grid'> <input type='hidden' value="grid">
 						<h1> Parametros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
 								<td> Tamanho Horizontal (x-size) </td>
-								<td> <input type='text' onkeypress="return SomenteNumero(event)" name="gradeX" value="10" size=5> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="10"> </td>
 							</tr> <tr>
 								<td> Tamanho vertical (y-size) </td>
-								<td> <input type="text" onkeypress="return SomenteNumero(event)" name="gradeY" value="10" size= 5> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="10"> </td>
 							</tr> <tr>
 								<td> Espaço entre nós (step)</td>
-								<td> <input type='text' onkeypress="return SomenteNumero(event)" name="step" value="100" size=5> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
+							</tr> <tr>
+								<td> Tempo total de simulação em segundos (time)</td>
+								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
 								<td> Numero de interfaces de cada nó (interfaces) </td>
-								<td> <input type='text' onkeypress="return SomenteNumero(event)" name='interface' value="3" size=5> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="3"> </td>
+							</tr> <tr>
+								<td> Intervalo em segundos entre pacotes (packet-interval) </td>
+								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+							</tr> <tr>
+								<td> Tamanho dos pacotes em KB (packet-size) </td>
+								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+							</tr> <tr>
+								<td> Politica de escolha de canais (channels) </td>
+								<td> 
+									<select name="channels">
+										<option value="1" selected> complete spread </option>
+										<option value="0" > all on zero </option>
+								   </select>
+								</td>
 							</tr> <tr>
 								<td>Tipo de traces</td>
 								<td>
-									<input type="checkbox" checked='on' name="xml">XML<br>
-									<input type="checkbox" name="pcap">PCAP<br>
+									<input type="checkbox" checked name="xml" value="1">XML<br>
+									<input type="checkbox" name="pcap" value="1">PCAP<br>
 								</td>
 							</tr>
 						</table>
 				</div>
-				<div id='uniform_disc'> 
-					<input type='hidden' value="uniform_disc">
+				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
 						<h1> Parametros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
 								<td> Raio do disco (radius) </td>
-								<td> <input type='text' onkeypress="return SomenteNumero(event)" name="radius" id='grade' value="" size=5> </td>
+								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 							</tr> <tr>
-								<td> Numero de nos </td>
-								<td> <input type="text" onkeypress="return SomenteNumero(event)" name="size" id="grade" value="" size=5> </td>
+								<td> Numero de nós </td>
+								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
+							</tr> <tr>
+								<td> Tempo total de simulação em segundos (time)</td>
+								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+							</tr> <tr>
+								<td> Numero de fluxos na simulação (flows) </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 							</tr> <tr>
 								<td> Numero de interfaces de cada nó (interfaces) </td>
-								<td> <input type='text' onkeypress="return SomenteNumero(event)" name="interface" id='interface' value="" size=5> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
+							</tr> <tr>
+								<td> Intervalo em segundos entre pacotes (time) </td>
+								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+							</tr> <tr>
+								<td> Tamanho dos pacotes em KB (packet-size) </td>
+								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+							</tr> <tr>
+								<td> Politica de escolha de canais (channels) </td>
+								<td> 
+									<select name="channels">
+										<option value="1" selected> complete spread </option>
+										<option value="0" > all on zero </option>
+								   </select>
+								</td>
 							</tr> <tr>
 								<td>Tipo de traces</td>
 								<td>
-									<input type="checkbox" name="xml">XML<br>
-									<input type="checkbox" name="pcap">PCAP<br>
+									<input type="checkbox" value="1" checked name="xml">XML<br>
+									<input type="checkbox" value="1" name="pcap">PCAP<br>
 								</td>
 							</tr> 
 						</table>
