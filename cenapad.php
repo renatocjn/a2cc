@@ -351,7 +351,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td>Tipos de trace desejado<td>
+								<td>Tipos de trace desejado</td>
 								<td>
 									<input type="checkbox" value="1" checked name="xml">XML<br>
 									<input type="checkbox" value="1" name="pcap">PCAP<br>
