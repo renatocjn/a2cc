@@ -51,7 +51,7 @@
 					var val = option.val();
 					
 					if($('#namdCustomParamsTable input[name='+name+']').length) return;
-					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="img/excluir.png" alt="remover parametro"> </a> </td> </tr>');
+					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
 				});
 				
 				$('.delBttn').click(function () {
@@ -137,13 +137,13 @@
 	<center> <form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>	
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>
-			<li><a href="#namd"> Namd </a> </li>			
+			<!--<li><a href="#namd"> Namd </a> </li>			
 			<li><a href="#gaussian"> Gaussian </a> </li>
 			<li><a href="#siesta"> Siesta </a> </li>
-			<li><a href="#octave"> Octave </a> </li>
+			<li><a href="#octave"> Octave </a> </li>-->
 		</ul>
 		
-		<div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
+		<!-- <div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
 		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div>
 		<div id='octave'> <input type='hidden' value='octave'> Não implementado! </div>		
 		
@@ -249,15 +249,15 @@
 			<table id="namdCustomParamsTable" > 	</table>
 		
 		</div>		
-
+		-->
 		<div id='ns3' class='tab'> <input type='hidden' value='ns3'>
 			<ul>
 				<li><a href="#mesh_tab"> Redes Mesh </a> </li>
-				<li><a href="#lte"> Redes LTE </a> </li>
+				<!--<li><a href="#lte"> Redes LTE </a> </li>
 				<li><a href="#vannet"> Redes VANNETS </a> </li>
-				<li><a href="#generic"> Script Generico </a> </li>
+				<li><a href="#generic"> Script Generico </a> </li>-->
 			</ul>
-			<div id='generic'> <input type='hidden' value='generic'>
+			<!--<div id='generic'> <input type='hidden' value='generic'>
 				<table>
 					<tr>
 						<td> Arquivo de script ns3 </td>
@@ -269,7 +269,7 @@
 				</table> 
 			</div>
 			<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
-			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div> 
+			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div> -->
 			<div id='mesh_tab' class='tab'>
 				<input type='hidden' value="mesh">
 				<ul>
@@ -281,10 +281,10 @@
 						<h1> Parametros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
-								<td> Tamanho Horizontal (x-size) </td>
+								<td> Tamanho Horizontal da grade (x-size) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="10"> </td>
 							</tr> <tr>
-								<td> Tamanho vertical (y-size) </td>
+								<td> Tamanho vertical da grade (y-size) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="10"> </td>
 							</tr> <tr>
 								<td> Espaço entre nós (step)</td>
@@ -293,16 +293,16 @@
 								<td> Tempo total de simulação em segundos (time)</td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> Numero de interfaces de cada nó (interfaces) </td>
+								<td> Número de interfaces de cada nó (interfaces) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="3"> </td>
 							</tr> <tr>
-								<td> Intervalo em segundos entre pacotes (packet-interval) </td>
+								<td> Intervalo em segundos entre transmissão pacotes (packet-interval) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> Tamanho dos pacotes em KB (packet-size) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> Politica de escolha de canais (channels) </td>
+								<td> Política de escolha de canais (channels) </td>
 								<td> 
 									<select name="channels">
 										<option value="1" selected> complete spread </option>
@@ -310,7 +310,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td>Tipo de traces</td>
+								<td>Tipos de trace desejado</td>
 								<td>
 									<input type="checkbox" checked name="xml" value="1">XML<br>
 									<input type="checkbox" name="pcap" value="1">PCAP<br>
@@ -322,22 +322,22 @@
 						<h1> Parametros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
-								<td> Raio do disco (radius) </td>
+								<td> Raio do disco em metros </td>
 								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 							</tr> <tr>
-								<td> Numero de nós </td>
+								<td> Número de nós </td>
 								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
 							</tr> <tr>
 								<td> Tempo total de simulação em segundos (time)</td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> Numero de fluxos na simulação (flows) </td>
+								<td> Número de fluxos na simulação (flows) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 							</tr> <tr>
-								<td> Numero de interfaces de cada nó (interfaces) </td>
+								<td> Número de interfaces de cada nó (interfaces) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
 							</tr> <tr>
-								<td> Intervalo em segundos entre pacotes (time) </td>
+								<td> Intervalo em segundos entre transmissão pacotes (time) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> Tamanho dos pacotes em KB (packet-size) </td>
@@ -351,7 +351,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td>Tipo de traces</td>
+								<td>Tipos de trace desejado<td>
 								<td>
 									<input type="checkbox" value="1" checked name="xml">XML<br>
 									<input type="checkbox" value="1" name="pcap">PCAP<br>
@@ -362,10 +362,10 @@
 			</div>
 		</div>
 		<table width="100%">
-			<tr width="100%"> 
+			<!--<tr width="100%"> 
 				<td width="50%" align="right"> Descrição: </td> 
 				<td width="50%"> <textarea name="user_description" rows="3" cols="20" > Não Funciona </textarea>  </td>
-			</tr> <tr width="100%">
+			</tr>--> <tr width="100%">
 				<td width="50%"><input type="submit" id="submit_bttn" value="Simular" class="btn btnPrimary " id="enviar" /></td>
 				<td width="50%"><input type="reset" value="Cancelar" class="btn btnPrimary" /></td>
 			</tr>

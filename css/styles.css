@@ -449,7 +449,7 @@ th {
 }
 
 .table-cadastro td:FIRST-CHILD {
-	text-align: right;
+	text-align: left;
 }
 
 img {
