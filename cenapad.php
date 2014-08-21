@@ -228,7 +228,7 @@
 
 			</div>
 			<select id='namdCustomParams'>
-				<option disabled selected> Por favor selecione os parametros que deseja customizar </option>
+				<option disabled selected> Por favor selecione os parâmetros que deseja customizar </option>
 				<?php
 					$default_params = get_customizeable_namd_params();
 					foreach ($default_params as $p_key => $p_val)
@@ -243,7 +243,7 @@
 					<td>Arquivo PSF com estruturas: </td>
 					<td><input type="file" name="structureFile" accept=".psf"></td>
 				</tr>	<tr>
-					<td>Arquivo INP ou XPLOR com parametros</td>
+					<td>Arquivo INP ou XPLOR com parâmetros</td>
 					<td><input type="file" name="inpFile" accept=".inp,.xplor"></td>
 				</tr>
 			</table>
@@ -276,7 +276,7 @@
 				<input type='hidden' value="mesh">
 				<ul>
 					<li> <a href="#grid"> Topologia em grade </a> </li>
-					<li> <a href="#uniform_disc"> Topologia em disco aleatorio </a> </li>
+					<li> <a href="#uniform_disc"> Topologia em disco aleatório </a> </li>
 				</ul>
 
 				<div id='grid'> <input type='hidden' value="grid">
