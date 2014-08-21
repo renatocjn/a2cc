@@ -3,8 +3,6 @@
 from glob import glob
 import networkx as nx
 from lxml import etree
-from sys import exit
-from time import time
 import os
 import sys
 import matplotlib.pyplot as plt
@@ -15,10 +13,13 @@ elif len(sys.argv) > 2:
 	print 'ERROR: Run this without parameters if the XMLs are in the current folder or with the only parameter as the directory with the XMLs'
 	sys.exit(1)
 
+
 reports = glob('mp-report-*.xml')
 if len(reports) == 0:
 	print "ERROR: There wasnt any mesh point report found in the '%s' folder" % working_dir
 	sys.exit(1)
+
+
 ids = dict()
 for report in reports:
 	aux = open(report).read()
@@ -43,10 +44,6 @@ for report in reports:
 		G.add_edge(currId, peerId)
 
 
-fig = plt.figure(figsize=(5,5))
-ax = plt.subplot(111)	
-pos = nx.graphviz_layout(G)
-nx.draw(G, pos, node_size=500, node_color='yellow', font_size=15, font_weight='bold')
-
+nx.draw_graphviz(G)
 plt.savefig('connections.png')
 

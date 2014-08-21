@@ -44,5 +44,6 @@ pl.scatter(othersx, othersy, color='k', s=100)
 
 for i, x, y in zip(ids, x_positions, y_positions):
 	pl.annotate(str(i), xy = (x, y), xytext = (7, 7), textcoords = 'offset points')
-pl.legend(loc='best', ncol=2)
+pl.legend(loc='best', ncol=2, bbox_to_anchor=(0., 1.02, 1., .102))
+pl.margins(0.1)
 pl.savefig('nodes.png')

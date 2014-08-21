@@ -495,3 +495,9 @@ div .help {
 div .help .red {
 	color: red;
 }
+
+.help-ico {
+	height: 15px;
+	width: 15px;
+	cursor: help;
+}

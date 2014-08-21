@@ -1,16 +1,15 @@
 #!/usr/bin/python
 
-from os.path import isdir, join
+from os.path import isdir
 from lxml import etree
 from glob import glob
-import os, sys, numpy, networkx as nx
+import os, sys, networkx as nx
 import pylab as pl
 from utils import *
-from numpy import array, zeros, inf, arange, floor, sqrt, argmin
-from glob import glob
-from csv import writer
-from scipy.ndimage.filters import *
-from time import sleep	
+from numpy import meshgrid, array, zeros, inf, arange, floor, sqrt, argmin, ogrid
+from scipy.ndimage.filters import maximum_filter
+
+
 if len(sys.argv) == 2 and isdir(sys.argv[1]): #minimum parameter checking
 	os.chdir(sys.argv[1])
 else:
@@ -34,7 +33,6 @@ per_run_statistics = {'rxOpen', 'txOpen',
 					  'totalQueued',
 					  'totalDropped'
 					  }
-
 
 
 
@@ -74,11 +72,11 @@ for line in pfile_contents.strip().split("\n"):
 
 	x = float(line[1])
 	if x > x_max: x_max = int(floor(x))
-	elif x< x_min: x_min = int(floor(x))
+	if x < x_min: x_min = int(floor(x))
 
 	y = float(line[2])
 	if y > y_max: y_max = int(floor(y))
-	elif y < y_min: y_min = int(floor(y))
+	if y < y_min: y_min = int(floor(y))
 	
 	positions[i] = x,y
 
@@ -87,13 +85,11 @@ for line in pfile_contents.strip().split("\n"):
 if not isdir('graphics'):
 	os.mkdir('graphics')
 os.chdir('graphics')
-
 x = range(x_min-100, x_max+100)
 y = range(y_min-100, y_max+100)
-X, Y = numpy.meshgrid(x, y)
+X, Y = meshgrid(x, y, indexing='ij')
 
 for k in per_run_statistics:
-	print k
 	pl.clf()
 	pl.title(k)
 	Z = zeros(X.shape)
@@ -101,12 +97,8 @@ for k in per_run_statistics:
 		xi, yi = floor(positions[i])
 		pl.text(xi, yi, i, horizontalalignment='center', verticalalignment='center')
 		Z[x.index(xi),y.index(yi)] = per_run_values[i][k]
-	Z = maximum_filter(Z, size=80, mode='constant')
-	print X
-	print Y
-	print (Z==0).all()
-	raw_input ("press <enter>\n")
-	#pl.contourf(X,Y,Z)
-	#pl.colorbar()
-	#pl.savefig('%s.png' % k)
+	Z = maximum_filter(Z, size=90, mode='constant') #expanding area of effect range
+	pl.contourf(X,Y,Z)
+	pl.colorbar()
+	pl.savefig('%s.png' % k)
 

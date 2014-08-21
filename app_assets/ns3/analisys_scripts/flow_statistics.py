@@ -54,7 +54,10 @@ for flow in all_flows: # get flow simulation values
 	stats['lostPackets'].append(clean_result(flow.get('lostPackets')))
 	stats['timesForwarded'].append(clean_result(flow.get('timesForwarded')))
 stats['deliveryRate'] = map( lambda x: x[0]*100/x[1], zip(stats['rxPackets'], stats['txPackets']))
-stats['throughput'] = map( lambda x: 8*(10**9)*x[0]/(x[1]-x[2]), zip(stats['rxBytes'], stats['timeLastRxPacket'], stats['timeFirstTxPacket']) )
+try:
+	stats['throughput'] = map( lambda x: 8*(10**9)*x[0]/(x[1]-x[2]), zip(stats['rxBytes'], stats['timeLastRxPacket'], stats['timeFirstTxPacket']) )
+except:
+	stats['throughput'] = [ 0 for i in range(nflows) ]
 
 if len(sys.argv) == 2:
 	output = open('flow-statistics.txt','w')
