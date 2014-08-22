@@ -280,7 +280,8 @@
 				</ul>
 
 				<div id='grid'> <input type='hidden' value="grid">
-						<h1> Parametros da simulação </h1>
+						<img id='grid-help-pic' src="img/mesh-grid.jpg">
+						<h1> Parâmetros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
 								<td> <img class="help-ico" src="img/Help-icon.png" title="Representa o número de nós por linha da grade."> </td>
@@ -307,7 +308,7 @@
 								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulaçao"> </td>
+								<td> <img class="help-ico" src="img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
 								<td> Tamanho dos pacotes (KBytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
@@ -327,17 +328,17 @@
 									<input type="checkbox" name="pcap" value="1">PCAP<br>
 								</td>
 							</tr>
-						</table>
+						</table> 
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
-						<h1> Parametros da simulação </h1>
+						<h1> Parâmetros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
 								<td> <img class="help-ico" src="img/Help-icon.png" title="Número de nós que devem ser criados e alocados dentro do disco."> </td>
 								<td> Número de nós </td>
 								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="img/Help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatóriamente no disco."> </td>
+								<td> <img class="help-ico" src="img/Help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatoriamente no disco."> </td>
 								<td> Raio do disco (metros) </td>
 								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 							</tr> <tr>
@@ -357,7 +358,7 @@
 								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulaçao"> </td>
+								<td> <img class="help-ico" src="img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
 								<td> Tamanho dos pacotes (KBytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
