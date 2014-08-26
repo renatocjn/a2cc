@@ -167,18 +167,19 @@ class opennebula_handler implements infra_handler {
 		$cloud_connection = new ssh_conecta();
 		$cloud_connection->set_host('200.19.191.230');
 		$cloud_connection->set_port(33000);
-		$cloud_connection->set_user('controller');
-		$cloud_connection->set_passwd('senha.123');
-		if ($cloud_connection->login()) {
+		$cloud_connection->set_user('oneadmin');
+		$cloud_connection->set_pub_key('/etc/ON-controller.key.pub');
+		$cloud_connection->set_priv_key('/etc/ON-controller.key');
+		if ($cloud_connection->login('key')) {
 			return $cloud_connection;
 		} else { 
-			throw new Exception("Can't connect to openstack cloud");
+			throw new Exception("Can't connect to opennebula cloud");
 		}
 	}
 	
 	function dispose() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
-		$machineIP = $cloud_connection->command("export ONE_AUTH=~/one_auth && onevm delete ".$this->VMID);
+		$machineIP = $cloud_connection->command("onevm delete ".$this->VMID);
 	}
 
 	function get_infra_type() {
@@ -210,22 +211,22 @@ class opennebula_handler implements infra_handler {
 		$this->VMID = $vm_id;
 		$cloud_connection = opennebula_handler::getCloudConnection();
 		
-		$owner = trim($cloud_connection->command("export ONE_AUTH=~/one_auth && onevm show $vm_id|grep USER|xargs|cut -d ' ' -f 3"));
+		$owner = trim($cloud_connection->command("onevm show $vm_id|grep USER|xargs|cut -d ' ' -f 3"));
 		if ($owner != $_SESSION['usuarioLogin']) {
 			throw new Exception("Usuario não é dono da maquina!");
 		}
 		
 		if ($machineIP === null) {	
-			$machineIP = $cloud_connection->command("export ONE_AUTH=~/one_auth && onevm show ".$this->VMID."|grep private|xargs|cut -d ' ' -f 5");
+			$machineIP = $cloud_connection->command("onevm show ".$this->VMID."|grep publica|xargs|cut -d ' ' -f 5");
 			$machineIP = trim($machineIP);
 		}
 
 		$this->connection = new ssh_conecta();
 		$this->connection->set_host($machineIP);
 		$this->connection->set_port(22);
-		$this->connection->set_user('root');
-		$this->connection->set_pub_key('/etc/opennebula.key.pub');
-		$this->connection->set_priv_key('/etc/opennebula.key');
+		$this->connection->set_user('clouduser');
+		$this->connection->set_pub_key('/etc/ON-vm.key.pub');
+		$this->connection->set_priv_key('/etc/ON-vm.key');
 		if(!$this->connection->login('key')) {
 			$this->status = false;
 		} else {
@@ -235,7 +236,7 @@ class opennebula_handler implements infra_handler {
 
 	static function allocate_new_handler() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
-		$description = $cloud_connection->command("export ONE_AUTH=~/one_auth && onevm create --disk 25 --memory 1024 --cpu 1 --nic oneadmin[private] --ssh ~/.ssh/id_rsa.pub --vnc --user {$_SESSION['usuarioLogin']} --password {$_SESSION['usuarioSenha']}");
+		$description = $cloud_connection->command('onevm create --disk 13 --memory 1024 --cpu 1 --nic oneadmin[publica] --net_context --ssh /etc/vm.key.pub --vnc --user '.$_SESSION['usuarioLogin'].' --password '.$_SESSION['usuarioSenha']);
 		if( !preg_match('/^ID: [0-9]+$/', $description) ) {
 			return false;
 		}
@@ -246,14 +247,14 @@ class opennebula_handler implements infra_handler {
 
 	static function get_allocated_handlers($user) {
 		$cloud_connection = opennebula_handler::getCloudConnection();
-		$vm_list = explode("\n",$cloud_connection->command("export ONE_AUTH=~/one_auth && onevm list -l ID,USER --filter USER=$user --CSV"));
+		$vm_list = explode("\n",$cloud_connection->command("onevm list -l ID,USER --filter USER=$user --CSV"));
 		$handlers = array();
 		foreach ($vm_list as $vm) {
 			if(trim($vm) == "") continue; //skip blank lines
 			$vm_description = explode(',', $vm);
 			$VMID = $vm_description[0];
 			if($VMID == "ID") continue; //skip header line
-			$tmp = $cloud_connection->command("export ONE_AUTH=~/one_auth && onevm show $VMID|grep private");
+			$tmp = $cloud_connection->command("onevm show $VMID|grep publica");
 			$tmp = preg_split('/\s+/', trim($tmp));			
 			$machineIP = $tmp[4];	
 			$handlers[] = new opennebula_handler($VMID, $machineIP);
@@ -274,18 +275,19 @@ class opennebula_handler implements infra_handler {
 			if (!in_array($id, $existing_runs))
 				break;
 		}
-		$outdir = "/root/jobs/".$id.'/';
+		$outdir = "/home/clouduser/jobs/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
 		
-		$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
-		unset($params['user_description']);
+		//$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
+		//unset($params['user_description']);
 		$this->connection->command('echo '.$application.' > '.$outdir.'.app');		
 
 		$r = run_app($params, $outdir, $this->connection);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 		
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
-		$this->connection->command('nohup '.$r['cmd']." &> $outdir/job.log& echo $! > $outdir/.pid");
+		$this->connection->command('nohup '.$r['cmd']." &> ".$outdir."job.log& echo $! > ".$outdir.".pid");
+		var_dump($this->connection);
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log");
 		
 		return true;
@@ -527,7 +529,7 @@ class cluster_job extends job {
 	
 class opennebula_job extends job {
 	static function get_jobs_dir() {
-		return '/root/jobs';
+		return '/home/clouduser/jobs';
 	}
 	
 	function dispose() {

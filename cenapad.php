@@ -326,6 +326,7 @@
 								<td>
 									<input type="checkbox" checked name="xml" value="1">XML<br>
 									<input type="checkbox" name="pcap" value="1">PCAP<br>
+									<input type="checkbox" checked name="graphs" value="1">Graphs<br>
 								</td>
 							</tr>
 						</table> 
@@ -376,6 +377,7 @@
 								<td>
 									<input type="checkbox" value="1" checked name="xml">XML<br>
 									<input type="checkbox" value="1" name="pcap">PCAP<br>
+									<input type="checkbox" checked name="graphs" value="1">Graphs<br>
 								</td>
 							</tr>
 						</table>

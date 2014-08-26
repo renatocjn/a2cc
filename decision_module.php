@@ -12,8 +12,8 @@
 		} else {
 			$h = rand(0,100) < 25 ? opennebula_handler::allocate_new_handler() : cluster_handler::allocate_new_handler(); 
 		}*/
-//		$h = opennebula_handler::allocate_new_handler();
-		$h = cluster_handler::allocate_new_handler();
+		$h = opennebula_handler::allocate_new_handler();
+//		$h = cluster_handler::allocate_new_handler();
 		if (!$h) {
 			 throw new Exception("Não pode ser alocado novos recursos");
 		}
