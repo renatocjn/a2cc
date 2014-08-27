@@ -125,7 +125,7 @@ function expulsaVisitante1()
 	// Remove as variáveis da sessão (caso elas existam)
 	unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
 	$_SESSION['notice'] = "LOGIN ou SENHA incorreto!";
-	http_redirect('login.php');
+	http_redirect($_SESSION['lang'].'/login.php');
 	return true;
 }
 

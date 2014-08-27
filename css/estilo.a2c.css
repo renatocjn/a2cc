@@ -6,6 +6,37 @@ html {
 	height: 0;
 }
 
+#navbar { #
+	color: #D0D0CA; #
+	font-size: 12px;
+	font-size: 15px;
+	line-height: 26px; #
+	background-color: #194775;
+	background-color: #4F94CD;
+	text-align: center; #
+	letter-spacing: 6px;
+	letter-spacing: 2px;
+	margin-top: 2%;
+	margin-bottom: 15px;
+	margin-left: 20%;
+	margin-right: 20%;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	height: 26px
+}
+
+a.whitelink { #
+	color: #D0D0CA;
+	color: #FFFFFF;
+}
+
+a:hover.whitelink { #
+	color: white;
+	color: #000000;
+	text-decoration: none
+}
+
 body {
 	padding-bottom: 20px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -43,8 +74,6 @@ body {
 .siguLogo {
 	display: block;
 	float: right;
-	margin-top: 50px;
-	margin-right: 50px;
 }
 
 .siguLogo img {
@@ -133,7 +162,7 @@ color: #b94a48;
 	padding-top: 5px !important;
 	margin-top: 20px;
 	margin-left: 12%;
-	min-height: 450px;
+/*	min-height: 450px;*/
 	line-height: 150%;
 /*	text-align: justify;*/
 }
@@ -784,9 +813,9 @@ ul.dropdown-menu li:hover {
 
 /*Começo do grid de colunas*/
 .container_16 {
-	margin-left: auto;
-	margin-right: auto;
-	width: 960px;
+	margin-left: 20%;
+	margin-right: 20%;
+/*	width: 960px;*/
 }
 
 .container_16 .grid_1 {
@@ -829,10 +858,11 @@ ul.dropdown-menu li:hover {
 	width: 760px;
 }
 
-.container_16 .grid_14 {
+/*.container_16 .grid_14 {
 	width: 820px;
+	margin: 20%;
 }
-
+*/
 .container_16 .grid_15 {
 	width: 880px;
 }

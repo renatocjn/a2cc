@@ -10,6 +10,7 @@
 	unset($_SESSION['usuarioSenha']);
 	 
 	//Encerra a sessão
+	$lang = $_SESSION['lang'];
 	session_destroy();
-	http_redirect('login.php');
+	http_redirect($lang.'/login.php');
 ?>

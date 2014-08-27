@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	//utiliza a funcao da classe ssh_conecta
 	if ($ssh_con->login()) {
 		validaUsuario3($usuario, $senha);
-		http_redirect('cenapad.php');
+		$lang = $_SESSION['lang'];
+		http_redirect($lang.'/cenapad.php');
 	} else {
 		expulsaVisitante1();
 	}
