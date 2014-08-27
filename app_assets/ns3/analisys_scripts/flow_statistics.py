@@ -44,27 +44,30 @@ for flow in all_flows: # get flow simulation values
 	stats['txBytes'].append(clean_result(flow.get('txBytes')))
 	stats['rxPackets'].append(clean_result(flow.get('rxPackets')))
 	stats['txPackets'].append(clean_result(flow.get('txPackets')))
-	stats['timeLastRxPacket'].append(clean_result(flow.get('timeLastRxPacket')))
-	stats['timeLastTxPacket'].append(clean_result(flow.get('timeLastTxPacket')))
-	stats['timeFirstRxPacket'].append(clean_result(flow.get('timeFirstRxPacket')))
-	stats['timeFirstTxPacket'].append(clean_result(flow.get('timeFirstTxPacket')))
-	stats['delaySum'].append(clean_result(flow.get('delaySum')))
-	stats['jitterSum'].append(clean_result(flow.get('jitterSum')))
-	stats['lastDelay'].append(clean_result(flow.get('lastDelay')))
+	stats['timeLastRxPacket'].append(clean_result(flow.get('timeLastRxPacket')) / 10**9 )
+	stats['timeLastTxPacket'].append(clean_result(flow.get('timeLastTxPacket')) / 10**9 )
+	stats['timeFirstRxPacket'].append(clean_result(flow.get('timeFirstRxPacket')) / 10**9 )
+	stats['timeFirstTxPacket'].append(clean_result(flow.get('timeFirstTxPacket')) / 10**9 )
+	stats['delaySum'].append(clean_result(flow.get('delaySum')) / 10**9 )
+	stats['jitterSum'].append(clean_result(flow.get('jitterSum')) / 10**9 )
+	stats['lastDelay'].append(clean_result(flow.get('lastDelay')) / 10**9 )
 	stats['lostPackets'].append(clean_result(flow.get('lostPackets')))
 	stats['timesForwarded'].append(clean_result(flow.get('timesForwarded')))
 stats['deliveryRate'] = map( lambda x: x[0]*100/x[1], zip(stats['rxPackets'], stats['txPackets']))
 try:
-	stats['throughput'] = map( lambda x: 8*(10**9)*x[0]/(x[1]-x[2]), zip(stats['rxBytes'], stats['timeLastRxPacket'], stats['timeFirstTxPacket']) )
+	stats['throughput'] = map( lambda x: x[0]/(x[1]-x[2]), zip(stats['rxBytes'], stats['timeLastRxPacket'], stats['timeFirstTxPacket']) )
 except:
 	stats['throughput'] = [ 0 for i in range(nflows) ]
 
 if len(sys.argv) == 2:
 	output = open('flow-statistics.txt','w')
 	lines = list()
+	lines.append("### Mean of each statistics of flows captured from FlowMonitor\n")	
+	lines.append("### These times are in seconds\n")
+	lines.append("\n")
 	for metric in stats.keys():
 		try:
-			lines.append( '%s|%f\n' % (metric, mean(stats[metric])) )
+			lines.append( '%s\t%f\n' % (metric, mean(stats[metric])) )
 		except: pass
 	output.writelines(lines)
 	output.close()
