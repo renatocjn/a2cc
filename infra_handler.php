@@ -236,7 +236,7 @@ class opennebula_handler implements infra_handler {
 
 	static function allocate_new_handler() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
-		$description = $cloud_connection->command('onevm create --disk 13 --memory 1024 --cpu 1 --nic oneadmin[publica] --net_context --ssh /etc/vm.key.pub --vnc --user '.$_SESSION['usuarioLogin'].' --password '.$_SESSION['usuarioSenha']);
+		$description = $cloud_connection->command('onevm create --disk 14 --memory 1024 --cpu 1 --nic oneadmin[publica] --net_context --ssh /etc/vm.key.pub --vnc --user '.$_SESSION['usuarioLogin'].' --password '.$_SESSION['usuarioSenha']);
 		if( !preg_match('/^ID: [0-9]+$/', $description) ) {
 			return false;
 		}

@@ -415,7 +415,6 @@
 						foreach( $allocated_infra as $infra )	{
 							if (!$infra->is_ready()) continue;
 							$jobs = $infra->get_jobs();
-//							var_dump($jobs);
 							foreach ($jobs as $jobID => $job) {
 								$dataInicio = $job->get_start_date();
 								$params = $job->get_params();
