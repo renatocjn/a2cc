@@ -199,7 +199,6 @@ class opennebula_handler implements infra_handler {
 			if($job == "") continue;
 			$r[$job] = new opennebula_job($this->connection, $job);
 		}
-
 		return $r;
 	}
 
@@ -287,7 +286,6 @@ class opennebula_handler implements infra_handler {
 		
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		$this->connection->command('nohup '.$r['cmd']." &> ".$outdir."job.log& echo $! > ".$outdir.".pid");
-		var_dump($this->connection);
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log");
 		
 		return true;
@@ -414,7 +412,8 @@ class infra_controller {
 			$handler = new cluster_handler($infra_id);
 		}
 		
-		$handler->dispose();
+		if (empty($handler->get_jobs())) 
+			$handler->dispose();
 	}
 	
 	static function job_to_description($infra, $job) {
@@ -432,7 +431,7 @@ abstract class job {
 	protected $job_dir;
 	private $startDate;
 	
-	abstract static function get_jobs_dir();
+	static abstract function get_jobs_dir();
 
 	function __construct($con, $sid) {
 		$this->connection = clone $con;

@@ -30,6 +30,7 @@
 	}
 	
 	else if(isset($_GET["excluir"])) {
+		print 'excluir'.PHP_EOL;
 		$description = $_GET["excluir"];
 		$job = infra_controller::job_from_description($description);
 		$job->dispose();

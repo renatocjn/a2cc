@@ -7,6 +7,15 @@ legend {
 	font-size: 15pt;
 }
 
+#updateJobStatus img {
+	width: 40px;
+	height: 40px;
+}
+
+a {
+	cursor : pointer;
+}
+
 #navbar { #
 	color: #D0D0CA; #
 	font-size: 12px;
@@ -76,7 +85,7 @@ legend {
 #midsection2 {
 	color: #6b6c5a;
 	background: transparent;
-	margin: 3% 15%;
+	margin: 0 15%;
 }
 
 #status {

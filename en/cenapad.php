@@ -24,51 +24,75 @@
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
 
 		<script type='text/javascript'>
+var updating = false;
 
 			function removeRow(elem) {
-				console.log(elem);
 				$(elem).parents('tr').remove();
 			}
-			$( function() {
-				$('.tab').tabs();
-				$('.progressbar').progressbar().progressbar('value', false);
-				$('#load').hide();
 
-				function mostrar_barra() {
-					$('#load').show('fast');
+			function mostrar_barra() {
+				$('#load').show('fast');
+			}
+
+			function ocultar_barra() {
+				$('#load').hide('fast');
+			}
+
+			function updateJobStatus() {
+				if (updating) {
+					return;
 				}
+				updating = true;
+				$('#updateJobStatus img').attr('src', '../img/dinamic_job_status.gif');
+				$.ajax( {
+					url: '../job_status.php',
+					dataType: 'xml',
+					success: function (data) {
+						var table = $('.table-consulta tbody');
+						table.children().remove();
+						var Jobs = $(data).find('job');
+						Jobs.each( function () {
+							var j = $(this);
+							var jobRow = "<tr>";
+							jobRow += '<input type="hidden" value="'+j.find('description').text().trim()+'">';
+							jobRow += '<td> '+ j.find('startDate').text().trim() + ' </td>';
+							var pic = j.find('isrunning').text().trim() == 'true' ? "<img title='Running' src='../img/carregando.gif'>" : "<img title='Finished' src='../img/check.svg'>";
+							jobRow += "<td> "+ pic + "</td>"
+							jobRow += '<td> <img class="app_img" src="../applications/'+ j.find('application').text().trim() +'.png" /> </td>';
+							jobRow += "<td> " + j.find('params').text().trim() + " </td>";
+							jobRow += '<td width="15%"> <a href="../executaComando.php?down=' + j.find('description').text().trim() + '"><img src="../img/dowloads.jpg" height=25 title=Download></a></td>';
+							jobRow += "<td width='15%'> <a class='delBttn' title=''> <img src=../img/excluir.jpg height=25 title=Delete> </a> </td>";
+							table.append(jobRow);
+						});
 
-				function ocultar_barra() {
-					$('#load').hide('fast');
-				}
+						if (Jobs.length != 0) {
+							table.append("<tr> <th colspan='6'> <a id='cleanBttn'> Clean all <img src=../img/apagarTudo.png height=25 title=Delete all simulations> </a> </th> </tr>");
+						} else {
+							table.append("<tr> <th colspan='6'>No simulation found</th> </tr>");
+						}
 
-				function alertFail(d) {
-					alert('Something went wrong...\n'+d.responseText)
-				}
-
-				$('#namdCustomParams').change( function() {
-					var option = $(this).find("option:selected");
-					var name = option.attr('name');
-					var val = option.val();
-
-					if($('#namdCustomParamsTable input[name='+name+']').length) return;
-					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
+						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
+						loadTableActions();
+						updating = false;
+						document.body.style.cursor='default';
+					}
 				});
+			}
 
+			function loadTableActions() {
 				$('.delBttn').click(function () {
-					var description = $(this).parent().parent().children('input[type=hidden]').val();
+					var description = $(this).parent().siblings('input[type=hidden]').val();
 					jQuery.ajax({
 						url: "../executaComando.php",
-						data: { excluir: description },
+						data: { excluir: description.trim() },
 						complete: ocultar_barra,
 						beforeSend: mostrar_barra,
 						method: 'GET',
 						error: alertFail,
-						success: function() {location.reload();}
+						success: updateJobStatus
 					});
 				});
 
-				$('a').css({"cursor":"pointer"});
 				$("#cleanBttn").click( function() {
 					jQuery.ajax({
 						url: "../executaComando.php",
@@ -77,8 +101,27 @@
 						complete: ocultar_barra,
 						beforeSend: mostrar_barra,
 						error: alertFail,
-						success: function() {location.reload();}
+						success: updateJobStatus
 					});
+				});
+			}
+
+			function alertFail(d) {
+				alert('Something went wrong...\n'+d.responseText)
+			}
+
+			$( function() {
+				$('.tab').tabs();
+				$('.progressbar').progressbar().progressbar('value', false);
+				$('#load').hide();
+
+				$('#namdCustomParams').change( function() {
+					var option = $(this).find("option:selected");
+					var name = option.attr('name');
+					var val = option.val();
+
+					if($('#namdCustomParamsTable input[name='+name+']').length) return;
+					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
@@ -115,11 +158,21 @@
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: function() {location.reload();}
+						success: updateJobStatus
 					});
 				});
-				
 				$('.help-ico').tooltip();
+
+				function clickUpdate() {
+					document.body.style.cursor='wait';
+					updateJobStatus();
+				}
+
+				$('#updateJobStatus').click( clickUpdate );
+
+				updateJobStatus();
+				
+				setInterval(updateJobStatus, 30000);
 			});
 		</script>
 	</head>
@@ -303,7 +356,7 @@
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of radio interfaces conected to each node."> </td>
 								<td> Number of radio interfaces in each node </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="3"> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
 								<td> Packet transmission interval (seconds) </td>
@@ -323,14 +376,14 @@
 								</td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
-								<td>Tipos de trace desejado</td>
+								<td>Select desired traces</td>
 								<td>
 									<input type="checkbox" checked name="xml" value="1">XML<br>
 									<input type="checkbox" name="pcap" value="1">PCAP<br>
 									<input type="checkbox" checked name="graphs" value="1">Graphs<br>
 								</td>
 							</tr>
-						</table> 
+						</table>
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
 						<h1> Simulation Parameters </h1>
@@ -345,27 +398,27 @@
 								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is normally larger than the simulated time."> </td>
-								<td> Tempo de simulação (segundos) </td>
+								<td> Simulation time (seconds) </td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of flows to be created on the simulation, every flow has the same destination(server) but have different origins(clients)"> </td>
-								<td> Número de fluxos de dados na simulação </td>
+								<td> Number of flows to be generated </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of radio interfaces conected on each node."> </td>
-								<td> Número de interfaces de rádio por nó </td>
+								<td> Number of radios interfaces per node </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
-								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
+								<td> Time interval between packet transmission (seconds) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
-								<td> Tamanho dos pacotes (KBytes) </td>
+								<td> Packet size (KBytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
-								<td> Politica de escolha de canais (channels) </td>
+								<td> Channel allocation strategy (channels) </td>
 								<td>
 									<select name="channels">
 										<option value="1" selected> complete spread </option>
@@ -374,7 +427,7 @@
 								</td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
-								<td>Tipos de trace desejado</td>
+								<td>Select desired traces</td>
 								<td>
 									<input type="checkbox" value="1" checked name="xml">XML<br>
 									<input type="checkbox" value="1" name="pcap">PCAP<br>
@@ -397,7 +450,10 @@
 	</form> </center>
 
 	<fieldset>
-		<legend>Simulations</legend>
+		<legend> 
+			Simulations 
+			<a id="updateJobStatus"> <img title="Update status" src="../img/static_job_status.gif" alt="update"> </a> 
+		</legend>
 			<table class="table table-consulta">
 				<thead>
 					<tr>
@@ -410,39 +466,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php
-						$allocated_infra = infra_controller::get_allocated_infrastructure($nome_user);
-						$flag = false;
-						foreach( $allocated_infra as $infra )	{
-							if (!$infra->is_ready()) continue;
-							$jobs = $infra->get_jobs();
-							foreach ($jobs as $jobID => $job) {
-								$dataInicio = $job->get_start_date();
-								$params = $job->get_params();
-								$runn = $job->is_running();
-								$description = infra_controller::job_to_description($infra, $job);
-								echo "<tr>
-										<input type='hidden' value=".$description." />
-										<td> $dataInicio </td>
-										<td>".( $runn ? "<img title='Running' src='../img/carregando.gif'>" : "<img title='Finalized' src='../img/check.svg'>" )."</td>
-										<td> <img class=\"app_img\" height=\"1000\" width=\"1000\" src=../applications/".trim($job->get_app()).".png /> </td>
-										<td> $params </td>
-										<td width='15%'><a href='executaComando.php?down=$description'><img src=../img/dowloads.jpg height=25 title=Download></a></td>
-										<td width='15%'><a class='delBttn') title=''><img src=../img/excluir.jpg height=25 title=Delete></a></td>
-									</tr>";
-								$flag = true;
-							}
-						}
-						if($flag) {
-							echo"<tr>
-									<th colspan='6	'> <a id='cleanBttn'> Dispose of all simulations <img src=../img/apagarTudo.png height=25 title='Delete All'> </a> </th>
-								</tr>";
-						}else{
-							echo"<tr>
-									<th colspan='6'> No simulation could be found </th>
-								</tr>";
-						}
-					?>
+					<tr>
+						<th colspan='6'> Aguarde enquanto a lista dos suas simulações é carregada </th>
+					</tr>
 				</tbody> </table> <br/> </fieldset>
 		</div>
 		<div id="footer"><?php include "rodape.php";?></div>

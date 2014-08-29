@@ -14,7 +14,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="refresh" content="600">
 		<?php print_title(); ?>
 		<link rel="stylesheet" href="../css/styles.css" type="text/css" media="all">
 		<link rel="shortcut icon" href="../css/images/cenapad.png" type="image/gif" />
@@ -24,27 +23,99 @@
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
 
 		<script type='text/javascript'>
+			var updating = false;
 
 			function removeRow(elem) {
-				console.log(elem);
 				$(elem).parents('tr').remove();
 			}
+
+			function mostrar_barra() {
+				$('#load').show('fast');
+			}
+
+			function ocultar_barra() {
+				$('#load').hide('fast');
+			}
+
+			function updateJobStatus() {
+				if (updating) {
+					return;
+				}
+				updating = true;
+				$('#updateJobStatus img').attr('src', '../img/dinamic_job_status.gif');
+				$.ajax( {
+					url: '../job_status.php',
+					dataType: 'xml',
+					success: function (data) {
+						var table = $('.table-consulta tbody');
+						table.children().remove();
+						var Jobs = $(data).find('job');
+						Jobs.each( function () {
+							var j = $(this);
+							var jobRow = "<tr>";
+							jobRow += '<input type="hidden" value="'+j.find('description').text()+'">';
+							jobRow += '<td> '+ j.find('startDate').text() + ' </td>';
+							var pic = j.find('isrunning').text().trim() == 'true' ? "<img title='executando' src='../img/carregando.gif'>" : "<img title='finalizada' src='../img/check.svg'>";
+							jobRow += "<td> "+ pic + "</td>"
+							jobRow += '<td> <img class="app_img" src="../applications/'+ j.find('application').text().trim() +'.png" /> </td>';
+							jobRow += "<td> " + j.find('params').text() + " </td>";
+							jobRow += '<td width="15%"> <a href="../executaComando.php?down=' + j.find('description').text().trim() + '"><img src="../img/dowloads.jpg" height=25 title=Download></a></td>';
+							jobRow += "<td width='15%'> <a class='delBttn' title=''> <img src=../img/excluir.jpg height=25 title=Excluir> </a> </td>";
+							table.append(jobRow);
+						});
+
+						if (Jobs.length != 0) {
+							table.append("<tr> <th colspan='6'> <a id='cleanBttn'> Limpar <img src=../img/apagarTudo.png height=25 title=Excluir> </a> </th> </tr>");
+						} else {
+							table.append("<tr> <th colspan='6'>Não foi localizado nenhum arquivo</th> </tr>");
+						}
+
+						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
+						loadTableActions();
+						updating = false;
+						document.body.style.cursor='default';
+					}
+				});
+			}
+
+			function loadTableActions() {
+				$('.delBttn').click(function () {
+					console.log('delBttn');
+					var description = $(this).parent().siblings('input[type=hidden]').val();
+					console.log(description);
+					jQuery.ajax({
+						url: "../executaComando.php",
+						data: { excluir: description.trim() },
+						complete: ocultar_barra,
+						beforeSend: mostrar_barra,
+						method: 'GET',
+						error: alertFail,
+						success: updateJobStatus
+					});
+				});
+
+				$("#cleanBttn").click( function() {
+					console.log('cleanBttn');
+					jQuery.ajax({
+						url: "../executaComando.php",
+						data: { rmAll:"" },
+						method: 'GET',
+						complete: ocultar_barra,
+						beforeSend: mostrar_barra,
+						error: alertFail,
+						success: updateJobStatus
+					});
+				});
+			}
+
+			function alertFail(d) {
+				alert('algo deu errado...\n'+d.responseText)
+			}
+
 			$( function() {
 				$('.tab').tabs();
 				$('.progressbar').progressbar().progressbar('value', false);
 				$('#load').hide();
-
-				function mostrar_barra() {
-					$('#load').show('fast');
-				}
-
-				function ocultar_barra() {
-					$('#load').hide('fast');
-				}
-
-				function alertFail(d) {
-					alert('algo deu errado...\n'+d.responseText)
-				}
 
 				$('#namdCustomParams').change( function() {
 					var option = $(this).find("option:selected");
@@ -53,32 +124,6 @@
 
 					if($('#namdCustomParamsTable input[name='+name+']').length) return;
 					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
-				});
-
-				$('.delBttn').click(function () {
-					var description = $(this).parent().parent().children('input[type=hidden]').val();
-					jQuery.ajax({
-						url: "../executaComando.php",
-						data: { excluir: description },
-						complete: ocultar_barra,
-						beforeSend: mostrar_barra,
-						method: 'GET',
-						error: alertFail,
-						success: function() {location.reload();}
-					});
-				});
-
-				$('a').css({"cursor":"pointer"});
-				$("#cleanBttn").click( function() {
-					jQuery.ajax({
-						url: "../executaComando.php",
-						data: { rmAll:"" },
-						method: 'GET',
-						complete: ocultar_barra,
-						beforeSend: mostrar_barra,
-						error: alertFail,
-						success: function() {location.reload();}
-					});
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
@@ -115,11 +160,21 @@
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: function() {location.reload();}
+						success: updateJobStatus
 					});
 				});
-				
 				$('.help-ico').tooltip();
+
+				function clickUpdate() {
+					document.body.style.cursor='wait';
+					updateJobStatus();
+				}
+
+				$('#updateJobStatus').click( clickUpdate );
+
+				clickUpdate();
+				
+				setInterval(updateJobStatus, 30000);
 			});
 		</script>
 	</head>
@@ -303,7 +358,7 @@
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
 								<td> Número de interfaces de rádio por nó </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="3"> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
 								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
@@ -330,7 +385,7 @@
 									<input type="checkbox" checked name="graphs" value="1">Graphs<br>
 								</td>
 							</tr>
-						</table> 
+						</table>
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
 						<h1> Parâmetros da simulação </h1>
@@ -397,7 +452,10 @@
 	</form> </center>
 
 	<fieldset>
-		<legend>Simulações</legend>
+		<legend> 
+			Simulações 
+			<a id="updateJobStatus"> <img title="Atualizar status" src="../img/static_job_status.gif" alt="atualizar"> </a> 
+		</legend>
 			<table class="table table-consulta">
 				<thead>
 					<tr>
@@ -410,40 +468,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php
-						$allocated_infra = infra_controller::get_allocated_infrastructure($nome_user);
-						$flag = false;
-						foreach( $allocated_infra as $infra )	{
-							if (!$infra->is_ready()) continue;
-							$jobs = $infra->get_jobs();
-							foreach ($jobs as $jobID => $job) {
-								$dataInicio = $job->get_start_date();
-								$params = $job->get_params();
-								$runn = $job->is_running();
-								$description = infra_controller::job_to_description($infra, $job);
-								echo "<tr>
-										<input type='hidden' value=".$description." />
-										<td> $dataInicio </td>
-										<td>".( $runn ? "<img title='executando' src='../img/carregando.gif'>" : "<img title='finalizada' src='../img/check.svg'>" )."</td>
-										<td> <img class=\"app_img\" height=\"1000\" width=\"1000\" src=../applications/".trim($job->get_app()).".png /> </td>
-										<td> $params </td>
-										<td width='15%'><a href='executaComando.php?down=$description'><img src=../img/dowloads.jpg height=25 title=Download></a></td>
-										<td width='15%'><a class='delBttn') title=''><img src=../img/excluir.jpg height=25 title=Excluir></a></td>
-									</tr>";
-								$flag = true;
-							}
-						}
-						if($flag) {
-							echo"<tr>
-									<th colspan='6	'> <a id='cleanBttn'> Limpar <img src=../img/apagarTudo.png height=25 title=Excluir> </a> </th>
-								</tr>";
-						}else{
-							echo"<tr>
-									<th colspan='6'>Não foi localizado nenhum arquivo</th>
-								</tr>";
-						}
-					?>
-				</tbody> </table> <br/> </fieldset>
+					<tr>
+						<th colspan='6'> Aguarde enquanto a lista dos suas simulações é carregada </th>
+					</tr>
+				</tbody> 
+			</table> <br/> 
+		</fieldset>
 		</div>
 		<div id="footer"><?php include "rodape.php";?></div>
 	</body>
