@@ -1,6 +1,7 @@
 <?php
 
-	error_reporting(E_ALL ^ E_STRICT);
+	//error_reporting(E_ALL ^ E_STRICT);
+	error_reporting(0);
 	
 	include_once ("seguranca3.php"); // Inclui o arquivo com o sistema de segurança
 	protegePagina(); // Chama a função que protege a página
@@ -18,24 +19,24 @@
 		if (!$infra->is_ready()) continue;
 		$jobs = $infra->get_jobs();
 		foreach ($jobs as $job) {
-			echo '\t<job>';			
+			echo "<job>";			
 			
 			$dataInicio = $job->get_start_date();
-			echo "\t\t<startDate> $dataInicio </startDate>";
+			echo "<startDate>$dataInicio</startDate>";
 			
 			$runn = ($job->is_running()) ? 'true' : 'false';
-			echo "\t\t<isrunning> ". $runn . " </isrunning>";			
+			echo "<isrunning>". $runn . "</isrunning>";			
 
 			$app = $job->get_app();
-			echo "\t\t<application> $app </application>";
+			echo "<application>$app</application>";
 			
 			$description = infra_controller::job_to_description($infra, $job);
-			echo "\t\t<description> $description </description>";			
+			echo "<description>$description</description>";			
 			
 			$params = $job->get_params();
-			echo "\t\t<params> $params </params>";						
+			echo "<params>$params</params>";						
 			
-			echo '\t</job>';
+			echo "</job>";
 		}
 	}		
 	echo '</jobs>';

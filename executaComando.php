@@ -45,7 +45,7 @@
 			foreach ($jobs as $job) {
 				$job->dispose();
 			}
-			$infra->dispose();
+			if($infra->clean_of_jobs()) $infra->dispose();
 		}
 	}
 	

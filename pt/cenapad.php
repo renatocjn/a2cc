@@ -69,7 +69,7 @@
 						} else {
 							table.append("<tr> <th colspan='6'>Não foi localizado nenhum arquivo</th> </tr>");
 						}
-
+						
 						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
 						loadTableActions();
 						updating = false;
@@ -174,7 +174,7 @@
 
 				clickUpdate();
 				
-				setInterval(updateJobStatus, 30000);
+//				setInterval(updateJobStatus, 30000);
 			});
 		</script>
 	</head>
@@ -188,9 +188,7 @@
 	?>
 	<div id="midsection2">
 
-	<BR>
-	<div id='load' class='progressbar'> </div>
-	<BR>
+	
 
 	<center> <form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
@@ -342,11 +340,11 @@
 							<tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de nós por linha da grade."> </td>
 								<td> Tamanho Horizontal da grade (x-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="10"> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de nós por coluna da grade."> </td>
 								<td> Tamanho vertical da grade (y-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="10"> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa a distância física entre os nós da grade, essa distância é constante verticalmente e horizontalmente."> </td>
 								<td> Espaço entre nós (step)</td>
@@ -450,7 +448,7 @@
 			</tr>
 		</table>
 	</form> </center>
-
+	<div id='load' class='progressbar'> </div>
 	<fieldset>
 		<legend> 
 			Simulações 

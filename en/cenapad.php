@@ -89,7 +89,7 @@ var updating = false;
 						beforeSend: mostrar_barra,
 						method: 'GET',
 						error: alertFail,
-						success: updateJobStatus
+						success: clickUpdate
 					});
 				});
 
@@ -101,7 +101,7 @@ var updating = false;
 						complete: ocultar_barra,
 						beforeSend: mostrar_barra,
 						error: alertFail,
-						success: updateJobStatus
+						success: clickUpdate
 					});
 				});
 			}
@@ -158,7 +158,7 @@ var updating = false;
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: updateJobStatus
+						success: clickUpdate
 					});
 				});
 				$('.help-ico').tooltip();
