@@ -12,17 +12,17 @@ interface infra_handler {
 	function get_jobs();
 
 	//get allocation status for that handler
-	function is_ready();	
-	
+	function is_ready();
+
 	//Start a job using this infrastructure
 	function start_job ($application, $params);
-	
+
 	public function get_id();
-	
+
 	function get_infra_type();
-	
+
 	function dispose();
-	
+
 	function clean_of_jobs();
 }
 
@@ -30,8 +30,8 @@ interface infra_handler {
 class openstack_handler implements infra_handler {
 	var $connection;
 	var $VMID;
-	var $status;	
-	
+	var $status;
+
 	static function getCloudConnection() {
 		$cloud_connection = new ssh_conecta();
 		$cloud_connection->set_host('200.19.191.240');
@@ -40,11 +40,11 @@ class openstack_handler implements infra_handler {
 		$cloud_connection->set_passwd('senha.123');
 		if ($cloud_connection->login()) {
 			return $cloud_connection;
-		} else { 
+		} else {
 			throw new Exception("Can't connect to openstack cloud");
 		}
 	}
-	
+
 	function dispose() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
 		$machineIP = $cloud_connection->command("source admin-openrc.sh && nova show {$this->VMID}|grep network|xargs|cut -d ' ' -f 6");
@@ -55,7 +55,7 @@ class openstack_handler implements infra_handler {
 	function get_infra_type() {
 		return 'openstack';
 	}
-	
+
 	public function get_id() {
 		return $this->VMID;
 	}
@@ -81,14 +81,14 @@ class openstack_handler implements infra_handler {
 		$this->VMID = $vm_id;
 		$cloud_connection = openstack_handler::getCloudConnection();
 		$user = $_SESSION['usuarioLogin'];
-		
+
 		$aux = preg_split("/\s+/", trim($cloud_connection->command("nova --os-tenant-name $user show {$vm_id}|grep -e network -e tenant")));
 		$owner = $aux[9];
-		 
+
 		if ($owner != $user) {
 			throw new Exception("Usuario não é dono da maquina!");
 		}
-		
+
 		$machineIP = $aux[4];
 
 		$this->connection = new ssh_conecta();
@@ -116,7 +116,7 @@ class openstack_handler implements infra_handler {
 	static function get_allocated_handlers($user) {
 		$cloud_connection = opennebula_handler::getCloudConnection();
 		$user = $_SESSION['usuarioLogin'];
-		
+
 		$vm_list = explode("\n",$cloud_connection->command("source admin-openrc.sh && nova --os-tenant-name $user list --minimal"));
 		$handlers = array();
 		foreach ($vm_list as $vm) {
@@ -128,10 +128,10 @@ class openstack_handler implements infra_handler {
 		}
 		return $handlers;
 	}
-	
+
 	function start_job($application, $params) {
 //		$t = time(); //benchmarking
-		while (!$this->connection->login('key')) {			
+		while (!$this->connection->login('key')) {
 			sleep(15);
 		}
 //		print 'machineDeployTime '.(time() - $t)."\n"; //benchmarking
@@ -144,19 +144,19 @@ class openstack_handler implements infra_handler {
 		}
 		$outdir = "/root/jobs/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
-		
-		
+
+
 //		$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
 		unset($params['user_description']);
-		$this->connection->command('echo '.$application.' > '.$outdir.'.app');		
+		$this->connection->command('echo '.$application.' > '.$outdir.'.app');
 
 		$r = run_app($params, $outdir, $this->connection);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-		
+
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		$this->connection->command('nohup '.$r['cmd']." &> $outdir/job.log& echo $! > $outdir/.pid");
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log"); //benchmarking
-		
+
 		return true;
 	}
 //}'*/
@@ -164,7 +164,7 @@ class openstack_handler implements infra_handler {
 class opennebula_handler implements infra_handler {
 	var $connection;
 	var $VMID;
-	var $status;	
+	var $status;
 
 	private static function get_allocated_vmids($user = NULL) {
 		$con = mysqli_connect("localhost", "a2cc", "1!2@3#");
@@ -173,13 +173,13 @@ class opennebula_handler implements infra_handler {
 		if($user)
 			$sql .= " where username='$user'";
 		$result = mysqli_query($con, $sql);
-		
+
 		$r = array();
 		while(($t = mysqli_fetch_assoc($result)))
 			$r[] = intval($t['vmid']);
 		return $r;
 	}
-	
+
 	private static function register_vm($vmid) {
 		$con = mysqli_connect("localhost", "a2cc", "1!2@3#");
 		$username = mysqli_real_escape_string($con, trim($_SESSION['usuarioLogin']));
@@ -187,14 +187,14 @@ class opennebula_handler implements infra_handler {
 		mysqli_query($con, "insert into a2cc.opennebula_allocated_vms values ('$username', $vmid)");
 		print mysqli_error($con);
 	}
-	
+
 	private static function unregister_vm($vmid) {
 		$con = mysqli_connect("localhost", "a2cc", "1!2@3#");
 		$username = mysqli_real_escape_string($con, trim($_SESSION['usuarioLogin']));
 		$vmid = mysqli_real_escape_string($con, $vmid);
 		mysqli_query($con, "delete from a2cc.opennebula_allocated_vms where username='$username' and vmid=$vmid");
 	}
-	
+
 	static function getCloudConnection() {
 		$cloud_connection = new ssh_conecta();
 		$cloud_connection->set_host('200.19.191.230');
@@ -204,11 +204,11 @@ class opennebula_handler implements infra_handler {
 		$cloud_connection->set_priv_key('/etc/ON-controller.key');
 		if ($cloud_connection->login('key')) {
 			return $cloud_connection;
-		} else { 
+		} else {
 			throw new Exception("Can't connect to opennebula cloud");
 		}
 	}
-	
+
 	function dispose() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
 		$machineIP = $cloud_connection->command("onevm delete ".$this->VMID);
@@ -218,7 +218,7 @@ class opennebula_handler implements infra_handler {
 	function get_infra_type() {
 		return 'opennebula';
 	}
-	
+
 	public function get_id() {
 		return $this->VMID;
 	}
@@ -234,12 +234,12 @@ class opennebula_handler implements infra_handler {
 		}
 		return $r;
 	}
-	
+
 	function clean_of_jobs() {
 		$jobs = $this->connection->command("find jobs/ -maxdepth 2 -type d -regex .*/[0-9]+$");
 		if(trim($jobs) == "")
 			return true;
-		else 
+		else
 			return false;
 	}
 
@@ -250,10 +250,10 @@ class opennebula_handler implements infra_handler {
 	function __construct($vm_id, $machineIP=null) {
 		$this->VMID = $vm_id;
 		$cloud_connection = opennebula_handler::getCloudConnection();
-		
+
 		$owner = trim($cloud_connection->command("onevm show $vm_id|grep USER|xargs|cut -d ' ' -f 3"));
-		
-		if ($machineIP === null) {	
+
+		if ($machineIP === null) {
 			$machineIP = $cloud_connection->command("onevm show ".$this->VMID."|grep publica|xargs|cut -d ' ' -f 5");
 			$machineIP = trim($machineIP);
 		}
@@ -289,10 +289,10 @@ class opennebula_handler implements infra_handler {
 		foreach ($vm_list as $vmid) $handlers[] = new opennebula_handler($vmid);
 		return $handlers;
 	}
-	
+
 	function start_job($application, $params) {
 //		$t = time();
-		while (!$this->connection->login('key')) {			
+		while (!$this->connection->login('key')) {
 			sleep(15);
 		}
 //		print 'machineDeployTime '.(time() - $t)."\n";
@@ -306,27 +306,27 @@ class opennebula_handler implements infra_handler {
 		opennebula_handler::register_vm($this->VMID);
 		$outdir = opennebula_job::get_jobs_dir()."/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
-		
+
 		//$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
 		//unset($params['user_description']);
-		$this->connection->command('echo '.$application.' > '.$outdir.'.app');		
+		$this->connection->command('echo '.$application.' > '.$outdir.'.app');
 
 		$r = run_app($params, $outdir, $this->connection);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-		
+
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		$this->connection->command('nohup '.$r['cmd']." &> ".$outdir."job.log& echo $! > ".$outdir.".pid");
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log");
-		
+
 		return true;
 	}
 }
 
 class cluster_handler implements infra_handler {
 	var $cluster_connection;
-	var $outdir; 
+	var $outdir;
 	var $cpus;
-	
+
 	function __construct($id = null) {
 		$this->cluster_connection = new ssh_conecta();
 		$this->cluster_connection->set_host('padufc.cenapad.ufc.br');
@@ -337,13 +337,13 @@ class cluster_handler implements infra_handler {
 			throw new Exception('Usuário desconhecido ou cluster indisponivel');
 		}
 		$this->outdir = trim(cluster_job::get_jobs_dir().'/');
-		$this->cluster_connection->command('mkdir -p '.$this->outdir); 
+		$this->cluster_connection->command('mkdir -p '.$this->outdir);
 	}
-	
+
 	function set_cpus($count) {
-			$this->cpus = $count; 
+			$this->cpus = $count;
 	}
-	
+
 	// These are for compatibility with cloud
 	static function get_allocated_handlers($user) {
 		return new cluster_handler();
@@ -359,7 +359,7 @@ class cluster_handler implements infra_handler {
 	function get_infra_type() {
 		return 'cluster';
 	}
-	
+
 	function get_id() {
 		return 0;
 	}
@@ -368,7 +368,7 @@ class cluster_handler implements infra_handler {
 	function is_ready() {
 		return true;
 	}
-	
+
 	function get_jobs() {
 		$jobs = $this->cluster_connection->command('ls -1 '.$this->outdir);
 		$jobs = preg_split('/\s+/', $jobs);
@@ -381,7 +381,7 @@ class cluster_handler implements infra_handler {
 
 		return $r;
 	}
-	
+
 	function start_job($application, $params) {
 		include_once ("applications/".$application.".php");
 		$existing_runs = explode("\n", $this->cluster_connection->command("ls -1 ".$this->outdir));
@@ -395,30 +395,30 @@ class cluster_handler implements infra_handler {
 
 		$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
 		unset($params['user_description']);
-		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');		
+		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');
 
 		$r = run_app($params, $outdir, $this->cluster_connection);
 		$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-		
+
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
 //		print($r['cmd']);
 		$this->cluster_connection->command('nohup srun -p gpu '.$r['cmd']." &> {$outdir}job.log& echo $! > $outdir.pid");
 //		print $this->cluster_connection->command('srun -p gpu '.$r['cmd']);
-		
+
 		return true;
 	}
 }
 
 class infra_controller {
-	
+
 	static function get_allocated_infrastructure($user) {
 		$r = opennebula_handler::get_allocated_handlers($user);
 //		$r2 = openstack_handler::get_allocated_handlers($user);
 //		$r = array_merge($r1, $r2);
-		$r[] = cluster_handler::get_allocated_handlers($user);
+//		$r[] = cluster_handler::get_allocated_handlers($user);
 		return $r;
 	}
-	
+
 	static function job_from_description($description) {
 		$description = explode('/', $description);
 		$infra = $description[0];
@@ -433,22 +433,22 @@ class infra_controller {
 		$jobs = $handler->get_jobs();
 		return $jobs[$job_id];
 	}
-	
+
 	static function dispose_vm ($description) {
 		$description = explode('/', $description);
 		$infra = $description[0];
 		$infra_id = $description[1];
-		
+
 		if ($infra == 'opennebula') {
 			$handler = new opennebula_handler($infra_id);
 		} else {
 			$handler = new cluster_handler($infra_id);
 		}
-		
+
 		if ($handler->clean_of_jobs())
 			$handler->dispose();
 	}
-	
+
 	static function job_to_description($infra, $job) {
 		$type = $infra->get_infra_type();
 		$infra_id = $infra->get_id();
@@ -463,13 +463,13 @@ abstract class job {
 	protected $sim_id;
 	protected $job_dir;
 	private $startDate;
-	
+
 	static abstract function get_jobs_dir();
 
 	function __construct($con, $sid) {
 		$this->connection = clone $con;
 		$this->sim_id = trim($sid);
-		
+
 		$this->job_dir = static::get_jobs_dir();
 		$this->connection->cd();
 		$tmp = $this->connection->command("ls -l ".$this->job_dir."|grep ".$this->sim_id);
@@ -484,12 +484,12 @@ abstract class job {
 	}
 
 	abstract function dispose();
-	
+
 	function download_all_files() {
 		$nome_user = $_SESSION['usuarioLogin'];
 		$arquivo_remoto = 'files.tgz';
 		$this->connection->cd($this->job_dir);
-		
+
 		$this->connection->command("tar czf $arquivo_remoto --exclude '.*' *");
 		if (!file_exists('/tmp/ssh-down/'. $nome_user)) {
 			if (!file_exists('/tmp/ssh-down/')) {
@@ -530,16 +530,16 @@ abstract class job {
 	function get_start_date() {
 		return $this->startDate;
 	}
-	
+
 	function get_params() {
 		return $this->connection->command('cat '.$this->job_dir.'/.params.txt');
 	}
-	
-	
+
+
 	function get_app() {
 		return $this->connection->command('cat '.$this->job_dir.'/.app');
 	}
-	
+
 	function get_id() {
 		return $this->sim_id;
 	}
@@ -549,7 +549,7 @@ class cluster_job extends job {
 	static function get_jobs_dir() {
 		return "/home/{$_SESSION['usuarioLogin']}/jobs";
 	}
-	
+
 	function dispose() {
 		if ($this->is_running()) {
 			$pid = trim($this->connection->command("cat ".$this->job_dir."/.pid"));
@@ -558,12 +558,12 @@ class cluster_job extends job {
 		$this->connection->command("rm -R ".$this->job_dir);
 	}
 }
-	
+
 class opennebula_job extends job {
 	static function get_jobs_dir() {
 		return '/home/clouduser/jobs/'.$_SESSION['usuarioLogin'];
 	}
-	
+
 	function dispose() {
 	if ($this->is_running()) {
 			$pid = trim($this->connection->command("cat ".$this->job_dir."/.pid"));
