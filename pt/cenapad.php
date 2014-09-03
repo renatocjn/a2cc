@@ -23,7 +23,7 @@
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
 
 		<script type='text/javascript'>
-			var updating = false;
+			var blocked = false;
 
 			function removeRow(elem) {
 				$(elem).parents('tr').remove();
@@ -38,10 +38,10 @@
 			}
 
 			function updateJobStatus() {
-				if (updating) {
+				if (blocked) {
 					return;
 				}
-				updating = true;
+				blocked = true;
 				$('#updateJobStatus img').attr('src', '../img/dinamic_job_status.gif');
 				$.ajax( {
 					url: '../job_status.php',
@@ -72,7 +72,7 @@
 						
 						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
 						loadTableActions();
-						updating = false;
+						blocked = false;
 						document.body.style.cursor='default';
 					}
 				});
@@ -127,6 +127,10 @@
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
+					if (blocked) {
+						return;
+					}
+					blocked = true;
 					var panel = $(this);
 					var appURI = "";
 					do {
@@ -160,7 +164,7 @@
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: updateJobStatus
+						success: function() { blocked = false; updateJobStatus(); }
 					});
 				});
 				$('.help-ico').tooltip();
@@ -174,7 +178,7 @@
 
 				clickUpdate();
 				
-//				setInterval(updateJobStatus, 30000);
+				setInterval(updateJobStatus, 30000);
 			});
 		</script>
 	</head>
@@ -467,7 +471,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<th colspan='6'> Aguarde enquanto a lista dos suas simulações é carregada </th>
+						<th colspan='6'> Aguarde enquanto a lista das suas simulações é carregada </th>
 					</tr>
 				</tbody> 
 			</table> <br/> 

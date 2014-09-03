@@ -28,14 +28,12 @@
 				break;
 			}
 		}
-		var_dump($h);
 		if (!$h) {
 			$h = opennebula_handler::allocate_new_handler();
 //			$h = cluster_handler::allocate_new_handler();
 		}
 		if (!$h) 
 			 throw new Exception("Não pode ser alocado novos recursos");
-		var_dump($h);
 		$r = $h->start_job($application, $params);
 		if (!$r) {
 			 throw new Exception("Job não pode ser iniciado");

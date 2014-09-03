@@ -280,6 +280,7 @@ class opennebula_handler implements infra_handler {
 		$description = preg_split('/\s+/', $description);
 		$vmid = $description[1];
 		opennebula_handler::register_vm($vmid);
+		sleep(60);
 		return new opennebula_handler($vmid);
 	}
 

@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
 
 		<script type='text/javascript'>
-var updating = false;
+			var blocked = false;
 
 			function removeRow(elem) {
 				$(elem).parents('tr').remove();
@@ -39,10 +39,10 @@ var updating = false;
 			}
 
 			function updateJobStatus() {
-				if (updating) {
+				if (blocked) {
 					return;
 				}
-				updating = true;
+				blocked = true;
 				$('#updateJobStatus img').attr('src', '../img/dinamic_job_status.gif');
 				$.ajax( {
 					url: '../job_status.php',
@@ -73,10 +73,15 @@ var updating = false;
 
 						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
 						loadTableActions();
-						updating = false;
+						blocked = false;
 						document.body.style.cursor='default';
 					}
 				});
+			}
+
+			function clickUpdate() {
+				document.body.style.cursor='wait';
+				updateJobStatus();
 			}
 
 			function loadTableActions() {
@@ -125,6 +130,10 @@ var updating = false;
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
+					if (blocked) {
+						return;
+					}
+					blocked = true;
 					var panel = $(this);
 					var appURI = "";
 					do {
@@ -158,7 +167,7 @@ var updating = false;
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: clickUpdate
+						success: function() { blocked = false; updateJobStatus(); }
 					});
 				});
 				$('.help-ico').tooltip();
@@ -340,11 +349,11 @@ var updating = false;
 							<tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of nodes in each line of the grid."> </td>
 								<td> Horizontal size of the disc (x-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="10"> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of nodes in each column of the grid."> </td>
 								<td> Vertical size of the disc (y-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="10"> </td>
+								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the physical distance between nodes of the grid, this distance is constant vertically and horizontally."> </td>
 								<td> Distance among nodes (step)</td>
@@ -467,7 +476,7 @@ var updating = false;
 				</thead>
 				<tbody>
 					<tr>
-						<th colspan='6'> Aguarde enquanto a lista dos suas simulações é carregada </th>
+						<th colspan='6'> Wait while your simulations are loaded </th>
 					</tr>
 				</tbody> </table> <br/> </fieldset>
 		</div>
