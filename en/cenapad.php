@@ -317,12 +317,12 @@
 		-->
 		<div id='ns3' class='tab'> <input type='hidden' value='ns3'>
 			<ul>
-				<li><a href="#mesh_tab"> Mesh networks </a> </li>
-				<!--<li><a href="#lte"> Redes LTE </a> </li>
-				<li><a href="#vannet"> Redes VANNETS </a> </li>
-				<li><a href="#generic"> Script Generico </a> </li>-->
+				<li><a href="#mesh_tab"> Mesh Networks </a> </li>
+				<!--<li><a href="#lte"> LTE Networks </a> </li>
+				<li><a href="#vannet"> VANNET Networks </a> </li>-->
+				<li><a href="#generic"> Generic script </a> </li>
 			</ul>
-			<!--<div id='generic'> <input type='hidden' value='generic'>
+			<div id='generic'> <input type='hidden' value='generic'>
 				<table>
 					<tr>
 						<td> Arquivo de script ns3 </td>
@@ -333,7 +333,7 @@
 					</tr>
 				</table>
 			</div>
-			<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
+			<!--<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
 			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div> -->
 			<div id='mesh_tab' class='tab'>
 				<input type='hidden' value="mesh">

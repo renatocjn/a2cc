@@ -2,14 +2,19 @@
 
 	//error_reporting(E_ALL ^ E_STRICT);
 	error_reporting(0);
-	
+	include_once("http_response_code.php");
 	include_once ("seguranca3.php"); // Inclui o arquivo com o sistema de segurança
 	protegePagina(); // Chama a função que protege a página
 	
 	include_once 'infra_handler.php';
 	$nome_user=$_SESSION['usuarioNome'];//variavel que contem o login do usuario logado
 	
-	$allocated_infra = infra_controller::get_allocated_infrastructure($nome_user);
+	try {
+		$allocated_infra = infra_controller::get_allocated_infrastructure($nome_user);
+	} catch (Exception $e) {
+		print $e->getMessage()."\n";
+		http_response_code(500);
+	}	
 	
 	//header("Content-type: text/xml");
 	echo '<?xml version="1.0"?>';

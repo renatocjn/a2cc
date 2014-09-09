@@ -9,8 +9,8 @@
 	
 	$app = 'ns3/mesh/grid';
 	$params = array('step'=>'100', 'interface'=>'2');
-//	$sizes = array(3=>3, 5=>10, 10=>10, 15=>10, 20=>10);
-	$sizes = array(3=>3, 5=>10, 10=>10, 15=>10);
+	$sizes = array(3=>3, 5=>10, 10=>10, 15=>10, 20=>10);
+//	$sizes = array(3=>3, 5=>10, 10=>10, 15=>10);
 	$num_runs = 10;
 	$EOL = "\n";
 

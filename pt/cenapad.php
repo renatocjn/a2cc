@@ -80,9 +80,7 @@
 
 			function loadTableActions() {
 				$('.delBttn').click(function () {
-					console.log('delBttn');
 					var description = $(this).parent().siblings('input[type=hidden]').val();
-					console.log(description);
 					jQuery.ajax({
 						url: "../executaComando.php",
 						data: { excluir: description.trim() },
@@ -203,7 +201,7 @@
 			<li><a href="#octave"> Octave </a> </li>-->
 		</ul>
 
-		<!-- <div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
+		<!--<div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
 		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div>
 		<div id='octave'> <input type='hidden' value='octave'> Não implementado! </div>
 
@@ -309,15 +307,15 @@
 			<table id="namdCustomParamsTable" > 	</table>
 
 		</div>
-		-->
+	-->
 		<div id='ns3' class='tab'> <input type='hidden' value='ns3'>
 			<ul>
 				<li><a href="#mesh_tab"> Redes Mesh </a> </li>
 				<!--<li><a href="#lte"> Redes LTE </a> </li>
-				<li><a href="#vannet"> Redes VANNETS </a> </li>
-				<li><a href="#generic"> Script Generico </a> </li>-->
+				<li><a href="#vannet"> Redes VANNETS </a> </li>-->
+				<li><a href="#generic"> Script Generico </a> </li>
 			</ul>
-			<!--<div id='generic'> <input type='hidden' value='generic'>
+			<div id='generic'> <input type='hidden' value='generic'>
 				<table>
 					<tr>
 						<td> Arquivo de script ns3 </td>
@@ -328,8 +326,8 @@
 					</tr>
 				</table>
 			</div>
-			<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
-			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div> -->
+			<!--<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
+			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div>-->
 			<div id='mesh_tab' class='tab'>
 				<input type='hidden' value="mesh">
 				<ul>
@@ -367,7 +365,7 @@
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
-								<td> Tamanho dos pacotes (KBytes) </td>
+								<td> Tamanho dos pacotes (Bytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
@@ -418,7 +416,7 @@
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
-								<td> Tamanho dos pacotes (KBytes) </td>
+								<td> Tamanho dos pacotes (Bytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>

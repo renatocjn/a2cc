@@ -21,7 +21,7 @@ interface infra_handler {
 
 	function get_infra_type();
 
-	function dispose();
+	function dispose_if_necessary();
 
 	function clean_of_jobs();
 }
@@ -45,7 +45,7 @@ class openstack_handler implements infra_handler {
 		}
 	}
 
-	function dispose() {
+	function dispose_if_necessary() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
 		$machineIP = $cloud_connection->command("source admin-openrc.sh && nova show {$this->VMID}|grep network|xargs|cut -d ' ' -f 6");
 		$cloud_connection->command("source admin-openrc.sh && nova delete ".$this->VMID);
@@ -185,7 +185,6 @@ class opennebula_handler implements infra_handler {
 		$username = mysqli_real_escape_string($con, trim($_SESSION['usuarioLogin']));
 		$vmid = mysqli_real_escape_string($con, $vmid);
 		mysqli_query($con, "insert into a2cc.opennebula_allocated_vms values ('$username', $vmid)");
-		print mysqli_error($con);
 	}
 
 	private static function unregister_vm($vmid) {
@@ -209,10 +208,12 @@ class opennebula_handler implements infra_handler {
 		}
 	}
 
-	function dispose() {
-		$cloud_connection = opennebula_handler::getCloudConnection();
+	function dispose_if_necessary() {
+		/*$cloud_connection = opennebula_handler::getCloudConnection();
 		$machineIP = $cloud_connection->command("onevm delete ".$this->VMID);
-		opennebula_handler::unregister_vm($this->VMID);
+		opennebula_handler::unregister_vm($this->VMID);*/
+		if (empty($this->get_jobs()))
+			opennebula_handler::unregister_vm($this->VMID);
 	}
 
 	function get_infra_type() {
@@ -273,7 +274,7 @@ class opennebula_handler implements infra_handler {
 
 	static function allocate_new_handler() {
 		$cloud_connection = opennebula_handler::getCloudConnection();
-		$description = $cloud_connection->command('onevm create --disk 14 --memory 1024 --cpu 1 --nic oneadmin[publica] --net_context --ssh /etc/vm.key.pub --vnc --user '.$_SESSION['usuarioLogin'].' --password '.$_SESSION['usuarioSenha']);
+		$description = $cloud_connection->command('onevm create --disk 14 --memory 1024 --cpu 1 --nic oneadmin[publica] --net_context --ssh /etc/vm.key.pub --vnc --user a2cc --password 1!2@3#');
 		if( !preg_match('/^ID: [0-9]+$/', $description) ) {
 			return false;
 		}
@@ -285,18 +286,24 @@ class opennebula_handler implements infra_handler {
 	}
 
 	static function get_allocated_handlers($user = NULL) {
-		$vm_list = opennebula_handler::get_allocated_vmids($user);
+		if($user)
+			$vm_list = opennebula_handler::get_allocated_vmids($user);
+		else {
+			$cloud_connection = opennebula_handler::getCloudConnection();
+			$r = $cloud_connection->command('onevm list --csv --list ID,USER --filter USER=a2cc|cut -d, -f1');
+			$vm_list = array_slice( preg_split('/\s+/', $r), 1 );
+		}
 		$handlers = array();
 		foreach ($vm_list as $vmid) $handlers[] = new opennebula_handler($vmid);
 		return $handlers;
 	}
 
 	function start_job($application, $params) {
-//		$t = time();
+		//$t = time();
 		while (!$this->connection->login('key')) {
 			sleep(15);
 		}
-//		print 'machineDeployTime '.(time() - $t)."\n";
+		//print 'machineDeployTime '.(60 + time() - $t)."\n";
 		include_once ("applications/".$application.".php");
 		$existing_runs = explode("\n", $this->connection->command("ls -1 ".opennebula_job::get_jobs_dir()));
 		while (true) {
@@ -346,13 +353,13 @@ class cluster_handler implements infra_handler {
 	}
 
 	// These are for compatibility with cloud
-	static function get_allocated_handlers($user) {
+	static function get_allocated_handlers($user = NULL) {
 		return new cluster_handler();
 	}
 	static function allocate_new_handler() {
 		return new cluster_handler();
 	}
-	function dispose() {}
+	function dispose_if_necessary() {}
 	function clean_of_jobs() {
 		return empty($this->get_jobs());
 	}
@@ -416,23 +423,28 @@ class infra_controller {
 		$r = opennebula_handler::get_allocated_handlers($user);
 //		$r2 = openstack_handler::get_allocated_handlers($user);
 //		$r = array_merge($r1, $r2);
-//		$r[] = cluster_handler::get_allocated_handlers($user);
+		$r[] = cluster_handler::get_allocated_handlers($user);
 		return $r;
 	}
 
-	static function job_from_description($description) {
+	static function parse_description($description) {
 		$description = explode('/', $description);
 		$infra = $description[0];
 		$infra_id = $description[1];
 		$job_id = $description[2];
-
+		$r = array();
+		
 		if ($infra == 'opennebula') {
 			$handler = new opennebula_handler($infra_id);
 		} else {
 			$handler = new cluster_handler($infra_id);
 		}
-		$jobs = $handler->get_jobs();
-		return $jobs[$job_id];
+		$r['infra'] = $handler;
+		
+		$jobs = $handler->get_jobs();		
+		$r['job'] = $jobs[$job_id];
+		
+		return $r;
 	}
 
 	static function dispose_vm ($description) {
@@ -447,7 +459,7 @@ class infra_controller {
 		}
 
 		if ($handler->clean_of_jobs())
-			$handler->dispose();
+			$handler->dispose_if_necessary();
 	}
 
 	static function job_to_description($infra, $job) {
