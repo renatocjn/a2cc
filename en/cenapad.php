@@ -37,6 +37,10 @@
 			function ocultar_barra() {
 				$('#load').hide('fast');
 			}
+			
+			function alertFail(d) {
+				alert('Something went wrong...\n'+d.responseText)
+			}
 
 			function updateJobStatus() {
 				if (blocked) {
@@ -75,7 +79,8 @@
 						loadTableActions();
 						blocked = false;
 						document.body.style.cursor='default';
-					}
+					},
+					error: alertFail
 				});
 			}
 
@@ -109,10 +114,6 @@
 						success: clickUpdate
 					});
 				});
-			}
-
-			function alertFail(d) {
-				alert('Something went wrong...\n'+d.responseText)
 			}
 
 			$( function() {

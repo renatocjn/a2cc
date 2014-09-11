@@ -14,6 +14,7 @@
 	} catch (Exception $e) {
 		print $e->getMessage()."\n";
 		http_response_code(500);
+		die;
 	}	
 	
 	//header("Content-type: text/xml");

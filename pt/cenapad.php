@@ -37,6 +37,10 @@
 				$('#load').hide('fast');
 			}
 
+			function alertFail(d) {
+				alert('algo deu errado...\n'+d.responseText)
+			}
+
 			function updateJobStatus() {
 				if (blocked) {
 					return;
@@ -74,7 +78,8 @@
 						loadTableActions();
 						blocked = false;
 						document.body.style.cursor='default';
-					}
+					},
+					error: alertFail
 				});
 			}
 
@@ -104,10 +109,6 @@
 						success: updateJobStatus
 					});
 				});
-			}
-
-			function alertFail(d) {
-				alert('algo deu errado...\n'+d.responseText)
 			}
 
 			$( function() {
