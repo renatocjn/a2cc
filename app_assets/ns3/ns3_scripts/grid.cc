@@ -55,6 +55,7 @@
 #include "ns3/random-variable.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/hwmp-protocol.h"
+#include "ns3/netanim-module.h"
 
 #include <iostream>
 #include <sstream>
@@ -93,6 +94,7 @@ private:
   bool      m_pcap;
   bool      m_xml;
   bool      m_flowmonitor;
+  bool      m_netanim;
   std::string m_stack;
   std::string m_root;
   /// List of network nodes
@@ -126,6 +128,7 @@ MeshTest::MeshTest () :
   m_pcap (false),
   m_xml (true),
   m_flowmonitor (true),
+  m_netanim (true),
   m_stack ("ns3::Dot11sStack"),
   m_root ("ff:ff:ff:ff:ff:ff")
 {
@@ -152,7 +155,7 @@ MeshTest::Configure (int argc, char *argv[])
   cmd.AddValue ("flowmonitor", "Enable Flow monitor traces on all flows.", m_flowmonitor);
   cmd.AddValue ("stack",  "Type of protocol stack.", m_stack);
   cmd.AddValue ("root", "Mac address of root mesh point in HWMP", m_root);
-
+  cmd.AddValue ("netanim", "Enable NetAnim animation traces", m_netanim);
   cmd.Parse (argc, argv);
   NS_LOG_DEBUG ("Grid:" << m_xSize << "*" << m_ySize);
   NS_LOG_DEBUG ("Simulation time: " << m_totalTime << " s");
@@ -265,11 +268,16 @@ MeshTest::Run ()
   flowMonitor = fmh.GetMonitor();
   
   if (m_xml) Simulator::Schedule (Seconds (m_totalTime), &MeshTest::Report, this);
+  
+  AnimationInterface anim ("netanim.xml");
+  
+  if (m_flowmonitor) {
+    flowMonitor->CheckForLostPackets();
+    flowMonitor->SerializeToXmlFile("FlowMonitorResults.xml", true, true);
+  }
+  
   Simulator::Stop (Seconds (m_totalTime));
   Simulator::Run ();
-  
-  flowMonitor->CheckForLostPackets();
-  flowMonitor->SerializeToXmlFile("FlowMonitorResults.xml", true, true);
   
   Simulator::Destroy ();
   return 0;
