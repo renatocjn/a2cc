@@ -102,7 +102,7 @@
 						success: clickUpdate
 					});
 				});
-
+				
 				$("#cleanBttn").click( function() {
 					jQuery.ajax({
 						url: "../executaComando.php",
@@ -116,7 +116,12 @@
 				});
 			}
 
-			$( function() {
+			$( function() {				
+				$('.help_container .help_contents').hide();
+				$('.help_container .help_bar').click( function () {
+					$('.help_container .help_contents').toggle(700);
+				});
+				
 				$('.tab').tabs();
 				$('.progressbar').progressbar().progressbar('value', false);
 				$('#load').hide();
@@ -131,10 +136,6 @@
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
-					if (blocked) {
-						return;
-					}
-					blocked = true;
 					var panel = $(this);
 					var appURI = "";
 					do {
@@ -168,7 +169,7 @@
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: function() { blocked = false; updateJobStatus(); }
+						success: updateJobStatus
 					});
 				});
 				$('.help-ico').tooltip();
@@ -200,7 +201,7 @@
 	<div id='load' class='progressbar'> </div>
 	<BR>
 
-	<center> <form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
+	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>
 			<!--<li><a href="#namd"> Namd </a> </li>
@@ -344,39 +345,39 @@
 				</ul>
 
 				<div id='grid'> <input type='hidden' value="grid">
-						<img id='grid-help-pic' src="../img/mesh-grid.jpg">
+						<img class='mesh-help-pic' src="../img/mesh-grid.jpg">
 						<h1> Simulation Parameters </h1>
 						<table class="table-cadastro">
 							<tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of nodes in each line of the grid."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of nodes in each line of the grid."> </td>
 								<td> Horizontal size of the disc (x-size) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of nodes in each column of the grid."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of nodes in each column of the grid."> </td>
 								<td> Vertical size of the disc (y-size) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the physical distance between nodes of the grid, this distance is constant vertically and horizontally."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the physical distance between nodes of the grid, this distance is constant vertically and horizontally."> </td>
 								<td> Distance among nodes (step)</td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is usually larger than the simulated time."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is usually larger than the simulated time."> </td>
 								<td> Simulation Time (seconds)</td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of radio interfaces conected to each node."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces conected to each node."> </td>
 								<td> Number of radio interfaces in each node </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
 								<td> Packet transmission interval (seconds) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
 								<td> Packet size (KBytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
 								<td> Channel allocation strategy (channels) </td>
 								<td>
 									<select name="channels">
@@ -385,7 +386,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
 								<td>Select desired traces</td>
 								<td>
 									<input type="checkbox" checked name="xml" value="1">XML<br>
@@ -394,40 +395,48 @@
 								</td>
 							</tr>
 						</table>
+						
+						<div class="help_container">
+							<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+							<div id="dialog" class="help_contents" title="Help">
+								Colocar ajuda para grade 
+							</div>
+						</div>
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
+						<img class='mesh-help-pic' src="../img/mesh-uniform_disc-en.png">
 						<h1> Simulation Parameters </h1>
 						<table class="table-cadastro">
 							<tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Number of nodes to be created and allocated on the disc."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Number of nodes to be created and allocated on the disc."> </td>
 								<td> Number of nodes </td>
 								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Radious of the disc that will bound the allocation of the nodes, these nodes are allocated in a random matter."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Radious of the disc that will bound the allocation of the nodes, these nodes are allocated in a random matter."> </td>
 								<td> Radius of the disc (meters) </td>
 								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is normally larger than the simulated time."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is normally larger than the simulated time."> </td>
 								<td> Simulation time (seconds) </td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of flows to be created on the simulation, every flow has the same destination(server) but have different origins(clients)"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of flows to be created on the simulation, every flow has the same destination(server) but have different origins(clients)"> </td>
 								<td> Number of flows to be generated </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the number of radio interfaces conected on each node."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces conected on each node."> </td>
 								<td> Number of radios interfaces per node </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
 								<td> Time interval between packet transmission (seconds) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
 								<td> Packet size (KBytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
 								<td> Channel allocation strategy (channels) </td>
 								<td>
 									<select name="channels">
@@ -436,7 +445,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
 								<td>Select desired traces</td>
 								<td>
 									<input type="checkbox" value="1" checked name="xml">XML<br>
@@ -445,6 +454,13 @@
 								</td>
 							</tr>
 						</table>
+						
+						<div class="help_container">
+							<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+							<div id="dialog" class="help_contents" title="Help">
+								Colocar Ajuda para uniform disc
+							</div>
+						</div>
 				</div>
 			</div>
 		</div>
@@ -457,7 +473,7 @@
 				<td width="50%"><input type="reset" value="Cancel" class="btn btnPrimary" /></td>
 			</tr>
 		</table>
-	</form> </center>
+	</form>
 
 	<fieldset>
 		<legend> 

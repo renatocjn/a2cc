@@ -98,7 +98,6 @@
 				});
 
 				$("#cleanBttn").click( function() {
-					console.log('cleanBttn');
 					jQuery.ajax({
 						url: "../executaComando.php",
 						data: { rmAll:"" },
@@ -126,10 +125,6 @@
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
-					if (blocked) {
-						return;
-					}
-					blocked = true;
 					var panel = $(this);
 					var appURI = "";
 					do {
@@ -163,7 +158,7 @@
 						error: alertFail,
 						beforeSend: mostrar_barra,
 						complete: ocultar_barra,
-						success: function() { blocked = false; updateJobStatus(); }
+						success: updateJobStatus
 					});
 				});
 				$('.help-ico').tooltip();
@@ -335,39 +330,39 @@
 				</ul>
 
 				<div id='grid'> <input type='hidden' value="grid">
-						<img id='grid-help-pic' src="../img/mesh-grid.jpg">
+						<img class='mesh-help-pic' src="../img/mesh-grid.jpg">
 						<h1> Parâmetros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de nós por linha da grade."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de nós por linha da grade."> </td>
 								<td> Tamanho Horizontal da grade (x-size) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de nós por coluna da grade."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de nós por coluna da grade."> </td>
 								<td> Tamanho vertical da grade (y-size) </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa a distância física entre os nós da grade, essa distância é constante verticalmente e horizontalmente."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a distância física entre os nós da grade, essa distância é constante verticalmente e horizontalmente."> </td>
 								<td> Espaço entre nós (step)</td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
 								<td> Tempo de simulação (segundos)</td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
 								<td> Número de interfaces de rádio por nó </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
 								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
 								<td> Tamanho dos pacotes (Bytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
 								<td> Política de escolha de canais (channels) </td>
 								<td>
 									<select name="channels">
@@ -376,7 +371,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Escolha quais tipos de dados devem ser armazenados. Os Traces XML contém informações dos nós, como roteamento e vizinhança, enquanto os traces PCAP possuem todos os pacotes enviados por cada interface"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Escolha quais tipos de dados devem ser armazenados. Os Traces XML contém informações dos nós, como roteamento e vizinhança, enquanto os traces PCAP possuem todos os pacotes enviados por cada interface"> </td>
 								<td>Tipos de trace desejado</td>
 								<td>
 									<input type="checkbox" checked name="xml" value="1">XML<br>
@@ -387,38 +382,39 @@
 						</table>
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
+						<img class='mesh-help-pic' src="../img/mesh-uniform_disc-pt.png">
 						<h1> Parâmetros da simulação </h1>
 						<table class="table-cadastro">
 							<tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Número de nós que devem ser criados e alocados dentro do disco."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Número de nós que devem ser criados e alocados dentro do disco."> </td>
 								<td> Número de nós </td>
 								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatoriamente no disco."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatoriamente no disco."> </td>
 								<td> Raio do disco (metros) </td>
 								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
 								<td> Tempo de simulação (segundos) </td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem diferente e o destino é o mesmo para todos os fluxos."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem diferente e o destino é o mesmo para todos os fluxos."> </td>
 								<td> Número de fluxos de dados na simulação </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
 								<td> Número de interfaces de rádio por nó </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
 								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
 								<td> Tamanho dos pacotes (Bytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
 								<td> Politica de escolha de canais (channels) </td>
 								<td>
 									<select name="channels">
@@ -427,7 +423,7 @@
 								   </select>
 								</td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/Help-icon.png" title="Escolha quais tipos de dados devem ser armazenados. Os Traces XML contém informações dos nós, como roteamento e vizinhança, enquanto os traces PCAP possuem todos os pacotes enviados por cada interface"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Escolha quais tipos de dados devem ser armazenados. Os Traces XML contém informações dos nós, como roteamento e vizinhança, enquanto os traces PCAP possuem todos os pacotes enviados por cada interface"> </td>
 								<td>Tipos de trace desejado</td>
 								<td>
 									<input type="checkbox" value="1" checked name="xml">XML<br>

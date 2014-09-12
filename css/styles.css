@@ -16,6 +16,39 @@ a {
 	cursor : pointer;
 }
 
+.help_container {
+	background: lightgray;
+	border-radius: 10px;
+	margin-bottom: 10px; 
+	margin-top: 10px;
+	clear: both;
+}
+
+.help_container .help_bar {
+	height: 35px;
+	width: inherit;
+	border-radius: 10px;
+	background: gray;
+	text-align: center;
+	font-size: 30px;
+	color: white;
+	cursor: pointer;
+}
+
+.help_container .help_bar img {
+	height: 30px;
+	width: 30px;
+	vertical-align: middle;
+	display: table-cell;
+	float: right;
+}
+
+.help_container .help_contents {
+	width: inherit;
+	color: black;
+	padding: 1em;
+}
+
 #navbar { #
 	color: #D0D0CA; #
 	font-size: 12px;
@@ -457,11 +490,12 @@ th {
 	background-color: #f9f9f9;
 }
 
-#grid #grid-help-pic {
+.mesh-help-pic {
 	float: left;
 	width: 380px;
 	height: 380px;
 	margin-right: 50px;
+	margin-bottom: 20px;
 }
 
 .table-cadastro td:FIRST-CHILD {
