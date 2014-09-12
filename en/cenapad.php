@@ -24,7 +24,8 @@
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
 
 		<script type='text/javascript'>
-			var blocked = false;
+			var updateBlocked = false;
+			var submitBlocked
 
 			function removeRow(elem) {
 				$(elem).parents('tr').remove();
@@ -43,10 +44,10 @@
 			}
 
 			function updateJobStatus() {
-				if (blocked) {
+				if (updateBlocked) {
 					return;
 				}
-				blocked = true;
+				updateBlocked = true;
 				$('#updateJobStatus img').attr('src', '../img/dinamic_job_status.gif');
 				$.ajax( {
 					url: '../job_status.php',
@@ -77,7 +78,7 @@
 
 						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
 						loadTableActions();
-						blocked = false;
+						updateBlocked = false;
 						document.body.style.cursor='default';
 					},
 					error: alertFail
@@ -119,7 +120,6 @@
 			$( function() {
 				$('.help_container .help_contents').hide();
 				$('.help_container .help_bar').click( function () {
-					console.log(this);
 					$(this).siblings('.help_contents').toggle(700);
 				});
 
@@ -137,6 +137,10 @@
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
+					if (submitBlocked) {
+						return;
+					}
+					submitBlocked = true;
 					var panel = $(this);
 					var appURI = "";
 					do {
@@ -169,7 +173,7 @@
 						processData: false,
 						error: alertFail,
 						beforeSend: mostrar_barra,
-						complete: ocultar_barra,
+						complete: function() { submitBlocked = false; ocultar_barra(); },
 						success: updateJobStatus
 					});
 				});
@@ -197,10 +201,6 @@
 			 require 'app_assets/namd/default_namd_params.php';
 	?>
 	<div id="midsection2">
-
-	<BR>
-	<div id='load' class='progressbar'> </div>
-	<BR>
 
 	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
@@ -555,7 +555,7 @@
 			</tr>
 		</table>
 	</form>
-
+	<div id='load' class='progressbar'> </div>
 	<fieldset>
 		<legend>
 			Simulations
