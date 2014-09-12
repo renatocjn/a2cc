@@ -73,7 +73,7 @@
 						} else {
 							table.append("<tr> <th colspan='6'>Não foi localizado nenhum arquivo</th> </tr>");
 						}
-						
+
 						$('#updateJobStatus img').attr('src', '../img/static_job_status.gif');
 						loadTableActions();
 						blocked = false;
@@ -111,6 +111,12 @@
 			}
 
 			$( function() {
+				$('.help_container .help_contents').hide();
+				$('.help_container .help_bar').click( function () {
+					console.log(this);
+					$(this).siblings('.help_contents').toggle(700);
+				});
+
 				$('.tab').tabs();
 				$('.progressbar').progressbar().progressbar('value', false);
 				$('#load').hide();
@@ -184,9 +190,9 @@
 	?>
 	<div id="midsection2">
 
-	
 
-	<center> <form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
+
+	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>
 			<!--<li><a href="#namd"> Namd </a> </li>
@@ -319,6 +325,16 @@
 						<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
 					</tr>
 				</table>
+				<div class="help_container">
+					<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+					<div id="dialog" class="help_contents">
+						<p> Este modo permite ao usuário executar qualquer simulação que desejar, desde que esteja em acordo com a versão padrão do ns3,
+						o usuário só precisa fazer upload do arquivo .cc e indicar quais parâmetros devem ser passados à simulação.</p>
+
+						<p> Por exemplo, se você deseja executar algo assim: ./waf --run 'myScript --param1=1 --param2=2' <br>
+						Então é necessário que o arquivo myScript.cc seja enviado e que seja escrito "--param1=1 --param2=2" no campo referente aos parâmetros. </p>
+					</div>
+				</div>
 			</div>
 			<!--<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
 			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div>-->
@@ -366,8 +382,8 @@
 								<td> Política de escolha de canais (channels) </td>
 								<td>
 									<select name="channels">
-										<option value="1" selected> complete spread </option>
-										<option value="0" > all on zero </option>
+										<option value="1" selected> Complete spread </option>
+										<option value="0" > Same channel </option>
 								   </select>
 								</td>
 							</tr> <tr>
@@ -380,58 +396,155 @@
 								</td>
 							</tr>
 						</table>
+
+						<div class="help_container">
+							<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+							<div id="dialog" class="help_contents">
+								<p>
+									Neste modo, será executada uma simulação onde os nós serão posicionados igualmente espaçados entre si,
+									i.e seguindo uma topologia em grade padrão.
+									O numero de nós é controlado pelas variáveis <b>x-size</b> e <b>y-size</b>.
+								</p>
+								<p>
+									<b>Apenas 2 fluxos serão criados neste modelo de simulação</b>, entre cliente e servidor,
+									que ficam localizados no canto inferior esquerdo e canto superior direito da grade respectivamente,
+									seguindo o modelo de aplicação de rede udp echo disponibilizado no NS3. <br>
+							 		O tamanho de cada fluxo pode ser controlado através das variáveis tamanho do pacote e intervalo entre transmissão de pacotes.
+								</p>
+								<p>
+									A politica de aplicação de canais determina em qual canal cada interface de cada nó irá ser sintonizada.
+									<ul>
+										<li>
+											Pela politica <b> Complete spread </b> cada interface será sintonizada em um canal diferente,
+											mas estes canais serão os mesmos para todos os nós, i.e no nó 1, a interface 1 ficará sintonizada no canal 1,
+											a interface 2 ficará sintonizada no canal 2, etc, o mesmo vale para os outros nós.
+										</li>
+										<li>
+											Pela politica <b> Same channel </b> todas as interfaces de todos os nós serão sintonizadas no mesmo canal.
+										</li>
+									</ul>
+								</p>
+								<p>
+									Os traces disponíveis de serem gerados são:
+									<ul>
+										<li>
+											<b> XML </b>, Estes arquivos XML são criados pelo método report da classe MeshHelper disponibilizada pelo ns3,
+											eles possuem informações como métricas do protocolo de roteamento e conexões dos nós
+											e elas são necessárias para que estas informações sejam desenhadas pela opção graphs.
+										</li>
+										<li>
+											<b> PCAP </b>, estes arquivos possuem todo o tráfico de cada interface de rede da simulação
+											e podem ser visualizados utilizando programas como o Wireshark.
+										</li>
+										<li>
+											<b> Graphs </b>, esta opção habilita a geração de arquivos gráficos ilustrando métricas extraídas da simulação,
+											é necessário que outros traces sejam gerados para que esta opção funcione.
+											Entre os gráficos gerados temos o posicionamento físico dos nós e as conexões entre os nós.
+											Cada métrica do protocolo de roteamento é desenhada no formato de um gráfico de calor sobre a área da simulação.
+										</li>
+									</ul>
+								</p>
+							</div>
+						</div>
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
-						<img class='mesh-help-pic' src="../img/mesh-uniform_disc-pt.png">
-						<h1> Parâmetros da simulação </h1>
-						<table class="table-cadastro">
-							<tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Número de nós que devem ser criados e alocados dentro do disco."> </td>
-								<td> Número de nós </td>
-								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatoriamente no disco."> </td>
-								<td> Raio do disco (metros) </td>
-								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
-								<td> Tempo de simulação (segundos) </td>
-								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem diferente e o destino é o mesmo para todos os fluxos."> </td>
-								<td> Número de fluxos de dados na simulação </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
-								<td> Número de interfaces de rádio por nó </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
-								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
-								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
-								<td> Tamanho dos pacotes (Bytes) </td>
-								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
-								<td> Politica de escolha de canais (channels) </td>
-								<td>
-									<select name="channels">
-										<option value="1" selected> complete spread </option>
-										<option value="0" > all on zero </option>
-								   </select>
-								</td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Escolha quais tipos de dados devem ser armazenados. Os Traces XML contém informações dos nós, como roteamento e vizinhança, enquanto os traces PCAP possuem todos os pacotes enviados por cada interface"> </td>
-								<td>Tipos de trace desejado</td>
-								<td>
-									<input type="checkbox" value="1" checked name="xml">XML<br>
-									<input type="checkbox" value="1" name="pcap">PCAP<br>
-									<input type="checkbox" checked name="graphs" value="1">Graphs<br>
-								</td>
-							</tr>
-						</table>
+					<img class='mesh-help-pic' src="../img/mesh-uniform_disc-pt.png">
+					<h1> Parâmetros da simulação </h1>
+					<table class="table-cadastro">
+						<tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Número de nós que devem ser criados e alocados dentro do disco."> </td>
+							<td> Número de nós </td>
+							<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatoriamente no disco."> </td>
+							<td> Raio do disco (metros) </td>
+							<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
+							<td> Tempo de simulação (segundos) </td>
+							<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem diferente e o destino é o mesmo para todos os fluxos."> </td>
+							<td> Número de fluxos de dados na simulação </td>
+							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
+							<td> Número de interfaces de rádio por nó </td>
+							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
+							<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
+							<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
+							<td> Tamanho dos pacotes (Bytes) </td>
+							<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
+							<td> Politica de escolha de canais (channels) </td>
+							<td>
+								<select name="channels">
+									<option value="1" selected> complete spread </option>
+									<option value="0" > Same channel </option>
+							   </select>
+							</td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Escolha quais tipos de dados devem ser armazenados. Os Traces XML contém informações dos nós, como roteamento e vizinhança, enquanto os traces PCAP possuem todos os pacotes enviados por cada interface"> </td>
+							<td>Tipos de trace desejado</td>
+							<td>
+								<input type="checkbox" value="1" checked name="xml">XML<br>
+								<input type="checkbox" value="1" name="pcap">PCAP<br>
+								<input type="checkbox" checked name="graphs" value="1">Graphs<br>
+							</td>
+						</tr>
+					</table>
+
+					<div class="help_container">
+						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+						<div id="dialog" class="help_contents">
+							<p>
+								Neste modo de simulação, será executado uma simulação onde os nós são posicionados em uma área circular,
+								o tamanho da área é definido através da variável <b> raio do disco </b>.
+								O posicionamento dos nós será realizado através do componente <b>UniformDiscPositionAllocator</b> disponibilizado pelo NS3.
+							</p>
+
+							<p>
+							 	Cada fluxo da simulação possui o mesmo <b>destino (servidor)</b> mas possui um nó aleatório como <b>origem (cliente)</b>. <br>
+							 	O tamanho de cada fluxo pode ser controlado através das variáveis tamanho do pacote e intervalo entre transmissão de pacotes.
+							<p>
+								A politica de aplicação de canais determina em qual canal cada interface de cada nó irá ser sintonizada.
+								<ul>
+									<li>
+										Pela politica <b> Complete spread </b> cada interface será sintonizada em um canal diferente,
+										mas estes canais serão os mesmos para todos os nós, i.e no nó 1, a interface 1 ficará sintonizada no canal 1,
+										a interface 2 ficará sintonizada no canal 2, etc, o mesmo vale para os outros nós.
+									</li>
+									<li>
+										Pela politica <b> Same channel </b> todas as interfaces de todos os nós serão sintonizadas no mesmo canal.
+									</li>
+								</ul>
+							</p>
+								Os traces disponíveis de serem gerados são:
+								<ul>
+									<li>
+										<b> XML </b>, Estes arquivos XML são criados pelo método report da classe MeshHelper disponibilizada pelo ns3,
+										eles possuem informações como métricas do protocolo de roteamento e conexões dos nós
+										e elas são necessárias para que estas informações sejam desenhadas pela opção graphs.
+									</li>
+									<li>
+										<b> PCAP </b>, estes arquivos possuem todo o tráfico de cada interface de rede da simulação
+										e podem ser visualizados utilizando programas como o Wireshark.
+									</li>
+									<li>
+										<b> Graphs </b>, esta opção habilita a geração de arquivos gráficos ilustrando métricas extraídas da simulação,
+										é necessário que outros traces sejam gerados para que esta opção funcione.
+										Entre os gráficos gerados temos o posicionamento físico dos nós e as conexões entre os nós.
+										Cada métrica do protocolo de roteamento é desenhada no formato de um gráfico de calor sobre a área da simulação.
+									</li>
+								</ul>
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -444,12 +557,12 @@
 				<td width="50%"><input type="reset" value="Cancelar" class="btn btnPrimary" /></td>
 			</tr>
 		</table>
-	</form> </center>
+	</form>
 	<div id='load' class='progressbar'> </div>
 	<fieldset>
-		<legend> 
-			Simulações 
-			<a id="updateJobStatus"> <img title="Atualizar status" src="../img/static_job_status.gif" alt="atualizar"> </a> 
+		<legend>
+			Simulações
+			<a id="updateJobStatus"> <img title="Atualizar status" src="../img/static_job_status.gif" alt="atualizar"> </a>
 		</legend>
 			<table class="table table-consulta">
 				<thead>
@@ -466,8 +579,8 @@
 					<tr>
 						<th colspan='6'> Aguarde enquanto a lista das suas simulações é carregada </th>
 					</tr>
-				</tbody> 
-			</table> <br/> 
+				</tbody>
+			</table> <br/>
 		</fieldset>
 		</div>
 		<div id="footer"><?php include "rodape.php";?></div>

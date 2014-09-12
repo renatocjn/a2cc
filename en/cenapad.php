@@ -37,7 +37,7 @@
 			function ocultar_barra() {
 				$('#load').hide('fast');
 			}
-			
+
 			function alertFail(d) {
 				alert('Something went wrong...\n'+d.responseText)
 			}
@@ -102,7 +102,7 @@
 						success: clickUpdate
 					});
 				});
-				
+
 				$("#cleanBttn").click( function() {
 					jQuery.ajax({
 						url: "../executaComando.php",
@@ -116,12 +116,13 @@
 				});
 			}
 
-			$( function() {				
+			$( function() {
 				$('.help_container .help_contents').hide();
 				$('.help_container .help_bar').click( function () {
-					$('.help_container .help_contents').toggle(700);
+					console.log(this);
+					$(this).siblings('.help_contents').toggle(700);
 				});
-				
+
 				$('.tab').tabs();
 				$('.progressbar').progressbar().progressbar('value', false);
 				$('#load').hide();
@@ -182,7 +183,7 @@
 				$('#updateJobStatus').click( clickUpdate );
 
 				updateJobStatus();
-				
+
 				setInterval(updateJobStatus, 30000);
 			});
 		</script>
@@ -327,13 +328,23 @@
 			<div id='generic'> <input type='hidden' value='generic'>
 				<table>
 					<tr>
-						<td> Arquivo de script ns3 </td>
+						<td> NS3 script file </td>
 						<td> <input name="scriptFile" type="file"> </td>
 					</tr>	<tr>
-						<td width="50%"> Parametros que devem ser passados ao script </td>
+						<td width="50%"> Parameters for the simulation </td>
 						<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
 					</tr>
 				</table>
+				<div class="help_container">
+					<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+					<div id="dialog" class="help_contents">
+						<p> This mode allows you to run any NS3 script you desire,
+						you need to upload the .cc code file and add the parameters you want to add to that simulation. </p>
+
+						<p>For Example, if you want to run something like ./waf --run myScript --param1=1 --param2=2 <br>
+						you need to upload the file myScript.cc and write "--param1=1 --param2=2" in the text field where the parameters are requested.</p>
+					</div>
+				</div>
 			</div>
 			<!--<div id='lte'> <input type='hidden' value='lte'> Não implementado! </div>
 			<div id='vannet'> <input type='hidden' value='vannet'> Não implementado! </div> -->
@@ -382,7 +393,7 @@
 								<td>
 									<select name="channels">
 										<option value="1" selected> Complete spread </option>
-										<option value="0" > All on zero </option>
+										<option value="0" > Same channel </option>
 								   </select>
 								</td>
 							</tr> <tr>
@@ -395,72 +406,142 @@
 								</td>
 							</tr>
 						</table>
-						
+
 						<div class="help_container">
 							<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
-							<div id="dialog" class="help_contents" title="Help">
-								Colocar ajuda para grade 
+							<div id="dialog" class="help_contents">
+								<p>
+									In this mode, ns3 will run a simulation where the nodes will be positioned equally spaced among themselves following a basic grid topology.
+									The amount of nodes of the grid is controlled by the parameters <b>x-size</b> and <b>y-size</b>.
+								</p>
+								<p>
+									<b>Only two flows will be created</b>, from one end to the other of the grid and back, between the client and the server,
+									according to the ns3 application Udp Echo.
+									The flow size can be controlled from the variables Packet size and Packet transmission interval.
+								</p>
+								<p>
+									The channel allocation strategy will determinate which channel each interface antenna of each node will be tuned to.
+									<ul>
+										<li>
+										With strategy <b>Complete spread</b>, each interface will be tuned to a different channel, but these channels will be the same for every node,
+										i.e in node 1, interface 1 will be tuned to channel 1, interface 2 will be tuned to channel 2, etc, the same is true for node 2 and every other node.
+										</li>
+										<li>
+										With strategy <b>Same channel</b>, all interfaces of every node will be tuned to the same channel.
+										</li>
+									</ul>
+								</p>
+								<p>
+									Possible traces to be generated are:
+									<ul>
+										<li>
+											<b>XML</b>, these traces are the XML files created when the report method is called on the MeshHelper class on ns3,
+											this is required to generate graphics for the routing protocol metrics.
+										</li>
+										<li>
+											<b>PCAP</b>, these are the entire dump of each interface network traffic. These can be read by wireshark.
+										</li>
+										<li>
+											<b>Graphs</b>, these are visual illustrations of metrics extracted from the simulation,
+											this requires other traces to be generated. <br>
+											Among the graphics generated there are the positions and connections of the nodes and
+											each metric of the routing protocol is plotted as a heat graph in the area of the simulation.
+										</li>
+									</ul>
+								</p>
 							</div>
 						</div>
 				</div>
 				<div id='uniform_disc'> <input type='hidden' value="uniform_disc">
-						<img class='mesh-help-pic' src="../img/mesh-uniform_disc-en.png">
-						<h1> Simulation Parameters </h1>
-						<table class="table-cadastro">
-							<tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Number of nodes to be created and allocated on the disc."> </td>
-								<td> Number of nodes </td>
-								<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Radious of the disc that will bound the allocation of the nodes, these nodes are allocated in a random matter."> </td>
-								<td> Radius of the disc (meters) </td>
-								<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is normally larger than the simulated time."> </td>
-								<td> Simulation time (seconds) </td>
-								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of flows to be created on the simulation, every flow has the same destination(server) but have different origins(clients)"> </td>
-								<td> Number of flows to be generated </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces conected on each node."> </td>
-								<td> Number of radios interfaces per node </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
-								<td> Time interval between packet transmission (seconds) </td>
-								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
-								<td> Packet size (KBytes) </td>
-								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
-								<td> Channel allocation strategy (channels) </td>
-								<td>
-									<select name="channels">
-										<option value="1" selected> complete spread </option>
-										<option value="0" > all on zero </option>
-								   </select>
-								</td>
-							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
-								<td>Select desired traces</td>
-								<td>
-									<input type="checkbox" value="1" checked name="xml">XML<br>
-									<input type="checkbox" value="1" name="pcap">PCAP<br>
-									<input type="checkbox" checked name="graphs" value="1">Graphs<br>
-								</td>
-							</tr>
-						</table>
-						
-						<div class="help_container">
-							<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
-							<div id="dialog" class="help_contents" title="Help">
-								Colocar Ajuda para uniform disc
-							</div>
+					<img class='mesh-help-pic' src="../img/mesh-uniform_disc-en.png">
+					<h1> Simulation Parameters </h1>
+					<table class="table-cadastro">
+						<tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Number of nodes to be created and allocated on the disc."> </td>
+							<td> Number of nodes </td>
+							<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Radious of the disc that will bound the allocation of the nodes, these nodes are allocated in a random matter."> </td>
+							<td> Radius of the disc (meters) </td>
+							<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is normally larger than the simulated time."> </td>
+							<td> Simulation time (seconds) </td>
+							<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of flows to be created on the simulation, every flow has the same destination(server) but have different origins(clients)"> </td>
+							<td> Number of flows to be generated </td>
+							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces conected on each node."> </td>
+							<td> Number of radios interfaces per node </td>
+							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
+							<td> Time interval between packet transmission (seconds) </td>
+							<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
+							<td> Packet size (KBytes) </td>
+							<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
+							<td> Channel allocation strategy (channels) </td>
+							<td>
+								<select name="channels">
+									<option value="1" selected> Complete spread </option>
+									<option value="0" > Same channel </option>
+							   </select>
+							</td>
+						</tr> <tr>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Choose which trace information must be saved, XML traces contain node information like neighboors and routing statistics, PCAP traces contain all the packets sent by each interface and Graphs are visual representation of the XML traces, nodes positions and FlowMonitor results."> </td>
+							<td>Select desired traces</td>
+							<td>
+								<input type="checkbox" value="1" checked name="xml">XML<br>
+								<input type="checkbox" value="1" name="pcap">PCAP<br>
+								<input type="checkbox" checked name="graphs" value="1">Graphs<br>
+							</td>
+						</tr>
+					</table>
+
+					<div class="help_container">
+						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+						<div id="dialog" class="help_contents">
+							<p> In this mode, ns3 will run a simulation where the nodes will be positioned in a circular area, the size of the area is controlled by the variable <b>radius of the disc</b>.
+							The positioning will be determined by the position allocator <b>UniformDiscPositionAllocator</b> which is provided by NS3 </p>
+
+							<p> Each flow of the simulation have the same <b> destination (server) </b> but has a random node as <b> origin (client) </b>.
+							The flow size can be controlled from the variables Packet size and Packet transmission interval. </p>
+
+							<p>The channel allocation strategy will determinate which channel each interface antenna of each node will be tuned to.
+							<ul>
+								<li>
+								With strategy <b>Complete spread</b>, each interface will be tuned to a different channel, but these channels will be the same for every node,
+								i.e in node 1, interface 1 will be tuned to channel 1, interface 2 will be tuned to channel 2, etc, the same is true for node 2 and every other node.
+								</li>
+								<li>
+								With strategy <b>Same channel</b>, all interfaces of every node will be tuned to the same channel.
+								</li>
+							</ul></p>
+
+							<p> Possible traces to be generated are:
+							<ul>
+								<li>
+									<b>XML</b>, these traces are the XML files created when the report method is called on the MeshHelper class on ns3,
+									this is required to generate graphics for the routing protocol metrics.
+								</li>
+								<li>
+									<b>PCAP</b>, these are the entire dump of each interface network traffic. These can be read by wireshark.
+								</li>
+								<li>
+									<b>Graphs</b>, these are visual illustrations of metrics extracted from the simulation,
+									this requires other traces to be generated. <br>
+									Among the graphics generated there are the positions and connections of the nodes and
+									each metric of the routing protocol is plotted as a heat graph in the area of the simulation.
+								</li>
+							</ul> </p>
 						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -476,9 +557,9 @@
 	</form>
 
 	<fieldset>
-		<legend> 
-			Simulations 
-			<a id="updateJobStatus"> <img title="Update status" src="../img/static_job_status.gif" alt="update"> </a> 
+		<legend>
+			Simulations
+			<a id="updateJobStatus"> <img title="Update status" src="../img/static_job_status.gif" alt="update"> </a>
 		</legend>
 			<table class="table table-consulta">
 				<thead>
