@@ -380,7 +380,7 @@
 								<td> Tamanho dos pacotes (Bytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um mesmo canal sem fio."> </td>
 								<td> Política de escolha de canais (channels) </td>
 								<td>
 									<select name="channels">
@@ -462,11 +462,11 @@
 							<td> Raio do disco (metros) </td>
 							<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 						</tr> <tr>
-							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação, o tempo para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
 							<td> Tempo de simulação (segundos) </td>
 							<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 						</tr> <tr>
-							<td> <img class="help-ico" src="../img/help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem diferente e o destino é o mesmo para todos os fluxos."> </td>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem (cliente) diferente, mas o destino (servidor) é o mesmo para todos os fluxos."> </td>
 							<td> Número de fluxos de dados na simulação </td>
 							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 						</tr> <tr>
@@ -478,11 +478,11 @@
 							<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
 							<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 						</tr> <tr>
-							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de Bytes enviados em cada pacote da simulação"> </td>
 							<td> Tamanho dos pacotes (Bytes) </td>
 							<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 						</tr> <tr>
-							<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um esmo canal sem fio."> </td>
+							<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'Same channel' coloca todas as interfaces de rádio trabalhando em um mesmo canal sem fio."> </td>
 							<td> Politica de escolha de canais (channels) </td>
 							<td>
 								<select name="channels">

@@ -1,5 +1,5 @@
 <?php
-$title="Ambiente de acesso ao CENAPAD-UFC";
+$title="CENAPAD-UFC";
 
 function print_title() {
 	global $title;

@@ -376,7 +376,7 @@
 								<td> Simulation Time (seconds)</td>
 								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces conected to each node."> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces connected to each node."> </td>
 								<td> Number of radio interfaces in each node </td>
 								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
@@ -384,11 +384,11 @@
 								<td> Packet transmission interval (seconds) </td>
 								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
-								<td> Packet size (KBytes) </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="Byte size of each packet to be sent on the network."> </td>
+								<td> Packet size (Bytes) </td>
 								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
-								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
+								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'Same channel' puts every interface of the nodes on the same interface"> </td>
 								<td> Channel allocation strategy (channels) </td>
 								<td>
 									<select name="channels">

@@ -213,6 +213,10 @@ label,input {
 	float: left;
 }
 
+input[type="text"] {
+	width: 100%;
+}
+
 label {
 	text-align: right;
 	width: 112px;
