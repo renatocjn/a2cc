@@ -16,9 +16,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="refresh" content="600">
 		<?php print_title(); ?>
-		<link rel="stylesheet" href="../css/styles.css" type="text/css" media="all">
 		<link rel="shortcut icon" href="../css/images/cenapad.png" type="image/gif" />
 		<link rel="stylesheet" href="../css/start/jquery-ui-1.10.4.custom.min.css" />
+		<link rel="stylesheet" href="../css/styles.css" type="text/css" media="all">
 		<script type="text/javascript" src="../js/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="../javascripts/script.js"></script>
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
@@ -207,15 +207,50 @@
 			<li><a href="#ns3"> NS3 </a> </li>
 			<!--<li><a href="#namd"> Namd </a> </li>
 			<li><a href="#gaussian"> Gaussian </a> </li>
-			<li><a href="#siesta"> Siesta </a> </li>
-			<li><a href="#octave"> Octave </a> </li>-->
+			<li><a href="#siesta"> Siesta </a> </li> -->
+			<li><a href="#octave"> Octave </a> </li>
 		</ul>
 
 		<!-- <div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
-		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div>
-		<div id='octave'> <input type='hidden' value='octave'> Não implementado! </div>
+		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div> -->
+		<div id='octave' class="tab"> <input type='hidden' value='octave'>
+			 <ul>
+			 	<li> <a href="#octave-generic"> generic script </a> </li>
+			 </ul>
+			 
+			 <div id="octave-generic"> <input type='hidden' value='generic'>
+				 <table>
+						<tr>
+							<td> Main script file </td>
+							<td> <input name="scriptFile" type="file"> </td>
+						</tr> <tr>
+							<td width="50%"> execution parameters for the script </td>
+							<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
+						</tr> <tr>
+							<td> Other necessary files </td>
+							<td> <input name="aux_files[]" type="file" size="10" multiple> </td>
+						</tr> 
+					</table>
+					<div class="help_container">
+						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+						<div id="dialog" class="help_contents">
+							<p> This mode allows you to run any script you desire,
+						you need to upload the main script file, add the parameters you want to add to that execution and any other files tou need for that execution, like files with data or source code. </p>
 
-		<div id='namd' class="tab"> <input type='hidden' value='namd'>
+						<p>For Example, if you want to run something like "octave myScript.m param1 param2" <br>
+							you need to:
+							<ol>
+								<li> upload the file myScript.m, </li>
+								<li> write "param1 param2" in the text field where the parameters are requested and</li>
+								<li> upload any other file you need for the execution of the script, they will be put on the same directory of the main script file. </li>
+							</ol>
+						</p>
+						</div>
+					</div>
+			 </div>
+		</div>
+
+		<!--<div id='namd' class="tab"> <input type='hidden' value='namd'>
 			<ul>
 				<li> <a href="#norun"> Minimização </a> </li>
 				<li> <a href="#singlerun"> Execução simples </a> </li>

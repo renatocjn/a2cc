@@ -5,6 +5,9 @@
 	function submit_job($application, $params) {
 		
 		$user = $_SESSION['usuarioLogin'];
+		
+		$h = NULL;		
+		
 		/*if($user == 'rneto') {
 			$h = opennebula_handler::allocate_new_handler();
 		}else if($user == 'rneto2') {
@@ -12,8 +15,8 @@
 		} else {
 			$h = rand(0,100) < 25 ? opennebula_handler::allocate_new_handler() : cluster_handler::allocate_new_handler(); 
 		}*/
-		$h = NULL;
-		$handlers = opennebula_handler::get_allocated_handlers();
+		
+		/*$handlers = opennebula_handler::get_allocated_handlers();
 		foreach ( $handlers as $handler ) { 
 			$jobs = $handler->get_jobs();
 			$free = true;
@@ -27,10 +30,11 @@
 				$h = $handler;
 				break;
 			}
-		}
+		}*/
+		
 		if (!$h) {
-			$h = opennebula_handler::allocate_new_handler();
-//			$h = cluster_handler::allocate_new_handler();
+//			$h = opennebula_handler::allocate_new_handler();
+			$h = cluster_handler::allocate_new_handler();
 		}
 		if (!$h) 
 			 throw new Exception("Não pode ser alocado novos recursos");

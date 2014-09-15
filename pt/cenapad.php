@@ -15,9 +15,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<?php print_title(); ?>
-		<link rel="stylesheet" href="../css/styles.css" type="text/css" media="all">
 		<link rel="shortcut icon" href="../css/images/cenapad.png" type="image/gif" />
 		<link rel="stylesheet" href="../css/start/jquery-ui-1.10.4.custom.min.css" />
+		<link rel="stylesheet" href="../css/styles.css" type="text/css" media="all">
 		<script type="text/javascript" src="../js/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="../javascripts/script.js"></script>
 		<script type="text/javascript" src="../js/jquery-ui-1.10.4.custom.min.js"></script>
@@ -155,7 +155,9 @@
 					});
 
 					$(this).find(':visible:input[type=file]').each( function() {
-	    				formData.append(this.name, $(this).prop('files')[0]);
+	    				for (var i = 0; i < $(this).prop('files').length; ++i) {
+	    					formData.append(this.name, $(this).prop('files')[i]);
+						}
 					});
 
 					jQuery.ajax({
@@ -199,14 +201,43 @@
 			<li><a href="#ns3"> NS3 </a> </li>
 			<!--<li><a href="#namd"> Namd </a> </li>
 			<li><a href="#gaussian"> Gaussian </a> </li>
-			<li><a href="#siesta"> Siesta </a> </li>
-			<li><a href="#octave"> Octave </a> </li>-->
+			<li><a href="#siesta"> Siesta </a> </li>-->
+			<li><a href="#octave"> Octave </a> </li>
 		</ul>
 
 		<!--<div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
-		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div>
-		<div id='octave'> <input type='hidden' value='octave'> Não implementado! </div>
-
+		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div>-->
+		<div id='octave' class="tab"> <input type='hidden' value='octave'>
+			 <ul>
+			 	<li> <a href="#octave-generic"> genérico </a> </li>
+			 </ul>
+			 
+			 <div id="octave-generic"> <input type='hidden' value='generic'>
+				 <table>
+						<tr>
+							<td> Arquivo de script principal </td>
+							<td> <input name="scriptFile" type="file"> </td>
+						</tr> <tr>
+							<td width="50%"> Parâmetros que devem ser passados ao script </td>
+							<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
+						</tr> <tr>
+							<td> Outros arquivos necessários </td>
+							<td> <input name="aux_files[]" type="file" size="10" multiple> </td>
+						</tr> 
+					</table>
+					<div class="help_container">
+						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+						<div id="dialog" class="help_contents">
+							<p> Este modo permite ao usuário executar qualquer script que desejar, desde que esteja em acordo com a versão padrão do octave,
+							o usuário só precisa fazer upload do arquivo com o código de script e indicar quais parâmetros devem ser passados à simulação.</p>
+	
+							<p> Por exemplo, se você deseja executar algo assim: octave myScript.m param1 param2 <br>
+							Então é necessário que o arquivo myScript.m seja enviado e que seja escrito "param1 param2" no campo referente aos parâmetros. </p>
+						</div>
+					</div>
+			 </div>
+		</div>
+		<!--
 		<div id='namd' class="tab"> <input type='hidden' value='namd'>
 			<ul>
 				<li> <a href="#norun"> Minimização </a> </li>

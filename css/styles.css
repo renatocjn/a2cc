@@ -25,30 +25,41 @@ a {
 }
 
 .help_container .help_bar {
-	height: 35px;
+	height: 20px;
 	width: inherit;
 	border-radius: inherit;
 	background-image: url("../img/help-bar.png");
 	background-repeat: x-repeat;
 	background-size: contain;
 	text-align: center;
-	font-size: 30px;
+	font-size: 15px;
 	color: white;
+	text-shadow: 1px 1px gray;
 	cursor: pointer;
 }
 
 .help_container .help_bar img {
-	height: 30px;
-	width: 30px;
+	height: inherit;
+	width: inherit;
 	vertical-align: middle;
 	display: table-cell;
 	float: right;
+	padding-right: 0.5%;
 }
 
 .help_container .help_contents {
 	width: inherit;
 	color: black;
 	padding: 1em;
+	font-size: 0.9em;
+}
+
+.help_container .help_contents ul li {
+	font-size: inherit;
+	line-height: normal;
+	list-style-type: disc;
+	margin: inherit;
+	padding: 0;
 }
 
 #navbar { #
@@ -344,15 +355,12 @@ UL {
 
 UL LI {
 	PADDING-RIGHT: 0px;
-	BACKGROUND-POSITION: 1px 8px;
 	PADDING-LEFT: 15px;
 	FONT-SIZE: 11px;
-	BACKGROUND-IMAGE: url(/imagens/ponto.gif);
 	PADDING-BOTTOM: 3px;
 	MARGIN: 0px;
 	LINE-HEIGHT: 1.3em;
 	PADDING-TOP: 3px;
-	BACKGROUND-REPEAT: no-repeat;
 	LIST-STYLE-TYPE: none
 }
 
@@ -539,6 +547,10 @@ img.app_img {
 #namdCustomParamsTable td:last-child {
 	text-align: left;
 
+}
+
+.ui-tabs-panel {
+	padding: 1.4em 1.4em 0em;
 }
 
 div .help {

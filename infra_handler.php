@@ -401,8 +401,8 @@ class cluster_handler implements infra_handler {
 		$outdir = $this->outdir.$id.'/';
 		$this->cluster_connection->command("mkdir -p $outdir");
 
-		$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
-		unset($params['user_description']);
+		/*$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
+		unset($params['user_description']);*/
 		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');
 
 		$r = run_app($params, $outdir, $this->cluster_connection);
@@ -411,6 +411,9 @@ class cluster_handler implements infra_handler {
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
 //		print($r['cmd']);
 		$this->cluster_connection->command('nohup srun -p gpu '.$r['cmd']." &> {$outdir}job.log& echo $! > $outdir.pid");
+		if($this->cluster_connection->get_err()) {
+			print $this->cluster_connection->get_err();
+		}
 //		print $this->cluster_connection->command('srun -p gpu '.$r['cmd']);
 
 		return true;
@@ -423,7 +426,7 @@ class infra_controller {
 		$r = opennebula_handler::get_allocated_handlers($user);
 //		$r2 = openstack_handler::get_allocated_handlers($user);
 //		$r = array_merge($r1, $r2);
-//		$r[] = cluster_handler::get_allocated_handlers($user);
+		$r[] = cluster_handler::get_allocated_handlers($user);
 		return $r;
 	}
 
