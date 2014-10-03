@@ -7,7 +7,7 @@
 		$file_name = $_FILES['scriptFile']['name'];
 		$name = pathinfo($file_name);
 		
-		$connection->send_file($file_path, 'ns-allinone-3.??/ns-3.??/scratch/'.$name['basename']);
+		$connection->send_file($file_path, 'ns-allinone-3.19/ns-3.19/scratch/'.$name['basename']);
 	
 		$r = array();
 		$r['params_description'] = $params['param_str'];

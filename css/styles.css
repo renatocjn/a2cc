@@ -50,7 +50,7 @@ a {
 .help_container .help_contents {
 	width: inherit;
 	color: black;
-	padding: 1em;
+	padding: 0em 1em 1em;
 	font-size: 0.9em;
 }
 

@@ -32,10 +32,19 @@
 			}
 
 			function mostrar_barra() {
+				window.onbeforeunload = function (e) {
+				  var confirmationMessage = "Your last command may not complete if you close or reload this page.";
+				
+				  (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
+				  return confirmationMessage;                                //Webkit, Safari, Chrome etc.
+				}
+				document.body.style.cursor='wait';
 				$('#load').show('fast');
 			}
 
 			function ocultar_barra() {
+				document.body.style.cursor='auto';
+				window.onbeforeunload = null;
 				$('#load').hide('fast');
 			}
 

@@ -323,8 +323,10 @@ class opennebula_handler implements infra_handler {
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
+		
 		$this->connection->command('nohup '.$r['cmd']." &> ".$outdir."job.log& echo $! > ".$outdir.".pid");
 //		$this->connection->command($r['cmd']." &> $outdir/.job.log");
+		
 
 		return true;
 	}
@@ -410,7 +412,7 @@ class cluster_handler implements infra_handler {
 
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
 //		print($r['cmd']);
-		$this->cluster_connection->command('nohup srun -p gpu '.$r['cmd']." &> {$outdir}job.log& echo $! > $outdir.pid");
+		$this->cluster_connection->command('nohup srun -p long '.$r['cmd']." &> {$outdir}job.log& echo $! > $outdir.pid");
 		if($this->cluster_connection->get_err()) {
 			print $this->cluster_connection->get_err();
 		}
@@ -503,7 +505,8 @@ abstract class job {
 
 	function download_all_files() {
 		$nome_user = $_SESSION['usuarioLogin'];
-		$arquivo_remoto = 'files.tgz';
+		$this->connection->command("mkdir /tmp/".$nome_user);
+		$arquivo_remoto = '/tmp/'.$nome_user.'/files.tgz';
 		$this->connection->cd($this->job_dir);
 
 		$this->connection->command("tar czf $arquivo_remoto --exclude '.*' *");
@@ -529,7 +532,7 @@ abstract class job {
 		// Verifica se o arquivo não existe
 		// Configuramos os headers que serão enviados para o browser
 		header('Content-Description: File Transfer');
-		header('Content-Disposition: attachment; filename="'.$arquivoNome.'"');
+		header('Content-Disposition: attachment; filename=files.tgz"');
 		header('Content-Type: "'.$mime.'"');
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: ' . filesize($arquivo));

@@ -31,10 +31,19 @@
 			}
 
 			function mostrar_barra() {
+				window.onbeforeunload = function (e) {
+				  var confirmationMessage = "Seu ultimo comando pode não finalizar caso feche ou recarrege esta página agora.";
+				
+				  (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
+				  return confirmationMessage;                                //Webkit, Safari, Chrome etc.
+				}
+				document.body.style.cursor='wait';
 				$('#load').show('fast');
 			}
 
 			function ocultar_barra() {
+				document.body.style.cursor='auto';
+				window.onbeforeunload = null;
 				$('#load').hide('fast');
 			}
 
@@ -199,14 +208,54 @@
 	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>
-			<!--<li><a href="#namd"> Namd </a> </li>
-			<li><a href="#gaussian"> Gaussian </a> </li>
-			<li><a href="#siesta"> Siesta </a> </li>-->
+			<li><a href="#namd"> Namd </a> </li>
+			<!--<li><a href="#gaussian"> Gaussian </a> </li> -->
+			<li><a href="#autodock"> AutoDock </a> </li>
 			<li><a href="#octave"> Octave </a> </li>
 		</ul>
 
-		<!--<div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
-		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div>-->
+		<!--<div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div> -->
+		
+		<div id='autodock' class="tab"> <input type='hidden' value='autodock'>
+			<ul>
+			 	<li> <a href="#autodock-generic"> genérico </a> </li>
+			 </ul>
+			 
+			 <div id="autodock-generic"> <input type='hidden' value='generic'>
+				 <table width="100%">
+						<tr>
+							<td> Arquivos DAT de parâmetros </td>
+							<td> <input name="datFiles[]" type="file" multiple> </td>
+						</tr> <tr>
+							<td> Arquivo GPF </td>
+							<td> <input name="gpfFile" type="file"> </td>
+						</tr>
+							<td> Arquivos DPFs </td>
+							<td> <input name="pdfFiles[]" type="file" multiple> </td>
+						</tr> <tr>
+							<td> Arquivo PDBQT da macromolécula </td>
+							<td> <input name="mainpdbqtFile" type="file"> </td>
+						</tr> <tr>
+							<td> Arquivos PDBQT dos ligantes </td>
+							<td> <input name="otherpdbqts[]" type="file" multiple> </td>
+						</tr> <tr>
+							<td> Quantidade de rodadas do autodock </td>
+							<td> <input name="autodockRuns" type="number" value="1" min="1" max="10"> </td>
+						</tr> 
+					</table>
+					<div class="help_container">
+						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+						<div id="dialog" class="help_contents">
+							<p> Este modo permite ao usuário executar qualquer script que desejar, desde que esteja em acordo com a versão padrão do octave,
+							o usuário só precisa fazer upload do arquivo com o código de script e indicar quais parâmetros devem ser passados à simulação.</p>
+	
+							<p> Por exemplo, se você deseja executar algo assim: octave myScript.m param1 param2 <br>
+							Então é necessário que o arquivo myScript.m seja enviado e que seja escrito "param1 param2" no campo referente aos parâmetros. </p>
+						</div>
+					</div>
+			 </div>
+		</div>
+		
 		<div id='octave' class="tab"> <input type='hidden' value='octave'>
 			 <ul>
 			 	<li> <a href="#octave-generic"> genérico </a> </li>
@@ -237,8 +286,8 @@
 					</div>
 			 </div>
 		</div>
-		<!--
-		<div id='namd' class="tab"> <input type='hidden' value='namd'>
+		
+		<div id='namd' class="tab"> <input type='hidden' value='namd'> <center>
 			<ul>
 				<li> <a href="#norun"> Minimização </a> </li>
 				<li> <a href="#singlerun"> Execução simples </a> </li>
@@ -338,9 +387,9 @@
 			</table>
 
 			<table id="namdCustomParamsTable" > 	</table>
-
+			</center>
 		</div>
-	-->
+
 		<div id='ns3' class='tab'> <input type='hidden' value='ns3'>
 			<ul>
 				<li><a href="#mesh_tab"> Redes Mesh </a> </li>
