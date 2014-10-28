@@ -33,7 +33,7 @@
 			function mostrar_barra() {
 				window.onbeforeunload = function (e) {
 				  var confirmationMessage = "Seu ultimo comando pode não finalizar caso feche ou recarrege esta página agora.";
-				
+
 				  (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
 				  return confirmationMessage;                                //Webkit, Safari, Chrome etc.
 				}
@@ -215,12 +215,12 @@
 		</ul>
 
 		<!--<div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div> -->
-		
+
 		<div id='autodock' class="tab"> <input type='hidden' value='autodock'>
 			<ul>
 			 	<li> <a href="#autodock-generic"> genérico </a> </li>
 			 </ul>
-			 
+
 			 <div id="autodock-generic"> <input type='hidden' value='generic'>
 				 <table width="100%">
 						<tr>
@@ -230,37 +230,52 @@
 							<td> Arquivo GPF </td>
 							<td> <input name="gpfFile" type="file"> </td>
 						</tr>
-							<td> Arquivos DPFs </td>
-							<td> <input name="pdfFiles[]" type="file" multiple> </td>
-						</tr> <tr>
+							</tr> <tr>
 							<td> Arquivo PDBQT da macromolécula </td>
 							<td> <input name="mainpdbqtFile" type="file"> </td>
+						</tr> <tr>
+							<td> Arquivos DPFs </td>
+							<td> <input name="pdfFiles[]" type="file" multiple> </td>
 						</tr> <tr>
 							<td> Arquivos PDBQT dos ligantes </td>
 							<td> <input name="otherpdbqts[]" type="file" multiple> </td>
 						</tr> <tr>
+							<td> Outros arquivos </td>
+							<td> <input name="others[]" type="file" multiple> </td>
+						</tr> <tr>
 							<td> Quantidade de rodadas do autodock </td>
 							<td> <input name="autodockRuns" type="number" value="1" min="1" max="10"> </td>
-						</tr> 
+						</tr>
 					</table>
 					<div class="help_container">
 						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
 						<div id="dialog" class="help_contents">
-							<p> Este modo permite ao usuário executar qualquer script que desejar, desde que esteja em acordo com a versão padrão do octave,
-							o usuário só precisa fazer upload do arquivo com o código de script e indicar quais parâmetros devem ser passados à simulação.</p>
-	
-							<p> Por exemplo, se você deseja executar algo assim: octave myScript.m param1 param2 <br>
-							Então é necessário que o arquivo myScript.m seja enviado e que seja escrito "param1 param2" no campo referente aos parâmetros. </p>
+							<p>Este modelo permite o docking de qualquer macro molécula com qualquer ligante.</p>
+							<p>
+								O usuário precisa colocar os arquivos GPF e PDBQT gerados pelo Auto Dock Tools (ADT)
+								referentes à macro molécula que receberá o docking.
+							</p>
+
+							<p>
+								O usuário também precisa colocar os arquivos DPFs e PDBQTs (também extraídos do ADT)
+								de cada ligante no qual deseja executar dockings.
+								Será feito docking para cada arquivo DPF submetido.
+							</p>
+
+							<p>
+								O numero de rodadas do autodock significa a quantidade de execuções do autodock para cada DPF
+								dos ligantes de entrada.
+							</p>
 						</div>
 					</div>
 			 </div>
 		</div>
-		
+
 		<div id='octave' class="tab"> <input type='hidden' value='octave'>
 			 <ul>
 			 	<li> <a href="#octave-generic"> genérico </a> </li>
 			 </ul>
-			 
+
 			 <div id="octave-generic"> <input type='hidden' value='generic'>
 				 <table>
 						<tr>
@@ -272,22 +287,22 @@
 						</tr> <tr>
 							<td> Outros arquivos necessários </td>
 							<td> <input name="aux_files[]" type="file" size="10" multiple> </td>
-						</tr> 
+						</tr>
 					</table>
 					<div class="help_container">
 						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
 						<div id="dialog" class="help_contents">
 							<p> Este modo permite ao usuário executar qualquer script que desejar, desde que esteja em acordo com a versão padrão do octave,
 							o usuário só precisa fazer upload do arquivo com o código de script e indicar quais parâmetros devem ser passados à simulação.</p>
-	
+
 							<p> Por exemplo, se você deseja executar algo assim: octave myScript.m param1 param2 <br>
 							Então é necessário que o arquivo myScript.m seja enviado e que seja escrito "param1 param2" no campo referente aos parâmetros. </p>
 						</div>
 					</div>
 			 </div>
 		</div>
-		
-		<div id='namd' class="tab"> <input type='hidden' value='namd'> <center>
+
+		<div id='namd' class="tab"> <input type='hidden' value='namd'>
 			<ul>
 				<li> <a href="#norun"> Minimização </a> </li>
 				<li> <a href="#singlerun"> Execução simples </a> </li>
@@ -295,14 +310,14 @@
 			</ul>
 
 			<div id='norun' class="tab"> <input type='hidden' value='norun'>
-				<div class="help"> <span class="red"> IMPORTANTE: </span> <br> Neste formato de simulação não é executado nenhuma dinamica, isso é, o valor de 'run' é zerado no .conf final.</div>
+				<div class="help"> <div class="red"> IMPORTANTE: </div> Neste formato de simulação não é executado nenhuma dinamica, isso é, o valor de 'run' é zerado no .conf final.</div>
 				 <ul>
 					<li> <a href="#start_norun"> Iniciar nova simulação </a> </li>
 					<li> <a href="#continue_norun"> Continuar simulação </a> </li>
 				</ul>
 				<div id="start_norun"> <input type='hidden' value='start_norun'> </div>
 				<div id="continue_norun"> <input type='hidden' value='continue_norun'>
-					<table>
+					<table class="namdTable" width="100%">
 						</tr>	<tr>
 							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
 							<td><input type="file" name="coorFile" accept=".coor"></td>
@@ -310,7 +325,7 @@
 							<td>Arquivo VEL com velocidades iniciais: </td>
 							<td><input type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
-							<td>Valor do passo inicial</td>
+							<td>Valor do passo inicial: </td>
 							<td><input type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
@@ -323,7 +338,7 @@
 				</ul>
 				<div id="start_singlerun"> <input type='hidden' value='start_singlerun'> </div>
 				<div id="continue_singlerun"> <input type='hidden' value='continue_singlerun'>
-					<table>
+					<table class="namdTable" width="100%">
 						</tr>	<tr>
 							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
 							<td><input type="file" name="coorFile" accept=".coor"></td>
@@ -331,14 +346,14 @@
 							<td>Arquivo VEL com velocidades iniciais: </td>
 							<td><input type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
-							<td>Valor do passo inicial</td>
+							<td>Valor do passo inicial: </td>
 							<td><input type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
 			</div>
 			<div id='multiplerun' class="tab"> <input type='hidden' value='multiplerun'>
-				<div class="help"> <span class="red"> IMPORTANTE: </span> <br> Neste Formato de simulação a quantidade total de passos definida no parametro 'run' é dividida igualmente entre a quantidade de divisões desejadas.</div>
+				<div class="help"> <div class="red"> IMPORTANTE: </div> Neste Formato de simulação a quantidade total de passos definida no parametro 'run' é dividida igualmente entre a quantidade de divisões desejadas.</div>
 				<ul>
 					<li> <a href="#start_multiplerun"> Iniciar nova simulação </a> </li>
 					<li> <a href="#continue_multiplerun"> Continuar simulação </a> </li>
@@ -346,7 +361,7 @@
 
 				<div id="start_multiplerun"> <input type='hidden' value='start_multiplerun'> </div>
 				<div id="continue_multiplerun"> <input type='hidden' value='continue_multiplerun'>
-					<table>
+					<table class="namdTable">
 						</tr>	<tr>
 							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
 							<td><input type="file" name="coorFile" accept=".coor"></td>
@@ -354,26 +369,19 @@
 							<td>Arquivo VEL com velocidades iniciais: </td>
 							<td><input type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
-							<td>Valor do passo inicial</td>
+							<td>Valor do passo inicial: </td>
 							<td><input type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
-				<table> <tr>
-						<td> Numero de vezes que deseja dividir a execução </td>
+				<table class="namdTable"> <tr>
+						<td> Numero de vezes que deseja dividir a execução: </td>
 						<td> <input type="number" name="divisions" min="1" max="30"> </td>
 				</tr> </table>
 
 			</div>
-			<select id='namdCustomParams'>
-				<option disabled selected> Por favor selecione os parâmetros que deseja customizar </option>
-				<?php
-					$default_params = get_customizeable_namd_params();
-					foreach ($default_params as $p_key => $p_val)
-						echo "<option value='$p_val' name='$p_key'>{$p_key}, default value: $p_val</option>";
-				?>
-			</select>
-			<table>
+
+			<table class="namdTable" id="namdCommomInputs">
 				</tr>	<tr>
 					<td>Arquivo PDB com coordenadas: </td>
 					<td><input type="file" name="coordenatesFile" accept=".pdb"></td>
@@ -381,13 +389,21 @@
 					<td>Arquivo PSF com estruturas: </td>
 					<td><input type="file" name="structureFile" accept=".psf"></td>
 				</tr>	<tr>
-					<td>Arquivo INP ou XPLOR com parâmetros</td>
+					<td>Arquivo INP ou XPLOR com parâmetros: </td>
 					<td><input type="file" name="inpFile" accept=".inp,.xplor"></td>
 				</tr>
 			</table>
 
-			<table id="namdCustomParamsTable" > 	</table>
-			</center>
+			<center> <select id='namdCustomParams'>
+				<option disabled selected> Por favor selecione os parâmetros que deseja customizar </option>
+				<?php
+					$default_params = get_customizeable_namd_params();
+					foreach ($default_params as $p_key => $p_val)
+						echo "<option value='$p_val' name='$p_key'>{$p_key}, default value: $p_val</option>";
+				?>
+			</select> </center>
+
+			<table width="100%" class="namdTable" id="namdCustomParamsTable" > 	</table>
 		</div>
 
 		<div id='ns3' class='tab'> <input type='hidden' value='ns3'>

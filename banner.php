@@ -8,7 +8,7 @@
 		<img src="../img/cenapad.png" />
 	</a>
 	
-	<div class="siguLogo">
+	<!--<div class="siguLogo">
 		<img class="" class="siguLogo" src="../img/LogoSigu.png" />
-	</div>
+	</div>-->
 </div>

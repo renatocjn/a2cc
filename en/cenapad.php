@@ -34,7 +34,7 @@
 			function mostrar_barra() {
 				window.onbeforeunload = function (e) {
 				  var confirmationMessage = "Your last command may not complete if you close or reload this page.";
-				
+
 				  (e || window.event).returnValue = confirmationMessage;     //Gecko + IE
 				  return confirmationMessage;                                //Webkit, Safari, Chrome etc.
 				}
@@ -215,18 +215,72 @@
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>
 			<!--<li><a href="#namd"> Namd </a> </li>
-			<li><a href="#gaussian"> Gaussian </a> </li>
 			<li><a href="#siesta"> Siesta </a> </li> -->
+			<li><a href="#autodock"> AutoDock </a> </li>
 			<li><a href="#octave"> Octave </a> </li>
 		</ul>
 
 		<!-- <div id='gaussian'> <input type='hidden' value='gaussian'> Não implementado! </div>
 		<div id='siesta'> <input type='hidden' value='siesta'> Não implementado! </div> -->
+
+		<div id='autodock' class="tab"> <input type='hidden' value='autodock'>
+			<ul>
+				<li> <a href="#autodock-generic"> generic </a> </li>
+			</ul>
+			
+			<div id="autodock-generic"> <input type='hidden' value='generic'>
+				<table width="100%">
+					<tr>
+						<td> Parameter DAT Files </td>
+						<td> <input name="datFiles[]" type="file" multiple> </td>
+					</tr> <tr>
+						<td> Macromolecule GPF file </td>
+						<td> <input name="gpfFile" type="file"> </td>
+					</tr>
+						</tr> <tr>
+						<td> Macromolecule PDBQT files </td>
+						<td> <input name="mainpdbqtFile" type="file"> </td>
+					</tr> <tr>
+						<td> Ligants pdf files </td>
+						<td> <input name="pdfFiles[]" type="file" multiple> </td>
+					</tr> <tr>
+						<td> Ligants PDBQT files </td>
+						<td> <input name="otherpdbqts[]" type="file" multiple> </td>
+					</tr> <tr>
+						<td> Any other file </td>
+						<td> <input name="others[]" type="file" multiple> </td>
+					</tr> <tr>
+						<td> Number of runs of autodock </td>
+						<td> <input name="autodockRuns" type="number" value="1" min="1" max="10"> </td>
+					</tr>
+				</table>
+				<div class="help_container">
+					<div class="help_bar"> Help <img src="../img/dropdown.png"></div>
+					<div id="dialog" class="help_contents">
+						<p>This model allows docking simulations of any macromolecule with any ligand.</p>
+						<p>
+							The user needs to input the GPF and PDBQT files generated with the Auto Dock Tools (ADT) software
+							for the macromolecule that will receive the docking.
+						</p>
+
+						<p>
+							The user also needs to input the DPF and PDBQT (also from ADT) for every ligand.
+							A docking will be generated for each DPF file.
+						</p>
+
+						<p>
+							The number of runs of autodock means the number of executions of autodock for each DPF file.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div id='octave' class="tab"> <input type='hidden' value='octave'>
 			 <ul>
 			 	<li> <a href="#octave-generic"> generic script </a> </li>
 			 </ul>
-			 
+
 			 <div id="octave-generic"> <input type='hidden' value='generic'>
 				 <table>
 						<tr>
@@ -238,7 +292,7 @@
 						</tr> <tr>
 							<td> Other necessary files </td>
 							<td> <input name="aux_files[]" type="file" size="10" multiple> </td>
-						</tr> 
+						</tr>
 					</table>
 					<div class="help_container">
 						<div class="help_bar"> Help <img src="../img/dropdown.png"></div>

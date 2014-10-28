@@ -1,6 +1,8 @@
 <?php
 include_once 'connecta1.php';
 
+error_reporting(E_ALL ^ E_STRICT);
+
 interface infra_handler {
 	//returns a handler for each VM and for the cluster
 	static function get_allocated_handlers($user);
@@ -299,34 +301,54 @@ class opennebula_handler implements infra_handler {
 	}
 
 	function start_job($application, $params) {
-		//$t = time();
+		
 		while (!$this->connection->login('key')) {
 			sleep(15);
 		}
-		//print 'machineDeployTime '.(60 + time() - $t)."\n";
+		
 		include_once ("applications/".$application.".php");
+		
 		$existing_runs = explode("\n", $this->connection->command("ls -1 ".opennebula_job::get_jobs_dir()));
 		while (true) {
 			$id = rand();
 			if (!in_array($id, $existing_runs))
 				break;
 		}
+		
 		opennebula_handler::register_vm($this->VMID);
 		$outdir = opennebula_job::get_jobs_dir()."/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
-
-		//$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
-		//unset($params['user_description']);
+		
 		$this->connection->command('echo '.$application.' > '.$outdir.'.app');
 
 		$r = run_app($params, $outdir, $this->connection);
+		
+		//$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
+		//unset($params['user_description']);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		
-		$this->connection->command('nohup '.$r['cmd']." &> ".$outdir."job.log& echo $! > ".$outdir.".pid");
-//		$this->connection->command($r['cmd']." &> $outdir/.job.log");
+		$cmdPreffix = 'nohup ';
+		$cmdSuffix = " &> ".$outdir."job.log& echo $! > ".$outdir.".pid"; 
 		
+		if(!is_array($r['cmd'])) {
+			$this->connection->command($cmdPreffix.$r['cmd'].$cmdSuffix);
+		} else {
+			$preparationCmd = $r['cmd'][0];
+			
+			$this->connection->command($cmdPreffix.$preparationCmd.$cmdSuffix);
+			$pid = $this->connection->command("cat ".$outdir.".pid");
+			
+			$othersCmd = $r['cmd'][1];
+			if( is_array($othersCmd) ) {
+				foreach ($othersCmd as $cmd) {
+					$this->connection->command("wait $pid && ".$cmdPreffix.$cmd.$cmdSuffix);
+				}
+			} else {
+				$this->connection->command("wait $pid && ".$cmdPreffix.$othersCmd.$cmdSuffix);
+			}
+		}
 
 		return true;
 	}
@@ -411,12 +433,44 @@ class cluster_handler implements infra_handler {
 		$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
-//		print($r['cmd']);
-		$this->cluster_connection->command('nohup srun -p long '.$r['cmd']." &> {$outdir}job.log& echo $! > $outdir.pid");
-		if($this->cluster_connection->get_err()) {
-			print $this->cluster_connection->get_err();
+
+		$cmdPreffix = 'nohup srun --partition=long ';		
+		$outLog = $outdir."job.".rand().".log";
+		$cmdSuffix = " &>> ".$outLog."& echo $! >> ".$outdir.".pid";
+			
+		if(!is_array($r['cmd'])) {
+			$this->cluster_connection->command($cmdPreffix.$r['cmd'].$cmdSuffix);
+			$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
+			$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+			$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
+		} else {
+			$preparationCmd = $r['cmd'][0];
+			
+			$this->cluster_connection->command($cmdPreffix.$preparationCmd.$cmdSuffix);
+			$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
+			$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+			$dependence = "-d afterok:$slurmJobId ";
+			$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
+			
+			$othersCmd = $r['cmd'][1];
+			if( is_array($othersCmd) ) {
+				foreach ($othersCmd as $cmd) {
+					$outLog = $outdir."job.".rand().".log";
+					$cmdSuffix = " &>> ".$outLog."& echo $! >> ".$outdir.".pid";
+					$this->cluster_connection->command($cmdPreffix.$dependence.$cmd.$cmdSuffix);
+					$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
+					print $msg.PHP_EOL;
+					$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+					$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
+					print $slurmJobId.PHP_EOL;
+				}
+			} else {
+				$this->cluster_connection->command($cmdPreffix.$dependence.$othersCmd.$cmdSuffix);
+				$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
+				$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+				$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
+			}
 		}
-//		print $this->cluster_connection->command('srun -p gpu '.$r['cmd']);
 
 		return true;
 	}
@@ -506,10 +560,10 @@ abstract class job {
 	function download_all_files() {
 		$nome_user = $_SESSION['usuarioLogin'];
 		$this->connection->command("mkdir /tmp/".$nome_user);
-		$arquivo_remoto = '/tmp/'.$nome_user.'/files.tgz';
+		$arquivo_remoto = '/tmp/'.$nome_user.'_down.tgz';
 		$this->connection->cd($this->job_dir);
-
 		$this->connection->command("tar czf $arquivo_remoto --exclude '.*' *");
+
 		if (!file_exists('/tmp/ssh-down/'. $nome_user)) {
 			if (!file_exists('/tmp/ssh-down/')) {
 				mkdir('/tmp/ssh-down');
@@ -522,17 +576,20 @@ abstract class job {
 		if (!file_exists($arquivo)) {
 			shell_exec("touch {$arquivo}");
 		}
+		
+		$this->connection->cd();
 		$this->connection->recv_file($arquivo_remoto, $arquivo);
 		$this->connection->command("rm $arquivo_remoto");
 
 		$arquivoLocal = $arquivo; // caminho absoluto do arquivo
 		$arquivoNome = $arquivo_remoto; // nome do arquivo que será enviado p/ download
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		
 		$mime = preg_replace('/^(.*[A-Za-z])[^A-Za-z]*$/', '\1', finfo_file($finfo, $arquivo) . "\n");
 		// Verifica se o arquivo não existe
 		// Configuramos os headers que serão enviados para o browser
 		header('Content-Description: File Transfer');
-		header('Content-Disposition: attachment; filename=files.tgz"');
+		header('Content-Disposition: attachment; filename="files.tgz"');
 		header('Content-Type: "'.$mime.'"');
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: ' . filesize($arquivo));
@@ -543,7 +600,6 @@ abstract class job {
 		readfile($arquivoLocal);
 
 		unlink($arquivo);
-		$this->connection->cd();
 	}
 
 	function get_start_date() {
@@ -571,8 +627,10 @@ class cluster_job extends job {
 
 	function dispose() {
 		if ($this->is_running()) {
-			$pid = trim($this->connection->command("cat ".$this->job_dir."/.pid"));
-			$this->connection->command("kill -9 ".$pid);
+			$slurmIds = preg_split('/\s+/', trim($this->connection->command("cat ".$this->job_dir."/.slurmIds")));
+			foreach ($slurmIds as $id) {
+				$this->connection->command("scancel $id");
+			}
 		}
 		$this->connection->command("rm -R ".$this->job_dir);
 	}
@@ -585,9 +643,11 @@ class opennebula_job extends job {
 
 	function dispose() {
 	if ($this->is_running()) {
-			$pid = trim($this->connection->command("cat ".$this->job_dir."/.pid"));
-			$gid = trim($this->connection->command("ps -o %r hp $pid"));
-			$this->connection->command("kill -9 -".$gid);
+			$pids = preg_split('/\s+/', trim($this->connection->command("cat ".$this->job_dir."/.pid")));
+			foreach ($pids as $pid) {
+				$gid = trim($this->connection->command("ps -o %r hp $pid"));
+				$this->connection->command("kill -9 -".$gid);
+			}
 		}
 		$this->connection->command("rm -R ".$this->job_dir);
 	}

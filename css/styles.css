@@ -225,7 +225,7 @@ label,input {
 }
 
 input[type="text"] {
-	width: 100%;
+	width: 50%;
 }
 
 label {
@@ -428,7 +428,17 @@ UL LI UL LI UL LI {
 
 
 
+.namdTable {
+	width: 100%;
+}
 
+.namdTable tr td {
+	width: 50%;
+}
+
+.namdTable tr td:first-child {
+	text-align: right;
+}
 
 table {
 	max-width: 100%;
@@ -521,6 +531,23 @@ th {
 	width: 30px;
 }
 
+#namdCommomInputs {
+	left: 20px;
+	bottom: 20px;
+}
+
+#namdCommomInputs tr td {
+	padding: 3px;
+}
+
+#namdCommomInputs td:first-child {
+	text-align: right;
+}
+
+#namdCustomParamsTable {
+	
+}
+
 img.app_img {
 	height: 30px;
 	width: 100%;
@@ -534,6 +561,7 @@ img.app_img {
 
 #namdCustomParamsTable {
 	width = 60%;
+	margin-bottom: 10px;
 }
 
 #namdCustomParamsTable td:nth-child(2) {
@@ -557,11 +585,16 @@ div .help {
 	background-color: #99ccff;
 	max-width: 50%;
 	color: black;
-	margin-bottom: 10px
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	align-self: center;
 }
 
 div .help .red {
 	color: red;
+	align-self: center;
+	text-align: center;
 }
 
 .help-ico {

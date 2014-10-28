@@ -29,10 +29,26 @@
 			$connection->send_file($auxfile_path, $outdir.$auxname['basename']);
 		}
 		
+		for ($i=0; $i<sizeof($params['others']['name']); $i++) {
+			$auxfile_path = $params['others']['tmp_name'][$i];
+			$auxname = pathinfo($params['others']['name'][$i]);
+			$connection->send_file($auxfile_path, $outdir.$auxname['basename']);
+		}		
+		
 		$r = array();
 		$r['params_description'] = "";
-		$r['cmd'] = "./fullAutodock.v2.sh $outdir $autodock_runs";
-		//$r['cmd_dir'] = $outdir;
+		$r['cmd'] = array();
+		$r['cmd'][0] = "autogrid4 -p ".$gpfFile['basename']." -l ".$gpfFile['filename'].".gpg";
+		$r['cmd'][1] = array(); 
+		foreach ($params['pdfFiles']['name'] as $ligand) {
+			$ligand = pathinfo($ligand);
+			$outdockRunCmd = "autodock4 -p ".$ligand['basename']." -l ".$ligand['filename'];
+			
+			for($i=0; $i<$autodock_runs; $i++) {
+				$r['cmd'][1][] = $outdockRunCmd.$i.".pgf";
+			}
+		}		
+		$r['cmd_dir'] = $outdir;
 		
 		return $r;
 	}
