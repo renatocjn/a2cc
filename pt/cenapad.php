@@ -192,6 +192,8 @@
 				$('#updateJobStatus').click( clickUpdate );
 
 				clickUpdate();
+				
+				setInterval(updateJobStatus, 30000);
 			});
 		</script>
 	</head>

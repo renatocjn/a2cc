@@ -25,7 +25,7 @@
 
 		<script type='text/javascript'>
 			var updateBlocked = false;
-			var submitBlocked
+			var submitBlocked = false;
 
 			function removeRow(elem) {
 				$(elem).parents('tr').remove();
@@ -93,12 +93,7 @@
 					error: alertFail
 				});
 			}
-
-			function clickUpdate() {
-				document.body.style.cursor='wait';
-				updateJobStatus();
-			}
-
+			
 			function loadTableActions() {
 				$('.delBttn').click(function () {
 					var description = $(this).parent().siblings('input[type=hidden]').val();
@@ -195,7 +190,7 @@
 
 				$('#updateJobStatus').click( clickUpdate );
 
-				updateJobStatus();
+				clickUpdate();
 
 				setInterval(updateJobStatus, 30000);
 			});
