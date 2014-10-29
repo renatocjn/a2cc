@@ -434,21 +434,27 @@ class cluster_handler implements infra_handler {
 
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
 
-		$cmdPreffix = 'nohup srun --partition=long ';		
+		$cmdPreffix = 'nohup srun -v --partition=long ';		
 		$outLog = $outdir."job.".rand().".log";
 		$cmdSuffix = " &>> ".$outLog."& echo $! >> ".$outdir.".pid";
 			
 		if(!is_array($r['cmd'])) {
 			$this->cluster_connection->command($cmdPreffix.$r['cmd'].$cmdSuffix);
-			$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
-			$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+			$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+			$msg = preg_split("/ /", $msg);
+			$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 			$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
 		} else {
 			$preparationCmd = $r['cmd'][0];
 			
 			$this->cluster_connection->command($cmdPreffix.$preparationCmd.$cmdSuffix);
-			$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
-			$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+			$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+			$msg = preg_split("/ /", $msg);
+			$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
+			if($slurmJobId == "") {
+				echo $this->cluster_connection->command("cat $outLog");
+				return false;
+			}
 			$dependence = "-d afterok:$slurmJobId ";
 			$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
 			
@@ -458,16 +464,16 @@ class cluster_handler implements infra_handler {
 					$outLog = $outdir."job.".rand().".log";
 					$cmdSuffix = " &>> ".$outLog."& echo $! >> ".$outdir.".pid";
 					$this->cluster_connection->command($cmdPreffix.$dependence.$cmd.$cmdSuffix);
-					$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
-					print $msg.PHP_EOL;
-					$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+					$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+					$msg = preg_split("/ /", $msg);
+					$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 					$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
-					print $slurmJobId.PHP_EOL;
 				}
 			} else {
 				$this->cluster_connection->command($cmdPreffix.$dependence.$othersCmd.$cmdSuffix);
-				$msg = $this->cluster_connection->command("sleep 0.5 && grep queued $outLog");
-				$slurmJobId = preg_replace("/[^0-9]/", "", $msg);
+				$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+				$msg = preg_split("/ /", $msg);
+				$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 				$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
 			}
 		}

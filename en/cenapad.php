@@ -214,8 +214,7 @@
 	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>
-			<!--<li><a href="#namd"> Namd </a> </li>
-			<li><a href="#siesta"> Siesta </a> </li> -->
+			<li><a href="#namd"> Namd </a> </li>
 			<li><a href="#autodock"> AutoDock </a> </li>
 			<li><a href="#octave"> Octave </a> </li>
 		</ul>
@@ -313,30 +312,30 @@
 			 </div>
 		</div>
 
-		<!--<div id='namd' class="tab"> <input type='hidden' value='namd'>
+		<div id='namd' class="tab"> <input type='hidden' value='namd'>
 			<ul>
-				<li> <a href="#norun"> Minimização </a> </li>
-				<li> <a href="#singlerun"> Execução simples </a> </li>
-				<li> <a href="#multiplerun"> Execução multipla </a> </li>
+				<li> <a href="#norun"> Minimization </a> </li>
+				<li> <a href="#singlerun"> simple execution </a> </li>
+				<li> <a href="#multiplerun"> multiple run </a> </li>
 			</ul>
 
 			<div id='norun' class="tab"> <input type='hidden' value='norun'>
-				<div class="help"> <span class="red"> IMPORTANTE: </span> <br> Neste formato de simulação não é executado nenhuma dinamica, isso é, o valor de 'run' é zerado no .conf final.</div>
+				<div class="help"> <div class="red"> IMPORTANT: </div> In this simulation format there is no dynamics executed, i.e. the value of 'run' is zero.</div>
 				 <ul>
-					<li> <a href="#start_norun"> Iniciar nova simulação </a> </li>
-					<li> <a href="#continue_norun"> Continuar simulação </a> </li>
+					<li> <a href="#start_norun"> Simulate from the beginning </a> </li>
+					<li> <a href="#continue_norun"> Continue previous simulation </a> </li>
 				</ul>
 				<div id="start_norun"> <input type='hidden' value='start_norun'> </div>
 				<div id="continue_norun"> <input type='hidden' value='continue_norun'>
-					<table>
+					<table class="namdTable" width="100%">
 						</tr>	<tr>
-							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
+							<td>COOR file with initial coordinates: </td>
 							<td><input type="file" name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
-							<td>Arquivo VEL com velocidades iniciais: </td>
+							<td>VEL file with initial velocities: </td>
 							<td><input type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
-							<td>Valor do passo inicial</td>
+							<td>Value for initial step: </td>
 							<td><input type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
@@ -344,78 +343,79 @@
 			</div>
 			<div id='singlerun' class="tab"> <input type='hidden' value='singlerun'>
 				<ul>
-					<li> <a href="#start_singlerun"> Iniciar nova simulação </a> </li>
-					<li> <a href="#continue_singlerun"> Continuar simulação </a> </li>
+					<li> <a href="#start_singlerun"> Simulate from the beginning </a> </li>
+					<li> <a href="#continue_singlerun"> Continue previous simulation </a> </li>
 				</ul>
 				<div id="start_singlerun"> <input type='hidden' value='start_singlerun'> </div>
 				<div id="continue_singlerun"> <input type='hidden' value='continue_singlerun'>
-					<table>
+					<table class="namdTable" width="100%">
 						</tr>	<tr>
-							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
+							<td>COOR file with initial coordinates: </td>
 							<td><input type="file" name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
-							<td>Arquivo VEL com velocidades iniciais: </td>
+							<td>VEL file with initial velocities: </td>
 							<td><input type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
-							<td>Valor do passo inicial</td>
+							<td>Value for initial step: </td>
 							<td><input type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
 			</div>
 			<div id='multiplerun' class="tab"> <input type='hidden' value='multiplerun'>
-				<div class="help"> <span class="red"> IMPORTANTE: </span> <br> Neste Formato de simulação a quantidade total de passos definida no parametro 'run' é dividida igualmente entre a quantidade de divisões desejadas.</div>
+				<div class="help"> <div class="red"> IMPORTANTE: </div> This format of simulation splits the amount of dynamics steps any number of times. <BR> This is designed to split the sizes of the output files.</div>
 				<ul>
-					<li> <a href="#start_multiplerun"> Iniciar nova simulação </a> </li>
-					<li> <a href="#continue_multiplerun"> Continuar simulação </a> </li>
+					<li> <a href="#start_multiplerun"> Simulate from the beginning </a> </li>
+					<li> <a href="#continue_multiplerun"> Continue previous simulation </a> </li>
 				</ul>
 
 				<div id="start_multiplerun"> <input type='hidden' value='start_multiplerun'> </div>
 				<div id="continue_multiplerun"> <input type='hidden' value='continue_multiplerun'>
-					<table>
+					<table class="namdTable">
 						</tr>	<tr>
-							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
+							<td>COOR file with initial coordinates: </td>
 							<td><input type="file" name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
-							<td>Arquivo VEL com velocidades iniciais: </td>
+							<td>VEL file with initial velocities: </td>
 							<td><input type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
-							<td>Valor do passo inicial</td>
+							<td>Value for initial step: </td>
 							<td><input type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
-				<table> <tr>
-						<td> Numero de vezes que deseja dividir a execução </td>
+				<table class="namdTable"> <tr>
+						<td> Number of times you want to split the dynamics </td>
 						<td> <input type="number" name="divisions" min="1" max="30"> </td>
 				</tr> </table>
 
 			</div>
-			<select id='namdCustomParams'>
-				<option disabled selected> Por favor selecione os parâmetros que deseja customizar </option>
+
+			<table class="namdTable" id="namdCommomInputs">
+				</tr>	<tr>
+					<td>PDB file with coordinates: </td>
+					<td><input type="file" name="coordenatesFile" accept=".pdb"></td>
+				</tr>	<tr>
+					<td>PSF file with structures: </td>
+					<td><input type="file" name="structureFile" accept=".psf"></td>
+				</tr>	<tr>
+					<td>INP or XPLOR file with parameters: </td>
+					<td><input type="file" name="inpFile" accept=".inp,.xplor"></td>
+				</tr>
+			</table>
+
+			<center> <select id='namdCustomParams'>
+				<option disabled selected> Please select the parameters you wish to customize </option>
 				<?php
 					$default_params = get_customizeable_namd_params();
 					foreach ($default_params as $p_key => $p_val)
 						echo "<option value='$p_val' name='$p_key'>{$p_key}, default value: $p_val</option>";
 				?>
-			</select>
-			<table>
-				</tr>	<tr>
-					<td>Arquivo PDB com coordenadas: </td>
-					<td><input type="file" name="coordenatesFile" accept=".pdb"></td>
-				</tr>	<tr>
-					<td>Arquivo PSF com estruturas: </td>
-					<td><input type="file" name="structureFile" accept=".psf"></td>
-				</tr>	<tr>
-					<td>Arquivo INP ou XPLOR com parâmetros</td>
-					<td><input type="file" name="inpFile" accept=".inp,.xplor"></td>
-				</tr>
-			</table>
+			</select> </center>
 
-			<table id="namdCustomParamsTable" > 	</table>
-
+			<table width="100%" class="namdTable" id="namdCustomParamsTable" > 	</table>
 		</div>
-		-->
+		
 		<div id='ns3' class='tab'> <input type='hidden' value='ns3'>
 			<ul>
 				<li><a href="#mesh_tab"> Mesh Networks </a> </li>

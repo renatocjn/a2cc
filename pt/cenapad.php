@@ -306,7 +306,7 @@
 			<ul>
 				<li> <a href="#norun"> Minimização </a> </li>
 				<li> <a href="#singlerun"> Execução simples </a> </li>
-				<li> <a href="#multiplerun"> Execução multipla </a> </li>
+				<li> <a href="#multiplerun"> Execução múltipla </a> </li>
 			</ul>
 
 			<div id='norun' class="tab"> <input type='hidden' value='norun'>
@@ -399,7 +399,7 @@
 				<?php
 					$default_params = get_customizeable_namd_params();
 					foreach ($default_params as $p_key => $p_val)
-						echo "<option value='$p_val' name='$p_key'>{$p_key}, default value: $p_val</option>";
+						echo "<option value='$p_val' name='$p_key'>{$p_key}, valor padrão: $p_val</option>";
 				?>
 			</select> </center>
 
