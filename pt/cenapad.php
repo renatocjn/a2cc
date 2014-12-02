@@ -136,7 +136,7 @@
 					var val = option.val();
 
 					if($('#namdCustomParamsTable input[name='+name+']').length) return;
-					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
+					$('#namdCustomParamsTable').append('<tr class="deleteonreset"> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
@@ -194,6 +194,10 @@
 				clickUpdate();
 				
 				setInterval(updateJobStatus, 30000);
+				
+				$('input[type=reset]').click( function () {
+					$('.deleteonreset').remove();
+				});
 			});
 		</script>
 	</head>

@@ -366,7 +366,7 @@ class cluster_handler implements infra_handler {
 		$this->cluster_connection->set_user($_SESSION['usuarioLogin']);
 		$this->cluster_connection->set_passwd($_SESSION['usuarioSenha']);
 		if(!$this->cluster_connection->login()) {
-			throw new Exception('Usuário desconhecido ou cluster indisponivel');
+			throw new Exception('Usuário não cadastrado no cluster ou cluster indisponível');
 		}
 		$this->outdir = trim(cluster_job::get_jobs_dir().'/');
 		$this->cluster_connection->command('mkdir -p '.$this->outdir);
@@ -440,7 +440,7 @@ class cluster_handler implements infra_handler {
 			
 		if(!is_array($r['cmd'])) {
 			$this->cluster_connection->command($cmdPreffix.$r['cmd'].$cmdSuffix);
-			$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+			$msg = $this->cluster_connection->command("grep -e jobid -e queued $outLog");
 			$msg = preg_split("/ /", $msg);
 			$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 			$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
@@ -448,11 +448,10 @@ class cluster_handler implements infra_handler {
 			$preparationCmd = $r['cmd'][0];
 			
 			$this->cluster_connection->command($cmdPreffix.$preparationCmd.$cmdSuffix);
-			$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
-			$msg = preg_split("/ /", $msg);
+			$msg = $this->cluster_connection->command('grep -e jobid -e queued '.$outLog);
+			$msg = preg_split("/ /", $msg);			
 			$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 			if($slurmJobId == "") {
-				echo $this->cluster_connection->command("cat $outLog");
 				return false;
 			}
 			$dependence = "-d afterok:$slurmJobId ";
@@ -464,14 +463,18 @@ class cluster_handler implements infra_handler {
 					$outLog = $outdir."job.".rand().".log";
 					$cmdSuffix = " &>> ".$outLog."& echo $! >> ".$outdir.".pid";
 					$this->cluster_connection->command($cmdPreffix.$dependence.$cmd.$cmdSuffix);
-					$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+					$msg = $this->cluster_connection->command('grep -e jobid -e queued '.$outLog);
 					$msg = preg_split("/ /", $msg);
 					$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
+					if($slurmJobId == "") {
+						var_dump($msg);
+						return false;
+					}
 					$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
 				}
 			} else {
 				$this->cluster_connection->command($cmdPreffix.$dependence.$othersCmd.$cmdSuffix);
-				$msg = $this->cluster_connection->command("sleep 0.5 && grep jobid $outLog");
+				$msg = $this->cluster_connection->command('sleep 1; grep -e jobid -e queued '.$outLog);
 				$msg = preg_split("/ /", $msg);
 				$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 				$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
@@ -543,7 +546,8 @@ abstract class job {
 	private $startDate;
 
 	static abstract function get_jobs_dir();
-
+	abstract function is_running();
+	
 	function __construct($con, $sid) {
 		$this->connection = clone $con;
 		$this->sim_id = trim($sid);
@@ -554,11 +558,6 @@ abstract class job {
 		$tmp = preg_split('/\s+/',$tmp);
 		$this->startDate = implode(' ', array_slice($tmp, 5, 3));
 		$this->job_dir = $this->job_dir.'/'.$this->sim_id;
-	}
-
-	function is_running() {
-		$pid = $this->connection->command("cat ".$this->job_dir."/.pid");
-		return (trim($this->connection->command("ps hp $pid")) == "") ? false : true;
 	}
 
 	abstract function dispose();
@@ -631,9 +630,22 @@ class cluster_job extends job {
 		return "/home/{$_SESSION['usuarioLogin']}/jobs";
 	}
 
+	function is_running() {
+		$slurmIds = $this->connection->command("cat ".$this->job_dir."/.slurmIds");
+		$slurmIds = preg_split("/\s+/", $slurmIds);
+		foreach ($slurmIds as $sid) {
+			$r = $this->connection->command("squeue -h --jobs=$sid");
+			if (trim($r) != "")
+				return true;
+		}
+		return false;
+	}
+
 	function dispose() {
 		if ($this->is_running()) {
 			$slurmIds = preg_split('/\s+/', trim($this->connection->command("cat ".$this->job_dir."/.slurmIds")));
+			echo $this->connection->get_err();
+			var_dump($slurmIds);
 			foreach ($slurmIds as $id) {
 				$this->connection->command("scancel $id");
 			}
@@ -643,6 +655,12 @@ class cluster_job extends job {
 }
 
 class opennebula_job extends job {
+
+	function is_running() {
+		$pid = $this->connection->command("cat ".$this->job_dir."/.pid");
+		return (trim($this->connection->command("ps hp $pid")) == "") ? false : true;
+	}
+
 	static function get_jobs_dir() {
 		return '/home/clouduser/jobs/'.$_SESSION['usuarioLogin'];
 	}
