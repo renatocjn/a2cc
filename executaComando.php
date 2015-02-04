@@ -30,11 +30,10 @@
 	}
 	
 	else if(isset($_GET["excluir"])) {
-		print 'excluir'.PHP_EOL;
 		$description = $_GET["excluir"];
-		$job = infra_controller::job_from_description($description);
-		$job->dispose();
-		infra_controller::dispose_vm($description);
+		$r = infra_controller::parse_description($description);
+		$r['job']->dispose();
+		$r['infra']->dispose_if_necessary();
 	}
 	
 	else if (isset($_GET["rmAll"]))	{
@@ -45,14 +44,14 @@
 			foreach ($jobs as $job) {
 				$job->dispose();
 			}
-			if($infra->clean_of_jobs()) $infra->dispose();
+			$infra->dispose_if_necessary();
 		}
 	}
 	
 	else if (isset($_GET["down"])) {
 		$description = $_GET["down"];
-		$job = infra_controller::job_from_description($description);
-		$job->download_all_files();
+		$r = infra_controller::parse_description($description);
+		$r['job']->download_all_files();
 	}
 	
 	else {

@@ -16,6 +16,52 @@ a {
 	cursor : pointer;
 }
 
+.help_container {
+	background: Lavender;
+	border-radius: 10px;
+	margin-bottom: 10px; 
+	margin-top: 10px;
+	clear: both;
+}
+
+.help_container .help_bar {
+	height: 20px;
+	width: inherit;
+	border-radius: inherit;
+	background-image: url("../img/help-bar.png");
+	background-repeat: x-repeat;
+	background-size: contain;
+	text-align: center;
+	font-size: 15px;
+	color: white;
+	text-shadow: 1px 1px gray;
+	cursor: pointer;
+}
+
+.help_container .help_bar img {
+	height: inherit;
+	width: inherit;
+	vertical-align: middle;
+	display: table-cell;
+	float: right;
+	padding-right: 0.5%;
+}
+
+.help_container .help_contents {
+	width: inherit;
+	color: black;
+	padding: 0em 1em 1em;
+	font-size: 0.9em;
+}
+
+.help_container .help_contents ul li {
+	font-size: inherit;
+	line-height: normal;
+	list-style-type: disc;
+	margin: inherit;
+	padding: 0;
+}
+
 #navbar { #
 	color: #D0D0CA; #
 	font-size: 12px;
@@ -178,6 +224,10 @@ label,input {
 	float: left;
 }
 
+input[type="text"] {
+	width: 50%;
+}
+
 label {
 	text-align: right;
 	width: 112px;
@@ -305,15 +355,12 @@ UL {
 
 UL LI {
 	PADDING-RIGHT: 0px;
-	BACKGROUND-POSITION: 1px 8px;
 	PADDING-LEFT: 15px;
 	FONT-SIZE: 11px;
-	BACKGROUND-IMAGE: url(/imagens/ponto.gif);
 	PADDING-BOTTOM: 3px;
 	MARGIN: 0px;
 	LINE-HEIGHT: 1.3em;
 	PADDING-TOP: 3px;
-	BACKGROUND-REPEAT: no-repeat;
 	LIST-STYLE-TYPE: none
 }
 
@@ -381,7 +428,17 @@ UL LI UL LI UL LI {
 
 
 
+.namdTable {
+	width: 100%;
+}
 
+.namdTable tr td {
+	width: 50%;
+}
+
+.namdTable tr td:first-child {
+	text-align: right;
+}
 
 table {
 	max-width: 100%;
@@ -457,11 +514,12 @@ th {
 	background-color: #f9f9f9;
 }
 
-#grid #grid-help-pic {
+.mesh-help-pic {
 	float: left;
 	width: 380px;
 	height: 380px;
 	margin-right: 50px;
+	margin-bottom: 20px;
 }
 
 .table-cadastro td:FIRST-CHILD {
@@ -471,6 +529,23 @@ th {
 .table-consulta img {
 	height: 30px;
 	width: 30px;
+}
+
+#namdCommomInputs {
+	left: 20px;
+	bottom: 20px;
+}
+
+#namdCommomInputs tr td {
+	padding: 3px;
+}
+
+#namdCommomInputs td:first-child {
+	text-align: right;
+}
+
+#namdCustomParamsTable {
+	
 }
 
 img.app_img {
@@ -486,6 +561,7 @@ img.app_img {
 
 #namdCustomParamsTable {
 	width = 60%;
+	margin-bottom: 10px;
 }
 
 #namdCustomParamsTable td:nth-child(2) {
@@ -501,15 +577,25 @@ img.app_img {
 
 }
 
+.ui-tabs-panel {
+	padding: 1.4em 1.4em 0em;
+}
+
 div .help {
 	background-color: #99ccff;
 	max-width: 50%;
 	color: black;
-	margin-bottom: 10px
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	align-self: center;
+	text-align: center;
 }
 
 div .help .red {
 	color: red;
+	align-self: center;
+	text-align: center;
 }
 
 .help-ico {

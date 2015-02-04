@@ -17,32 +17,7 @@
  *
  * Author: Kirill Andreev <andreev@iitp.ru>
  *
- *
- * By default this script creates m_xSize * m_ySize square grid topology with
- * IEEE802.11s stack installed at each node with peering management
- * and HWMP protocol.
- * The side of the square cell is defined by m_step parameter.
- * When topology is created, UDP ping is installed to opposite corners
- * by diagonals. packet size of the UDP ping and interval between two
- * successive packets is configurable.
- * 
- *  m_xSize * step
- *  |<--------->|
- *   step
- *  |<--->|
- *  * --- * --- * <---Ping sink  _
- *  | \   |   / |                ^
- *  |   \ | /   |                |
- *  * --- * --- * m_ySize * step |
- *  |   / | \   |                |
- *  | /   |   \ |                |
- *  * --- * --- *                _
- *  ^ Ping source
- *
- *  See also MeshTest::Configure to read more about configurable
- *  parameters.
- */
-
+*/
 
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
@@ -55,6 +30,7 @@
 #include "ns3/random-variable.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/hwmp-protocol.h"
+#include "ns3/netanim-module.h"
 
 #include <iostream>
 #include <sstream>
@@ -92,6 +68,7 @@ private:
   bool      m_xml;
   bool      m_flowmonitor;
   int       m_nFlows;
+  bool      m_netanim;
   int       m_seed;
   Ptr<FlowMonitor> m_monitor;
   std::string m_stack;
@@ -127,6 +104,7 @@ MeshTest::MeshTest () :
   m_xml (true),
   m_flowmonitor (true),
   m_nFlows (1),
+  m_netanim (true),
   m_stack ("ns3::Dot11sStack"),
   m_root ("ff:ff:ff:ff:ff:ff")
 {
@@ -156,6 +134,7 @@ MeshTest::Configure (int argc, char *argv[])
   cmd.AddValue ("flowmonitor", "Enable Flow monitor traces on all flows.", m_flowmonitor);
   cmd.AddValue ("stack", "Type of protocol stack. ns3::Dot11sStack by default", m_stack);
   cmd.AddValue ("root", "Mac address of root mesh point in HWMP", m_root);
+  cmd.AddValue ("netanim", "Enable NetAnim animation traces", m_netanim);
 
   SeedManager::SetSeed(m_seed);
 
@@ -282,10 +261,16 @@ MeshTest::Run ()
   m_monitor = fmh.GetMonitor();
 
   if (m_xml) Simulator::Schedule (Seconds (m_totalTime), &MeshTest::Report, this);
+
+  AnimationInterface anim("netanim.xml");
+
+  if (m_flowmonitor) {
+    m_monitor->CheckForLostPackets();
+    m_monitor->SerializeToXmlFile("FlowMonitorResults.xml", true, true);
+  }
+
   Simulator::Stop (Seconds (m_totalTime));
   Simulator::Run ();
-  m_monitor->CheckForLostPackets();
-  m_monitor->SerializeToXmlFile("FlowMonitorResults.xml", true, true);
 
   Simulator::Destroy ();
   return 0;
