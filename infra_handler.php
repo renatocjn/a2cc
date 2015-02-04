@@ -288,14 +288,16 @@ class opennebula_handler implements infra_handler {
 	}
 
 	static function get_allocated_handlers($user = NULL) {
-		if($user)
+		if($user){
 			$vm_list = opennebula_handler::get_allocated_vmids($user);
+		}
 		else {
 			$cloud_connection = opennebula_handler::getCloudConnection();
 			$r = $cloud_connection->command('onevm list --csv --list ID,USER --filter USER=a2cc|cut -d, -f1');
-			$vm_list = array_slice( preg_split('/\s+/', $r), 1 );
+			$vm_list = array_slice( preg_split('/\s+/', trim($r)), 1 );
 		}
 		$handlers = array();
+
 		foreach ($vm_list as $vmid) $handlers[] = new opennebula_handler($vmid);
 		return $handlers;
 	}
@@ -314,7 +316,7 @@ class opennebula_handler implements infra_handler {
 			if (!in_array($id, $existing_runs))
 				break;
 		}
-		
+
 		opennebula_handler::register_vm($this->VMID);
 		$outdir = opennebula_job::get_jobs_dir()."/".$id.'/';
 		$this->connection->command("mkdir -p $outdir");
@@ -334,6 +336,7 @@ class opennebula_handler implements infra_handler {
 		
 		if(!is_array($r['cmd'])) {
 			$this->connection->command($cmdPreffix.$r['cmd'].$cmdSuffix);
+			echo $this->connection->get_err().PHP_EOL;
 		} else {
 			$preparationCmd = $r['cmd'][0];
 			
@@ -544,7 +547,16 @@ abstract class job {
 	protected $sim_id;
 	protected $job_dir;
 	private $startDate;
-
+	protected $infra;
+	
+	function set_infra($infra) {
+		$this->infra = $infra;
+	}	
+	
+	function get_infra() {
+		return $this->infra;
+	}
+	
 	static abstract function get_jobs_dir();
 	abstract function is_running();
 	

@@ -21,7 +21,7 @@
 		} else {
 			$r['params_description'] = $param_str;
 			$r['cmd'] = "./waf --cwd=$outdir --run 'grid $param_str'";
-			$r['cmd_dir'] = 'ns-allinone-3.19/ns-3.19/';
+			$r['cmd_dir'] = 'ns-allinone-3.??/ns-3.??/';
 		}
 
 		if($graphs)

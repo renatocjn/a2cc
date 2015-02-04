@@ -21,9 +21,13 @@
 	echo '<?xml version="1.0"?>';
 	echo '<jobs>';
 	$jobs = array();
-	foreach( $allocated_infra as $infra )	{
+	foreach( $allocated_infra as $infra ) {
 		if (!$infra->is_ready()) continue;
 		$tmp = $infra->get_jobs();
+		foreach ($tmp as $job) {
+			echo get_class($infra)." / ".get_class($job).PHP_EOL;
+			$job->set_infra($infra);
+		}
 		$jobs = array_merge($jobs, $tmp);
 	}
 	
@@ -42,12 +46,12 @@
 		echo "<startDate>$dataInicio</startDate>";
 		
 		$runn = ($job->is_running()) ? 'true' : 'false';
-		echo "<isrunning>". $runn . "</isrunning>";			
+		echo "<isrunning>". $runn ."</isrunning>";			
 
 		$app = $job->get_app();
 		echo "<application>$app</application>";
 		
-		$description = infra_controller::job_to_description($infra, $job);
+		$description = infra_controller::job_to_description($job->get_infra(), $job);
 		echo "<description>$description</description>";			
 		
 		$params = $job->get_params();
