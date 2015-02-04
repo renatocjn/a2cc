@@ -52,6 +52,33 @@
 				alert('Something went wrong...\n'+d.responseText)
 			}
 
+			function loadTableActions() {
+					$('.delBttn').click(function () {
+						var description = $(this).parent().siblings('input[type=hidden]').val();
+						jQuery.ajax({
+							url: "../executaComando.php",
+							data: { excluir: description.trim() },
+							complete: ocultar_barra,
+							beforeSend: mostrar_barra,
+							method: 'GET',
+							error: alertFail,
+							success: clickUpdate
+						});
+					});
+	
+					$("#cleanBttn").click( function() {
+						jQuery.ajax({
+							url: "../executaComando.php",
+							data: { rmAll:"" },
+							method: 'GET',
+							complete: ocultar_barra,
+							beforeSend: mostrar_barra,
+							error: alertFail,
+							success: clickUpdate
+						});
+					});
+				}
+
 			function updateJobStatus() {
 				if (updateBlocked) {
 					return;
@@ -75,12 +102,12 @@
 							jobRow += '<td> <img class="app_img" src="../applications/'+ j.find('application').text().trim() +'.png" /> </td>';
 							jobRow += "<td> " + j.find('params').text().trim() + " </td>";
 							jobRow += '<td width="15%"> <a href="../executaComando.php?down=' + j.find('description').text().trim() + '"><img src="../img/dowloads.jpg" height=25 title=Download></a></td>';
-							jobRow += "<td width='15%'> <a class='delBttn' title=''> <img src=../img/excluir.jpg height=25 title=Delete> </a> </td>";
+							jobRow += "<td width='15%'> <a class='delBttn' title=''> <img src=../img/excluir.jpg height=25 title='delete data from this simulation'> </a> </td>";
 							table.append(jobRow);
 						});
 
 						if (Jobs.length != 0) {
-							table.append("<tr> <th colspan='6'> <a id='cleanBttn'> Clean all <img src=../img/apagarTudo.png height=25 title=Delete all simulations> </a> </th> </tr>");
+							table.append("<tr> <th colspan='6'> <a id='cleanBttn' title='Delete all simulations'> Clean all <img src=../img/apagarTudo.png height=25> </a> </th> </tr>");
 						} else {
 							table.append("<tr> <th colspan='6'>No simulation found</th> </tr>");
 						}
@@ -89,45 +116,65 @@
 						loadTableActions();
 						updateBlocked = false;
 						document.body.style.cursor='default';
-					},
-					error: alertFail
+					}
 				});
 			}
 			
-			function loadTableActions() {
-				$('.delBttn').click(function () {
-					var description = $(this).parent().siblings('input[type=hidden]').val();
-					jQuery.ajax({
-						url: "../executaComando.php",
-						data: { excluir: description.trim() },
-						complete: ocultar_barra,
-						beforeSend: mostrar_barra,
-						method: 'GET',
-						error: alertFail,
-						success: clickUpdate
-					});
-				});
-
-				$("#cleanBttn").click( function() {
-					jQuery.ajax({
-						url: "../executaComando.php",
-						data: { rmAll:"" },
-						method: 'GET',
-						complete: ocultar_barra,
-						beforeSend: mostrar_barra,
-						error: alertFail,
-						success: clickUpdate
-					});
-				});
+			
+			function clickUpdate() {
+				document.body.style.cursor='wait';
+				updateJobStatus();
 			}
 
 			$( function() {
+				$('input[type=file]').change(function () {
+					var extensions = this.accept.split(',');
+					var extSize = extensions.length;					
+					if (this.multiple) {
+						var nFiles = this.files.length;	
+						for (var i=0; i<nFiles; i++) {
+							ok = false;
+							for (var j=0; j<extSize; j++) {
+								regExp = RegExp(extensions[j].trim() + '$', 'i'); 
+								if (extensions[j].trim() != '' && regExp.test(this.files[i].name)) {
+									ok = true;
+									break;
+								}
+							} 
+							if(!ok) {
+								alert ('These files must have one of the following extensions: '+extensions);
+								this.value = null;
+								this.files = null;
+							}
+						}
+					} else {
+						ok = false;
+						for (var i=0; i<extSize; i++) {
+							regExp = RegExp(extensions[i].trim() + '$', 'i');
+							if (extensions[i].trim() != '' && regExp.test(this.value)){
+								ok = true;
+								break;
+							}
+						}
+						if (!ok) {
+							alert("This file must have one of the following extensions: "+ this.accept);
+							this.value = null;
+						}
+					}
+				});
+				
 				$('.help_container .help_contents').hide();
 				$('.help_container .help_bar').click( function () {
 					$(this).siblings('.help_contents').toggle(700);
 				});
 
-				$('.tab').tabs();
+				$('.tab').tabs().tabs({
+					activate: function(event, ui) {
+						$("#form1 input:hidden").prop('disabled', true);
+						$("#form1 input:visible").prop('disabled', false);
+					}
+				});
+				
 				$('.progressbar').progressbar().progressbar('value', false);
 				$('#load').hide();
 
@@ -137,7 +184,7 @@
 					var val = option.val();
 
 					if($('#namdCustomParamsTable input[name='+name+']').length) return;
-					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
+					$('#namdCustomParamsTable').append('<tr> <td>'+ name +'</td> <td> <input required type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
@@ -182,17 +229,14 @@
 					});
 				});
 				$('.help-ico').tooltip();
-
-				function clickUpdate() {
-					document.body.style.cursor='wait';
-					updateJobStatus();
-				}
-
+								
 				$('#updateJobStatus').click( clickUpdate );
 
 				clickUpdate();
 
 				setInterval(updateJobStatus, 30000);
+				
+				$("#form1 input:hidden").prop('disabled', true);
 			});
 		</script>
 	</head>
@@ -226,23 +270,23 @@
 				<table width="100%">
 					<tr>
 						<td> Parameter DAT Files </td>
-						<td> <input name="datFiles[]" type="file" multiple> </td>
+						<td> <input name="datFiles[]" required type="file" accept=".dat" multiple> </td>
 					</tr> <tr>
 						<td> Macromolecule GPF file </td>
-						<td> <input name="gpfFile" type="file"> </td>
+						<td> <input name="gpfFile" required type="file" accept=".gpf"> </td>
 					</tr>
 						</tr> <tr>
 						<td> Macromolecule PDBQT files </td>
-						<td> <input name="mainpdbqtFile" type="file"> </td>
+						<td> <input name="mainpdbqtFile" required type="file" accept=".pdbqt"> </td>
 					</tr> <tr>
-						<td> Ligants pdf files </td>
-						<td> <input name="pdfFiles[]" type="file" multiple> </td>
+						<td> Ligants DPF files </td>
+						<td> <input name="dpfFiles[]" type="file" required accept=".dpf" multiple> </td>
 					</tr> <tr>
 						<td> Ligants PDBQT files </td>
-						<td> <input name="otherpdbqts[]" type="file" multiple> </td>
+						<td> <input name="otherpdbqts[]" required type="file" accept=".pdbqt" multiple> </td>
 					</tr> <tr>
 						<td> Any other file </td>
-						<td> <input name="others[]" type="file" multiple> </td>
+						<td> <input name="others[]" required type="file" multiple> </td>
 					</tr> <tr>
 						<td> Number of runs of autodock </td>
 						<td> <input name="autodockRuns" type="number" value="1" min="1" max="10"> </td>
@@ -279,7 +323,7 @@
 				 <table>
 						<tr>
 							<td> Main script file </td>
-							<td> <input name="scriptFile" type="file"> </td>
+							<td> <input required name="scriptFile" type="file" accept=".m" > </td>
 						</tr> <tr>
 							<td width="50%"> execution parameters for the script </td>
 							<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
@@ -325,13 +369,13 @@
 					<table class="namdTable" width="100%">
 						</tr>	<tr>
 							<td>COOR file with initial coordinates: </td>
-							<td><input type="file" name="coorFile" accept=".coor"></td>
+							<td><input required type="file" name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
 							<td>VEL file with initial velocities: </td>
-							<td><input type="file" name="velFile" accept=".vel"></td>
+							<td><input required type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
 							<td>Value for initial step: </td>
-							<td><input type="number" name="initialStep" min="0"></td>
+							<td><input required type="number" name="initialStep" value="" min="0"></td>
 						</tr>
 					</table>
 				</div>
@@ -346,13 +390,13 @@
 					<table class="namdTable" width="100%">
 						</tr>	<tr>
 							<td>COOR file with initial coordinates: </td>
-							<td><input type="file" name="coorFile" accept=".coor"></td>
+							<td><input required type="file" name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
 							<td>VEL file with initial velocities: </td>
-							<td><input type="file" name="velFile" accept=".vel"></td>
+							<td><input required type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
 							<td>Value for initial step: </td>
-							<td><input type="number" name="initialStep" min="0"></td>
+							<td><input required type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
@@ -369,19 +413,19 @@
 					<table class="namdTable">
 						</tr>	<tr>
 							<td>COOR file with initial coordinates: </td>
-							<td><input type="file" name="coorFile" accept=".coor"></td>
+							<td><input required type="file" name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
 							<td>VEL file with initial velocities: </td>
-							<td><input type="file" name="velFile" accept=".vel"></td>
+							<td><input required type="file" name="velFile" accept=".vel"></td>
 						</tr>	<tr>
 							<td>Value for initial step: </td>
-							<td><input type="number" name="initialStep" min="0"></td>
+							<td><input required type="number" name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
 				<table class="namdTable"> <tr>
 						<td> Number of times you want to split the dynamics </td>
-						<td> <input type="number" name="divisions" min="1" max="30"> </td>
+						<td> <input type="number" name="divisions" min="2" max="30"> </td>
 				</tr> </table>
 
 			</div>
@@ -389,13 +433,13 @@
 			<table class="namdTable" id="namdCommomInputs">
 				</tr>	<tr>
 					<td>PDB file with coordinates: </td>
-					<td><input type="file" name="coordenatesFile" accept=".pdb"></td>
+					<td><input type="file" required name="coordenatesFile" accept=".pdb"></td>
 				</tr>	<tr>
 					<td>PSF file with structures: </td>
-					<td><input type="file" name="structureFile" accept=".psf"></td>
+					<td><input type="file" required name="structureFile" accept=".psf"></td>
 				</tr>	<tr>
 					<td>INP or XPLOR file with parameters: </td>
-					<td><input type="file" name="inpFile" accept=".inp,.xplor"></td>
+					<td><input type="file" required name="inpFile" accept=".inp,.xplor"></td>
 				</tr>
 			</table>
 
@@ -422,7 +466,7 @@
 				<table>
 					<tr>
 						<td> NS3 script file </td>
-						<td> <input name="scriptFile" type="file"> </td>
+						<td> <input name="scriptFile" required type="file" accept=".cc,.cpp"> </td>
 					</tr>	<tr>
 						<td width="50%"> Parameters for the simulation </td>
 						<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
@@ -455,31 +499,31 @@
 							<tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of nodes in each line of the grid."> </td>
 								<td> Horizontal size of the disc (x-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
+								<td> <input type='number' min="1" max="10" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of nodes in each column of the grid."> </td>
 								<td> Vertical size of the disc (y-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
+								<td> <input type='number' min="1" max="10" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the physical distance between nodes of the grid, this distance is constant vertically and horizontally."> </td>
 								<td> Distance among nodes (step)</td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
+								<td> <input type='number' min="1" max="300" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is usually larger than the simulated time."> </td>
 								<td> Simulation Time (seconds)</td>
-								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+								<td> <input type='number' min="10" max="1000" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces connected to each node."> </td>
 								<td> Number of radio interfaces in each node </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
+								<td> <input type='number' min="1" max="5" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
 								<td> Packet transmission interval (seconds) </td>
-								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+								<td> <input type='number' min="0.001" max="1" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Byte size of each packet to be sent on the network."> </td>
 								<td> Packet size (Bytes) </td>
-								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+								<td> <input type='number' min="128" max="3072" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'Same channel' puts every interface of the nodes on the same interface"> </td>
 								<td> Channel allocation strategy (channels) </td>
@@ -552,31 +596,31 @@
 						<tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Number of nodes to be created and allocated on the disc."> </td>
 							<td> Number of nodes </td>
-							<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
+							<td> <input type='number' min="2" max="100" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Radious of the disc that will bound the allocation of the nodes, these nodes are allocated in a random matter."> </td>
 							<td> Radius of the disc (meters) </td>
-							<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
+							<td> <input type='number' min="25" max="500" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the total time to be simulated, the time to run the simulation is normally larger than the simulated time."> </td>
 							<td> Simulation time (seconds) </td>
-							<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+							<td> <input type='number' min="10" max="1000" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of flows to be created on the simulation, every flow has the same destination(server) but have different origins(clients)"> </td>
 							<td> Number of flows to be generated </td>
-							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
+							<td> <input type='number' min="1" max="10" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the number of radio interfaces conected on each node."> </td>
 							<td> Number of radios interfaces per node </td>
-							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
+							<td> <input type='number' min="1" max="5" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Represents the wait time between each packet transmission on the simulation."> </td>
 							<td> Time interval between packet transmission (seconds) </td>
-							<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+							<td> <input type='number' min="0.001" max="1" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="KByte size of each packet to be sent on the network."> </td>
 							<td> Packet size (KBytes) </td>
-							<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+							<td> <input type='number' min="128" max="3072" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' puts each radio interface on a separated wireless channel while 'all on zero' puts every interface of the nodes on the same interface"> </td>
 							<td> Channel allocation strategy (channels) </td>

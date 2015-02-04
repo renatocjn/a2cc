@@ -17,9 +17,9 @@
 			$connection->send_file($auxfile_path, $outdir.$auxname['basename']);
 		}
 		
-		for ($i=0; $i<sizeof($params['pdfFiles']['name']); $i++) {
-			$auxfile_path = $params['pdfFiles']['tmp_name'][$i];
-			$auxname = pathinfo($params['pdfFiles']['name'][$i]);
+		for ($i=0; $i<sizeof($params['dpfFiles']['name']); $i++) {
+			$auxfile_path = $params['dpfFiles']['tmp_name'][$i];
+			$auxname = pathinfo($params['dpfFiles']['name'][$i]);
 			$connection->send_file($auxfile_path, $outdir.$auxname['basename']);
 		}
 		
@@ -40,7 +40,7 @@
 		$r['cmd'] = array();
 		$r['cmd'][0] = "autogrid4 -p ".$gpfFile['basename']." -l ".$gpfFile['filename'].".gpg";
 		$r['cmd'][1] = array(); 
-		foreach ($params['pdfFiles']['name'] as $ligand) {
+		foreach ($params['dpfFiles']['name'] as $ligand) {
 			$ligand = pathinfo($ligand);
 			$outdockRunCmd = "autodock4 -p ".$ligand['basename']." -l ".$ligand['filename'];
 			

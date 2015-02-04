@@ -25,7 +25,7 @@
 		<script type='text/javascript'>
 			var updateBlocked = false;
 			var submitBlocked = false;
-
+			
 			function removeRow(elem) {
 				$(elem).parents('tr').remove();
 			}
@@ -74,12 +74,12 @@
 							jobRow += '<td> <img class="app_img" src="../applications/'+ j.find('application').text().trim() +'.png" /> </td>';
 							jobRow += "<td> " + j.find('params').text() + " </td>";
 							jobRow += '<td width="15%"> <a href="../executaComando.php?down=' + j.find('description').text().trim() + '"><img src="../img/dowloads.jpg" height=25 title=Download></a></td>';
-							jobRow += "<td width='15%'> <a class='delBttn' title=''> <img src=../img/excluir.jpg height=25 title=Excluir> </a> </td>";
+							jobRow += "<td width='15%'> <a class='delBttn' title=''> <img src=../img/excluir.jpg height=25 title='Excluir dados desta execução'> </a> </td>";
 							table.append(jobRow);
 						});
 
 						if (Jobs.length != 0) {
-							table.append("<tr> <th colspan='6'> <a id='cleanBttn'> Limpar <img src=../img/apagarTudo.png height=25 title=Excluir> </a> </th> </tr>");
+							table.append("<tr> <th colspan='6'> <a id='cleanBttn' title='Excluir todas as execuções'> Limpar <img src=../img/apagarTudo.png height=25> </a> </th> </tr>");
 						} else {
 							table.append("<tr> <th colspan='6'>Não foi localizado nenhum arquivo</th> </tr>");
 						}
@@ -88,8 +88,7 @@
 						loadTableActions();
 						updateBlocked = false;
 						document.body.style.cursor='default';
-					},
-					error: alertFail
+					}
 				});
 			}
 
@@ -121,12 +120,55 @@
 			}
 
 			$( function() {
+
+				$('input[type=file]').change(function () {
+					var extensions = this.accept.split(',');
+					var extSize = extensions.length;					
+					if (this.multiple) {
+						var nFiles = this.files.length;	
+						for (var i=0; i<nFiles; i++) {
+							ok = false;
+							for (var j=0; j<extSize; j++) {
+								regExp = RegExp(extensions[j].trim() + '$', 'i'); 
+								if (extensions[j].trim() != '' && regExp.test(this.files[i].name)) {
+									ok = true;
+									break;
+								}
+							} 
+							if(!ok) {
+								alert ('Os arquivos devem possuir uma das seguintes extensões: '+extensions);
+								this.value = null;
+								this.files = null;
+							}
+						}
+					} else {
+						ok = false;
+						for (var i=0; i<extSize; i++) {
+							regExp = RegExp(extensions[i].trim() + '$', 'i');
+							if (extensions[i].trim() != '' && regExp.test(this.value)){
+								ok = true;
+								break;
+							}
+						}
+						if (!ok) {
+							alert("O arquivo deve possuir uma das seguintes extensões: "+ this.accept);
+							this.value = null;
+						}
+					}
+				});
+				
 				$('.help_container .help_contents').hide();
 				$('.help_container .help_bar').click( function () {
 					$(this).siblings('.help_contents').toggle(700);
 				});
 
-				$('.tab').tabs();
+				$('.tab').tabs().tabs({
+					activate: function(event, ui) {
+						$("#form1 input:hidden").prop('disabled', true);
+						$("#form1 input:visible").prop('disabled', false);
+					}
+				});
+				
 				$('.progressbar').progressbar().progressbar('value', false);
 				$('#load').hide();
 
@@ -136,7 +178,7 @@
 					var val = option.val();
 
 					if($('#namdCustomParamsTable input[name='+name+']').length) return;
-					$('#namdCustomParamsTable').append('<tr class="deleteonreset"> <td>'+ name +'</td> <td> <input type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
+					$('#namdCustomParamsTable').append('<tr class="deleteonreset"> <td>'+ name +'</td> <td> <input required type="text" name="'+name+'" value="'+ val +'"> </td> <td> <a onclick="removeRow(this)"> <img src="../img/excluir.png" alt="remover parâmetro"> </a> </td> </tr>');
 				});
 				$('#form1').submit( function(event) {
 					event.preventDefault();
@@ -193,11 +235,13 @@
 
 				clickUpdate();
 				
-				setInterval(updateJobStatus, 30000);
+				setInterval(updateJobStatus, 30000); //30 sec
 				
 				$('input[type=reset]').click( function () {
 					$('.deleteonreset').remove();
 				});
+				
+				$("#form1 input:hidden").prop('disabled', true);
 			});
 		</script>
 	</head>
@@ -231,20 +275,20 @@
 				 <table width="100%">
 						<tr>
 							<td> Arquivos DAT de parâmetros </td>
-							<td> <input name="datFiles[]" type="file" multiple> </td>
+							<td> <input required name="datFiles[]" accept=".dat" type="file" multiple> </td>
 						</tr> <tr>
 							<td> Arquivo GPF </td>
-							<td> <input name="gpfFile" type="file"> </td>
+							<td> <input name="gpfFile" required accept=".gpf" type="file"> </td>
 						</tr>
 							</tr> <tr>
 							<td> Arquivo PDBQT da macromolécula </td>
-							<td> <input name="mainpdbqtFile" type="file"> </td>
+							<td> <input name="mainpdbqtFile" required accept=".pdbqt" type="file"> </td>
 						</tr> <tr>
 							<td> Arquivos DPFs </td>
-							<td> <input name="pdfFiles[]" type="file" multiple> </td>
+							<td> <input name="dpfFiles[]" required accept=".dpf" type="file" multiple> </td>
 						</tr> <tr>
 							<td> Arquivos PDBQT dos ligantes </td>
-							<td> <input name="otherpdbqts[]" type="file" multiple> </td>
+							<td> <input name="otherpdbqts[]" type="file" required accept=".pdbqt" multiple> </td>
 						</tr> <tr>
 							<td> Outros arquivos </td>
 							<td> <input name="others[]" type="file" multiple> </td>
@@ -286,7 +330,7 @@
 				 <table>
 						<tr>
 							<td> Arquivo de script principal </td>
-							<td> <input name="scriptFile" type="file"> </td>
+							<td> <input required accept=".m" name="scriptFile" type="file"> </td>
 						</tr> <tr>
 							<td width="50%"> Parâmetros que devem ser passados ao script </td>
 							<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
@@ -326,13 +370,13 @@
 					<table class="namdTable" width="100%">
 						</tr>	<tr>
 							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
-							<td><input type="file" name="coorFile" accept=".coor"></td>
+							<td><input type="file" required name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
 							<td>Arquivo VEL com velocidades iniciais: </td>
-							<td><input type="file" name="velFile" accept=".vel"></td>
+							<td><input type="file" required name="velFile" accept=".vel"></td>
 						</tr>	<tr>
 							<td>Valor do passo inicial: </td>
-							<td><input type="number" name="initialStep" min="0"></td>
+							<td><input type="number" required name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
@@ -347,13 +391,13 @@
 					<table class="namdTable" width="100%">
 						</tr>	<tr>
 							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
-							<td><input type="file" name="coorFile" accept=".coor"></td>
+							<td><input type="file" required name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
 							<td>Arquivo VEL com velocidades iniciais: </td>
-							<td><input type="file" name="velFile" accept=".vel"></td>
+							<td><input type="file" required name="velFile" accept=".vel"></td>
 						</tr>	<tr>
 							<td>Valor do passo inicial: </td>
-							<td><input type="number" name="initialStep" min="0"></td>
+							<td><input type="number" required name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
@@ -370,13 +414,13 @@
 					<table class="namdTable">
 						</tr>	<tr>
 							<td>Arquivo COOR com coordenadas a serem iniciadas: </td>
-							<td><input type="file" name="coorFile" accept=".coor"></td>
+							<td><input type="file" required name="coorFile" accept=".coor"></td>
 						</tr>	<tr>
 							<td>Arquivo VEL com velocidades iniciais: </td>
-							<td><input type="file" name="velFile" accept=".vel"></td>
+							<td><input type="file" required name="velFile" accept=".vel"></td>
 						</tr>	<tr>
 							<td>Valor do passo inicial: </td>
-							<td><input type="number" name="initialStep" min="0"></td>
+							<td><input type="number" required name="initialStep" min="0"></td>
 						</tr>
 					</table>
 				</div>
@@ -390,13 +434,13 @@
 			<table class="namdTable" id="namdCommomInputs">
 				</tr>	<tr>
 					<td>Arquivo PDB com coordenadas: </td>
-					<td><input type="file" name="coordenatesFile" accept=".pdb"></td>
+					<td><input type="file" required name="coordenatesFile" accept=".pdb"></td>
 				</tr>	<tr>
 					<td>Arquivo PSF com estruturas: </td>
-					<td><input type="file" name="structureFile" accept=".psf"></td>
+					<td><input type="file" required name="structureFile" accept=".psf"></td>
 				</tr>	<tr>
 					<td>Arquivo INP ou XPLOR com parâmetros: </td>
-					<td><input type="file" name="inpFile" accept=".inp,.xplor"></td>
+					<td><input type="file" required name="inpFile" accept=".inp,.xplor"></td>
 				</tr>
 			</table>
 
@@ -423,7 +467,7 @@
 				<table>
 					<tr>
 						<td> Arquivo de script ns3 </td>
-						<td> <input name="scriptFile" type="file"> </td>
+						<td> <input name="scriptFile" required type="file" accept=".cc,.cpp"> </td>
 					</tr>	<tr>
 						<td width="50%"> Parametros que devem ser passados ao script </td>
 						<td width="50%"> <input size="50%" name="param_str" type="text"> </td>
@@ -456,31 +500,31 @@
 							<tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de nós por linha da grade."> </td>
 								<td> Tamanho Horizontal da grade (x-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
+								<td> <input type='number' min="1" max="10" onkeypress="return SomenteNumero(event)" name="x-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de nós por coluna da grade."> </td>
 								<td> Tamanho vertical da grade (y-size) </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
+								<td> <input type='number' min="1" max="10" onkeypress="return SomenteNumero(event)" name="y-size" value="5"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a distância física entre os nós da grade, essa distância é constante verticalmente e horizontalmente."> </td>
 								<td> Espaço entre nós (step)</td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
+								<td> <input type='number' min="1" max="300" onkeypress="return SomenteNumero(event)" name="step" value="100"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação o tempo de para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
 								<td> Tempo de simulação (segundos)</td>
-								<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+								<td> <input type='number' min="10" max="1000" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
 								<td> Número de interfaces de rádio por nó </td>
-								<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
+								<td> <input type='number' min="1" max="5" onkeypress="return SomenteNumero(event)" name='interfaces' value="1"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
 								<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
-								<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+								<td> <input type='number' min="0.001" max="1" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de KBytes enviados em cada pacote da simulação"> </td>
 								<td> Tamanho dos pacotes (Bytes) </td>
-								<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+								<td> <input type='number' min="128" max="3072" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 							</tr> <tr>
 								<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'all on zero' coloca todas as interfaces de rádio trabalhando em um mesmo canal sem fio."> </td>
 								<td> Política de escolha de canais (channels) </td>
@@ -558,31 +602,31 @@
 						<tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Número de nós que devem ser criados e alocados dentro do disco."> </td>
 							<td> Número de nós </td>
-							<td> <input type='number' min="2" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
+							<td> <input type='number' min="2" max="100" onkeypress="return SomenteNumero(event)" name="number-of-nodes" value="10"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Raio do disco que servirá como borda para a alocação dos nós, os nós são colocados aleatoriamente no disco."> </td>
 							<td> Raio do disco (metros) </td>
-							<td> <input type='number' min="25" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
+							<td> <input type='number' min="25" max="500" step="25" onkeypress="return SomenteNumero(event)" name="radius" value="100"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo total simulado, observação, o tempo para executar a simulação normalmente é bem maior que o tempo simulado."> </td>
 							<td> Tempo de simulação (segundos) </td>
-							<td> <input type='number' min="10" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
+							<td> <input type='number' min="10" max="1000" onkeypress="return SomenteNumero(event)" name="time" value="100"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Número de fluxos de dados a serem criados entre os nós, cada fluxo possui uma origem (cliente) diferente, mas o destino (servidor) é o mesmo para todos os fluxos."> </td>
 							<td> Número de fluxos de dados na simulação </td>
-							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
+							<td> <input type='number' min="1" max="10" onkeypress="return SomenteNumero(event)" name="flows" value="1"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o número de interfaces de rádio que estão conectadas a cada nó."> </td>
 							<td> Número de interfaces de rádio por nó </td>
-							<td> <input type='number' min="1" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
+							<td> <input type='number' min="1" max="5" onkeypress="return SomenteNumero(event)" name="interfaces" value="1"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa o tempo de espera entre cada envio de pacote."> </td>
 							<td> Intervalo de tempo entre transmissão pacotes (segundos) </td>
-							<td> <input type='number' min="0.001" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
+							<td> <input type='number' min="0.001" max="1" step="0.001" onkeypress="return SomenteNumero(event)" name='packet-interval' value="0.001"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="Representa a quantidade de Bytes enviados em cada pacote da simulação"> </td>
 							<td> Tamanho dos pacotes (Bytes) </td>
-							<td> <input type='number' min="128" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
+							<td> <input type='number' min="128" max="3072" step="128" onkeypress="return SomenteNumero(event)" name='packet-size' value="1024"> </td>
 						</tr> <tr>
 							<td> <img class="help-ico" src="../img/help-icon.png" title="'Complete Spread' coloca cada rádio em um canal sem fio diferente enquanto 'Same channel' coloca todas as interfaces de rádio trabalhando em um mesmo canal sem fio."> </td>
 							<td> Politica de escolha de canais (channels) </td>
@@ -674,7 +718,7 @@
 						<th>Inicio da Simulação</th>
 						<th>status</th>
 						<th>Programa</th>
-						<th>Parametros da simulação</th>
+						<th>Parâmetros da simulação</th>
 						<th>Baixar</th>
 						<th>Excluir</th>
 					</tr>
