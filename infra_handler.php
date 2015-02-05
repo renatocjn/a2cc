@@ -494,7 +494,7 @@ class infra_controller {
 		$r = opennebula_handler::get_allocated_handlers($user);
 //		$r2 = openstack_handler::get_allocated_handlers($user);
 //		$r = array_merge($r1, $r2);
-		$r[] = cluster_handler::get_allocated_handlers($user);
+//		$r[] = cluster_handler::get_allocated_handlers($user);
 		return $r;
 	}
 
