@@ -25,15 +25,14 @@
 		if (!$infra->is_ready()) continue;
 		$tmp = $infra->get_jobs();
 		foreach ($tmp as $job) {
-			echo get_class($infra)." / ".get_class($job).PHP_EOL;
 			$job->set_infra($infra);
 		}
 		$jobs = array_merge($jobs, $tmp);
 	}
 	
 	function comp($job1, $job2) {
-		$t1 = strtotime($job1->get_start_date());
-		$t2 = strtotime($job2->get_start_date());
+		$t1 = $job1->get_start_date();
+		$t2 = $job2->get_start_date();
 		return $t2 - $t1;
 	}
 	

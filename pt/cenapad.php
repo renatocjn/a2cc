@@ -68,7 +68,9 @@
 							var j = $(this);
 							var jobRow = "<tr>";
 							jobRow += '<input type="hidden" value="'+j.find('description').text()+'">';
-							jobRow += '<td> '+ j.find('startDate').text() + ' </td>';
+							var d = new Date(0);
+							d.setUTCSeconds(parseInt(j.find('startDate').text()));
+							jobRow += '<td> '+ d.toLocaleString() + ' </td>';
 							var pic = j.find('isrunning').text().trim() == 'true' ? "<img title='executando' src='../img/carregando.gif'>" : "<img title='finalizada' src='../img/check.svg'>";
 							jobRow += "<td> "+ pic + "</td>"
 							jobRow += '<td> <img class="app_img" src="../applications/'+ j.find('application').text().trim() +'.png" /> </td>';
