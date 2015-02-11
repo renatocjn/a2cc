@@ -328,7 +328,8 @@ class opennebula_handler implements infra_handler {
 		//$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
 		//unset($params['user_description']);
 		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
-
+		$this->connection->command('date +%s > '.$outdir.'.startDate');
+		
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
 		
 		$cmdPreffix = 'nohup ';
@@ -431,7 +432,7 @@ class cluster_handler implements infra_handler {
 		/*$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
 		unset($params['user_description']);*/
 		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');
-
+		$this->connection->command('date +%s > '.$outdir.'.startDate');
 		$r = run_app($params, $outdir, $this->cluster_connection);
 		$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 
@@ -566,10 +567,10 @@ abstract class job {
 
 		$this->job_dir = static::get_jobs_dir();
 		$this->connection->cd();
-		$tmp = $this->connection->command("ls -l ".$this->job_dir."|grep ".$this->sim_id);
-		$tmp = preg_split('/\s+/',$tmp);
-		$this->startDate = implode(' ', array_slice($tmp, 5, 3));
+				
 		$this->job_dir = $this->job_dir.'/'.$this->sim_id;
+		$tmp = $this->connection->command("cat ".$this->job_dir.'/.startDate');
+		$this->startDate = trim($tmp);
 	}
 
 	abstract function dispose();
