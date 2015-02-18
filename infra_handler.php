@@ -432,7 +432,7 @@ class cluster_handler implements infra_handler {
 		/*$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
 		unset($params['user_description']);*/
 		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');
-		$this->connection->command('date +%s > '.$outdir.'.startDate');
+		$this->cluster_connection->command('date +%s > '.$outdir.'.startDate');
 		$r = run_app($params, $outdir, $this->cluster_connection);
 		$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 
@@ -471,7 +471,6 @@ class cluster_handler implements infra_handler {
 					$msg = preg_split("/ /", $msg);
 					$slurmJobId = preg_replace("/[^0-9]/", "", $msg[2]);
 					if($slurmJobId == "") {
-						var_dump($msg);
 						return false;
 					}
 					$this->cluster_connection->command("echo $slurmJobId >> ".$outdir.".slurmIds");
@@ -495,7 +494,7 @@ class infra_controller {
 		$r = opennebula_handler::get_allocated_handlers($user);
 //		$r2 = openstack_handler::get_allocated_handlers($user);
 //		$r = array_merge($r1, $r2);
-//		$r[] = cluster_handler::get_allocated_handlers($user);
+		$r[] = cluster_handler::get_allocated_handlers($user);
 		return $r;
 	}
 
@@ -658,7 +657,6 @@ class cluster_job extends job {
 		if ($this->is_running()) {
 			$slurmIds = preg_split('/\s+/', trim($this->connection->command("cat ".$this->job_dir."/.slurmIds")));
 			echo $this->connection->get_err();
-			var_dump($slurmIds);
 			foreach ($slurmIds as $id) {
 				$this->connection->command("scancel $id");
 			}
