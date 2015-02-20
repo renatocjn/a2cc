@@ -4,7 +4,7 @@
 
 	#these arrays a a set of regexps to be matched with the 
 	#$application variable of the submit_job() function
-	#the regexps must be compatible with the ereg() php function
+	#the regexps must be compatible with the preg_match() php function
 	$cluster_applications = array('namd', 'autodock');
 	$cloud_applications = array('ns3', 'octave');
 		
@@ -40,32 +40,39 @@
 		$h->start_job($application,$params);
 		return true;
 	}
-
-	function submit_job($application, $params) {
-		global $cluster_applications, $cloud_applications;		
-		
-		#Check if $application checks on any regexp 
+	
+	function is_cloud_app($application) {
+		global $cloud_applications;
 		foreach ($cloud_applications as $regexp) {
-			if(ereg($regexp, $application)) {
-				echo "cloud regex";
-				try_start_on_opennebula($application,$params);
+			if(preg_match('/'.$regexp.'/i', $application)) 
 				return true;
-			}
+		}
+		return false;
+	}
+	
+	function is_cluster_app($application) {
+		global $cluster_applications;
+		foreach ($cluster_applications as $regexp) {
+			if(preg_match('/'.$regexp.'/i', $application)) 
+				return true;
+		}
+		return false;
+	}
+
+	function submit_job($application, $params) {		
+		if(is_cloud_app($application)) {
+			try_start_on_opennebula($application,$params);
+			return true;
 		}
 		
-		foreach ($cluster_applications as $regexp) {
-			if(ereg($regexp, $application)) {
-				echo "cluster regex";
-				try_start_on_cluster($application,$params);
-				return true;
-			}
+		if(is_cluster_app($application)) { 
+			try_start_on_cluster($application,$params);
+			return true;
 		}
 		
 		# $application did not match any regexp, start on any
-		echo "cloud start";
 		$cloud_start = try_start_on_opennebula($application,$params);
 		if(!$cloud_start) {
-			echo "cluster start"; 
 			$cluster_start = try_start_on_cluster($application,$params);
 			if(!$cluster_start) {
 				return false;

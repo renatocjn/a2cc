@@ -1,0 +1,217 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title> A2C User manual </title>
+<style type="text/css">
+	body {
+		background-image: url(../img/cluster.gif);
+		}
+	
+	#contents {
+		background-color: white;
+		border-radius: 10px;
+		width: 85%;
+		margin: auto;
+		padding: 10px;
+		}
+	 
+	.floaties {
+		float: right;
+		}
+	
+	img {
+		max-width: 90%;
+		margin: 25px;
+	}
+	
+	div > a {
+		display: block;
+		text-align: right;
+	}
+	
+	#left_link img {
+		height: 20px;
+		margin: 0;
+	}
+
+	#note {
+		text-align: center;
+		background-color: lightgray;
+		border-radius: 20px;
+		margin: 10px;
+		padding: 1px 10px;
+	}
+	
+	#note h4 {
+		background-color: slategrey;
+		border-radius: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 3px 10px;
+		width: 20%;
+		color: white;
+	}	
+	
+</style>
+
+</head>
+
+<body>
+
+<div id="contents">
+
+<div>
+<a id='left_link' href="user_manual_pt.html" > <img src="../img/br.png"> Manual de usuário em português </a>
+<img class="floaties" src="../img/ufc_logo.png" width="260" height="94" alt="ufc logo">
+<img class="floaties" src="../img/cenapad.png" width="206" height="73" alt="cenapad logo">
+</div>
+
+<h1> User manual for the A2C portals </h1>
+
+<div id="tableOfContents">
+
+<ul>
+	<li> <a href="#intro" >Introduction</a> </li>
+
+	<li> <a href="#runningJobs"> Instantiating executions </a> </li>
+	<ul>		
+		<li> <a href="#ns3"> The computer networks simulator, NS3 </a> </li>
+		<li> <a href="#namd"> The simulator for molecule dynamics, NAMD </a> </li>
+		<li> <a href="#autodock"> The simulator for molecule docking, AutoDock </a> </li>
+		<li> <a href="#octave"> The mathematical interpreter, Octave </a> </li>
+	</ul>
+	
+	<li> <a href="#handlingJobs" > Manipulating executions </a> </li>
+	<ul>
+		<li> <a href="#checkStatus"> Verifying each execution status </a> </li>
+		<li> <a href="#downloading"> Download execution files and results </a> </li>
+		<li> <a href="#disposing"> Dispose of executions </a> </li>
+	</ul>
+</ul>
+
+</div>
+
+<div id="intro">
+	<h2> Introduction </h2>
+	<p>This tool is designed to users of the computation resources available at CENAPAD-UFC. With these portals an user can execute e-Science applications on the available computation resources using this web interface. </p>
+	<p>To access the computation resources without this interface, the user must be familiar with the command line interfaces available in clusters and virtual machines, technologies like SSH, Linux shell and SLURM commands. </p>
+	<p>Through this interfaces we expect that researchers will not need special training to use the resources available at CENAPAD-UFC. The time that initially would be used for special training can be used in the desired research, which is the objective.</p>
+	<p> Users need to request credentials to access this tool, these credentials need to be requested to CENAPAD-UFC. The login screen requests a user and a password to be present at the user database. </p>
+	<center><img src="pics/login.png" width="846" height="619" alt=""></center>
+	<p> After the successful login the user is redirected to the main portal page, where he has access to all applications from the application tabs.</p>
+	<center><img src="pics/home.png" width="1002" height="801" alt=""></center>
+	<a href="#tableOfContents" > Go back top </a>
+</div>
+
+<div id="runningJobs">
+<h2> Instantiating executions </h2>
+<p> For the user to run applications on the available resources he needs to provide a definition of the desired run with any required file. The portal will decide and communicate with each resource to run in the best possible way without the need for user intervention.</p>
+4 applications are currently available in the portals:
+<ul>
+	<li> Computer networks simulations with <b>NS3</b> </li>
+	<li> Simulations of molecular dynamics with <b>NAMD</b> </li>
+	<li> Simulations of molecular docking with <b>AutoDock</b> </li>
+	<li> Execution of MatLab-like scripts with <b>octave</b> </li>
+</ul>
+<p>To select which application will be run, the user must select the correct tab from the application tabs, as shown in the image below:</p>
+<center> <img src="pics/app_tabs_en.jpg" width="730" height="592" alt=""> </center>
+<p>There may be more specific portal tabs grouped under the main tab for each application, like show in the image below.</p>
+<center><img src="pics/app_tabs2_en.jpg" width="737" height="586" alt=""></center>
+<p>In this example, the user can simulate a specific type of network without the need to study the simulator and prepare any simulation code. </p>
+
+The next sections will explain how to use the applications with this interface.
+
+<div id="note">
+<h4>Important</h4> 
+<p> The user is expected to already know how to use the applications in a common environment, the objective of this manual is to teach how to use these application in this environment, not to teach how to use these applications. </p>
+<p> It is recommended that the user visit the original web site for the desired application if guides or tutorials are needed. </p>
+</div>
+
+<div id="ns3">
+	<h3> The computer networks simulator, NS3 </h3>
+	<center> <img src="../img/ns3.png" width="40%" alt=""> </center>
+	<p> The NS3 simulator is a <i>open source</i> C++ framework. With this simulator, researchers can create scripts that simulate real computer networks. The entities of this framework allows studies of behavior and performance of computer network entities like protocols and devices. More information on the framework can be found <a href="http://www.nsnam.org/"> here </a> </p>
+	<p> Currently the portal support the simulation of wireless mesh networks and allows the submission of script code that runs on the default framework. </p> 
+	<p> The following tabs are used to run wireless mesh simulations: </p>
+	<center>
+		<img src="pics/ns3-1.png" width="963" height="590" alt=""> <br> Grid mesh networks
+		<img src="pics/ns3-2.png" width="962" height="590" alt=""> <br> Disc mesh networks
+	</center>
+	<p> The user simply needs to choose the characteristics of the simulated network using the input fields to the right of the picture. There is no necessity of the user learning to code with the NS3 framework. </p>
+	<p> To submit a C++ code to be run by the portal, the user submits in the following tab: </p>
+	<center>
+		<img src="pics/ns3-3.png" width="975" height="213" alt=""> <br> User script submission
+	</center>
+	<p> Command line parameters can be passed to the script using the text input under the file input </p>
+	<a href="#tableOfContents" > Go back top </a> 
+</div>
+
+<div id="namd">
+	<h3> The simulator for molecule dynamics, NAMD </h3>
+	<center><img src="pics/namd.gif" width="40%" alt="namd_logo"></center>
+	<p> The NAMD simulator allows the study of iterations between molecules which allows research for medicine for example. More information on NAMD can be found <a href="http://www.ks.uiuc.edu/Research/namd/" > here </a> </p>
+	<p> The user must input the PDB, PSF and INP/XPLOR files as input for the simulation. These files can be created with different tools </p>
+	<center> <img src="pics/namd1.png" width="488" height="317" alt=""> </center>
+	<p> Executions can be run from the nothing or start from another execution. To start a execution from another the user must provide the COOR and VEL files created at the end of a NAMD simulation and the step number to start counting iterations. </p>
+	<center><img src="pics/namd3.png" width="974" height="444" alt=""></center>
+	<p> The 'split simulation' tab equally divides the 'run' parameter of the simulation into the number of 'splits' the user desires, this way the log files will be smaller lowering the problems with the program that is used to analyze this. </p>
+	<p> The parameters of the CONF file used for simulation parameters can be customized using the combobox under the file inputs, the user simply select which ones he wants to customize and a new input will appear. </p>
+	<center><img src="pics/namd2.png" width="490" height="399" alt=""></center>
+	<a href="#tableOfContents" > Go back top </a> 
+</div>
+
+<div id="autodock">
+	<h3> The simulator for molecule docking, AutoDock </h3>
+	<p> This simulator allows the study of molecule and ligant docking, more informations can be found <a href="http://autodock.scripps.edu/" > here </a> </p>
+	<p> Each required file for the simulation must be provided in the specific file input as labeled at the left side of the input. </p>
+	<a href="#tableOfContents" > Go back top </a>  
+</div>
+
+<div id="octave">
+	<h3> The mathematical interpreter, Octave </h3>
+	<center><img src="pics/octave.png" alt="octave_logo"></center>
+	<p> Octave is a interpreter for Linux that executes a programming language that is designed to look like the mathematical language MatLab that is used for scientific computing. More information can be found <a href="https://www.gnu.org/software/octave/download.html" > here </a> </p>
+	<p> The user must write the main code for the execution, any other file necessary for the execution, like software libraries and data files, can be submitted in the other file input. </p>
+	<p> The user can input execution parameters using the text field available at the portal.</p>
+	<a href="#tableOfContents" > Go back top </a>  
+</div>
+
+</div>
+
+
+
+<div id="handlingJobs">
+<h2> Manipulating executions </h2> 
+<p> After a execution is initiated, it will be available at the table at bottom of the screen. The user can use this table to take different actions like check status, download files and dispose of the execution. </p>
+	<center> <img src="pics/status.png" width="985" height="297" alt=""> </center>
+
+<div id="checkStatus">
+	<h3> Verifying each execution status </h3>
+	<p> The second column (left to right) indicates if the execution is finished or not, finished executions display a green v symbol and unfinished executions display a spinning black and white circle. The third column display the application of that execution. </p>
+	<p> The symbol with 2 green arrows at the top of the executions table is responsible to update the status of the executions the user can click on it to force a update on the table. The arrows spinning indicates that the portal is currently updating the table, the portal will automatically update the table. </p>
+	<center> <img src="pics/status2_en.jpg" width="985" height="297" alt=""> </center>
+	<br> <a href="#tableOfContents" > Go back top </a> 
+</div>
+
+<div id="downloading">
+	<h3> Download execution files and results </h3>
+ <p> To download the files generated by each execution the user must click on the icon on the fifth column (left to right) of the line of that execution, the button with the downward arrow and a box. That will generate a zip file that contains all files from that execution. </p>
+ <br> <a href="#tableOfContents" > Go back top </a> 
+</div>
+
+<div id="disposing">
+	<h3> Dispose of executions </h3>
+	<p> If the user wants to dispose of any execution the user must click on the red x icon on the last column to the right of the line of that execution. This can be done to cancel a running execution. </p>
+<br> <a href="#tableOfContents" > Go back top </a> 
+</div>
+
+<center><img src="pics/status3_en.jpg" width="720" height="228" alt=""></center>
+
+</div>
+
+
+</div>
+</body>
+
+</html>
