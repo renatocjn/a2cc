@@ -1,0 +1,216 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title> A2C Manual para usuários </title>
+<style type="text/css">
+	body {
+		background-image: url(../img/cluster.gif);
+		}
+	
+	#contents {
+		background-color: white;
+		border-radius: 10px;
+		width: 85%;
+		margin: auto;
+		padding: 10px;
+		}
+	 
+	.floaties {
+		float: right;
+		}
+	
+	img {
+		max-width: 90%;
+		margin: 25px;
+	}
+	
+	div > a {
+		display: block;
+		text-align: right;
+	}
+	
+	#left_link img {
+		height: 20px;
+		margin: 0;
+	}
+	
+	#note {
+		text-align: center;
+		background-color: lightgray;
+		border-radius: 20px;
+		margin: 10px;
+		padding: 1px 10px;
+	}
+	
+	#note h4 {
+		background-color: slategrey;
+		border-radius: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 3px 10px;
+		width: 20%;
+		color: white;
+	}
+	
+</style>
+
+</head>
+
+<body>
+
+<div id="contents">
+
+<div>
+<a id='left_link' href="user_manual_en.html" > <img src="../img/en.png"> User manual in english </a>
+<img class="floaties" src="../img/ufc_logo.png" width="260" height="94" alt="ufc logo">
+<img class="floaties" src="../img/cenapad.png" width="206" height="73" alt="cenapad logo">
+</div>
+
+<h1> Manual para usuários do portal A2C </h1>
+
+<div id="tableOfContents">
+
+<ul>
+	<li> <a href="#intro" >Introdução</a> </li>
+
+	<li> <a href="#runningJobs"> Executando Aplicações </a> </li>
+	<ul>		
+		<li> <a href="#ns3"> O simulador de redes computacionais, NS3 </a> </li>
+		<li> <a href="#namd"> O simulador de dinâmicas moleculares, NAMD </a> </li>
+		<li> <a href="#autodock"> O simulador de docking de moléculas, AutoDock </a> </li>
+		<li> <a href="#octave"> O interpretador de linguagem matemática, Octave </a> </li>
+	</ul>
+	
+	<li> <a href="#handlingJobs" > Manipulação de execuções </a> </li>
+	<ul>
+		<li> <a href="#checkStatus">Verificar status das execuções </a> </li>
+		<li> <a href="#downloading"> Fazer download de resultados de execuções </a> </li>
+		<li> <a href="#disposing"> Excluir/Cancelar resultados e execuções </a> </li>
+	</ul>
+</ul>
+
+</div>
+
+<div id="intro">
+	<h2> Introdução </h2>
+	<p>Esta ferramenta é voltada para usuários dos recursos computacionais do CENAPAD-UFC. Através destes portais o usuário possui a capacidade de executar programas e-Science utilizando esta interface web e os recursos computacionais de alto desempenho presentes no CENAPAD-UFC.</p>
+	<p>Para utilizar os recursos computacionais disponíveis no CENAPAD sem utilizar esta interface, o usuário deve ter conhecimento dos comandos e tecnologias de interface de texto disponíveis no cluster e nas máquinas virtuais como os comandos ssh, linux shell e comandos SLURM de manutenção do cluster.</p>
+	<p>Através desta interface espera-se que os pesquisadores que utilizam aplicações e-Science não precisem de treinamento extra para manipular as infraestruturas computacionais disponíveis, possibilitando assim uma maior objetividade dos usuários para com suas pesquisas e objetivos.</p>
+	<p> Para acessar a ferramenta é necessário requisitar as credencias de acesso ao sistema junto ao CENAPAD-UFC. A tela de login querer um usuário e senha na base de usuários do sistema. </p>
+	<center><img src="pics/login.png" width="846" height="619" alt=""></center>
+	<p> Após apresentar as credenciais o usuário é movido para a tela principal do sistema, na qual ele tem acesso a todas aplicações organizadas em uma hierarquia de abas. </p>
+	<center><img src="pics/home.png" width="1002" height="801" alt=""></center>
+	<a href="#tableOfContents" > Voltar para o topo </a>
+</div>
+
+<div id="runningJobs">
+<h2> Executando Aplicações </h2>
+<p>Para o usuário utilizar os recursos disponíveis ele deve definir uma execução e submeter esta definição ao portal. O portal se encarregará de executar e disponibilizar o resultado. </p>
+4 aplicações estão disponíveis atualmente:
+<ul>
+	<li> Simulações de redes computacionais com <b>NS3</b> </li>
+	<li> Simulações de dinâmicas moleculares com <b>NAMD</b> </li>
+	<li> Simulações de dockings moleculares com <b>AutoDock</b> </li>
+	<li> Execução de programas MatLab com <b>octave</b> </li>
+</ul>
+<p>Para selecionar qual aplicação deverá ser executada o usuário deve selecionar a aba daquela aplicação na tela de portais após o login do usuário, como exibido na imagem abaixo.</p>
+<center> <img src="pics/app_tabs.jpg" width="730" height="592" alt=""> </center>
+<p>Aplicações podem ter sub-portais para facilitar a submissão de tipos mais específicos de execução, como exibido na figura abaixo:</p>
+<center><img src="pics/app_tabs2.jpg" width="737" height="586" alt=""></center>
+<p>No exemplo, o usuário pode executar um tipo especifico de topologia rede sem fio sem a necessidade de programar código do simulador.</p>
+Nas próximas seções serão explicados como utilizar o portal de cada aplicação.
+
+<div id="note">
+<h4>Importante</h4>
+<p> Espera-se que o usuário do portal saiba utilizar as aplicações em ambientes comuns. O objetivo deste manual não é ensinar a utilizar as aplicações, o objetivo é apenas ensinar a utilizar esta interface para trabalhar com estas aplicações.</p> 
+<p> É recomendado que o usuário utilize o web site da ferramenta para aprender e tirar duvidas sobre a utilização das aplicações.</p>
+</div>
+
+<div id="ns3">
+	<h3> O simulador de redes computacionais, NS3 </h3>
+	<center> <img src="../img/ns3.png" width="40%" alt=""> </center>
+	<p>O simulador de redes NS3 é um framework C++ <i>open source</i> para virtualização de componentes de redes computacionais. Utilizando este framework, pesquisadores podem ter acesso ao funcionamento de diversos protocolos e componentes de rede para realizar testes de eficiência e comportamento destas entidades. Mais informações e documentação sobre o simulador NS3 podem ser encontrados <a href="http://www.nsnam.org/"> aqui. </a> </p>
+	<p>Atualmente o portal suporta simulações de rede mesh e a submissão de código de usuário que utilizem o framework padrão. </p>
+	<p>Execuções em mesh devem ser submetidas utilizando as seguintes abas:</p>
+	<center>
+		Redes mesh em grade <br> <img src="pics/ns3-1.png" width="963" height="590" alt="">
+		Redes mesh em disco <br> <img src="pics/ns3-2.png" width="962" height="590" alt="">
+	</center>
+	<p> O usuário simplesmente precisa selecionar quais as características de rede que ele deseja em sua simulação utilizando os inputs do lado direito. Não há a necessidade do usuário estudar o framework para criar código C++ para simular a topologia </p>
+	<p>Para submeter um código C++ para ser executado com o framework NS3 o usuário deve utilizar a seguinte aba.</p>
+	<center>
+		 Submissão de código de usuário <br> <img src="pics/ns3-3.png" width="975" height="213" alt="">
+	</center>
+	<p>Os parâmetros utilizados pelo código podem ser enviados utilizando o campo de texto abaixo do input de arquivo.</p>
+	<a href="#tableOfContents" > Voltar para o topo </a> 
+</div>
+
+<div id="namd">
+	<h3> O simulador de dinâmicas moleculares, NAMD </h3>
+	<center><img src="pics/namd.gif" width="40%" alt="namd_logo"></center>
+	<p> O simulador NAMD possibilita a estudar interações entre moléculas. Informações extras sobre o NAMD e manuais podem ser encontrados <a href="http://www.ks.uiuc.edu/Research/namd/" > aqui. </a>
+	<p> O usuário deve passar os arquivos PDB, PSF e INP/XPLOR como entrada. Estes arquivos podem ser criados através de ferramentas auxiliares. </p>
+	<center> <img src="pics/namd1.png" width="488" height="317" alt=""> </center>
+	<p> Simulações podem ser iniciadas do zero ou podem ser a partir do final de outra simulação. Para iniciar simulações a partir do resultado de outras deve-se entrar com os arquivos COOR e VEL gerados no final de outra simulação. </p>
+	<center><img src="pics/namd3.png" width="974" height="444" alt=""></center>
+	<p> O modo de simulação múltipla permite dividir simulação em partes iguais para que os arquivos de resultados sejam menores e não haja problema com o programa utilizado para visualizar os resultados. </p>
+	<p> Os parâmetros do arquivo .conf utilizado pelo NAMD em suas simulações podem ser configurados utilizando o combobox abaixo dos inputs de arquivos</p>
+	<center><img src="pics/namd2.png" width="490" height="399" alt=""></center>
+	<a href="#tableOfContents" > Voltar para o topo </a> 
+</div>
+
+<div id="autodock">
+	<h3> O simulador de docking de moléculas, AutoDock </h3>
+	<p> Este simulador permite o estudo da interação entre moléculas e ligantes. Mais informações e manuais podem ser encontrados <a href="http://autodock.scripps.edu/" > aqui. </a> </p>
+	<p> Cada arquivo requerido para a execução da simulação deve ser colocado no input de arquivo correto de acordo com o texto do lado esquerdo do input. </p>
+	<a href="#tableOfContents" > Voltar para o topo </a>  
+</div>
+
+<div id="octave">
+	<h3> O interpretador de linguagem matemática, Octave </h3>
+	<center><img src="pics/octave.png" alt="octave_logo"></center>
+	<p> Octave é um interpretador para Linux que executa uma linguagem computacional parecida com a linguagem MatLab utilizada em programação cientifica. Mais informação <a href="https://www.gnu.org/software/octave/download.html" > aqui. </a> </p>
+	<p> O usuário deve escrever o código principal do script que vai ser executado. Qualquer outro arquivo necessário para a execução do script (arquivos de dados ou bibliotecas de software) deve ser colocado no input para outros arquivos. Os parâmetros de execução do script podem ser passados utilizando o input de texto presente no portal.  </p>
+	<a href="#tableOfContents" > Voltar para o topo </a>  
+</div>
+
+</div>
+
+
+
+<div id="handlingJobs">
+<h2> Manipulação de execuções </h2>
+<p>Após uma execução ser iniciada ela fica disponível na tabela do canto inferior da tela. Através desta tabela é possível manipular cada execução para verificar status da execução, excluir e adquirir resultados.</p> 
+	<center> <img src="pics/status.png" width="985" height="297" alt=""> </center>
+
+<div id="checkStatus">
+	<h3> Verificar status das execuções </h3>
+	<p> A segunda coluna da esquerda pra direita da tabela apresenta o status de cada execução. A marca verde indica que a execução terminou, mas não necessariamente com sucesso; o circulo animado preto e branco indica que ainda há algo executando. A terceira coluna apresenta qual aplicação está sendo executada.</p>
+	<p> O simbolo das setas verdes no topo da tabela indica a atualização da tabela. Caso esteja girando, o portal está buscando os status de suas execuções. A cada 5 segundos o portal atualiza automaticamente o status das execuções. Isso pode ser visualizado quando as setas começam a girar automaticamente. O usuário pode iniciar uma atualização clicando nas setas. </p>
+	<center> <img src="pics/status2.jpg" width="985" height="297" alt=""> </center>
+	<a href="#tableOfContents" > Voltar para o topo </a> 
+</div>
+
+<div id="downloading">
+	<h3> Fazer download de resultados de execuções </h3>
+ <p> Para fazer download dos arquivos gerados pela execução o usuário deve utilizar o botão da quinta coluna da esquerda para a direita, o botão com o ícone da caixa com uma seta para baixo. </p>
+ <p> Ao clicar neste botão, os arquivos gerados por aquela execução serão compactados em um arquivo zip para que o usuário faça download. </p>
+ <br> <a href="#tableOfContents" > Voltar para o topo </a> 
+</div>
+
+<div id="disposing">
+	<h3> Excluir/Cancelar resultados e execuções </h3>
+	<p> Para Cancelar ou se desfazer de qualquer execução basta clicar no ícone da última coluna da direita. </p>
+<br> <a href="#tableOfContents" > Voltar para o topo </a> 
+</div>
+
+<center><img src="pics/status3.jpg" width="720" height="228" alt=""></center>
+
+</div>
+
+
+</div>
+</body>
+
+</html>
