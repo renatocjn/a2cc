@@ -382,7 +382,11 @@ class cluster_handler implements infra_handler {
 
 	// These are for compatibility with cloud
 	static function get_allocated_handlers($user = NULL) {
-		return new cluster_handler();
+		try {
+			return new cluster_handler();
+		} catch (Exception $e) {
+			return null;
+		}
 	}
 	static function allocate_new_handler() {
 		return new cluster_handler();
@@ -494,7 +498,11 @@ class infra_controller {
 		$r = opennebula_handler::get_allocated_handlers($user);
 //		$r2 = openstack_handler::get_allocated_handlers($user);
 //		$r = array_merge($r1, $r2);
-		$r[] = cluster_handler::get_allocated_handlers($user);
+		$h = @cluster_handler::get_allocated_handlers($user);
+		if($h) {
+			$r[] = $h;
+		}
+		
 		return $r;
 	}
 

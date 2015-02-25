@@ -257,6 +257,8 @@
 	?>
 	<div id="midsection2">
 
+	<div id="updateNotice"> Ultima atualização: <span> 25/02/2015 </span> </div>
+
 	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
 			<li><a href="#ns3"> NS3 </a> </li>

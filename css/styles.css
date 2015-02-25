@@ -603,3 +603,11 @@ div .help .red {
 	width: 15px;
 	cursor: help;
 }
+
+#updateNotice {
+	text-align: center;
+}
+
+#updateNotice span {
+	color: red;
+}

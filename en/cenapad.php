@@ -138,11 +138,11 @@
 							ok = false;
 							for (var j=0; j<extSize; j++) {
 								regExp = RegExp(extensions[j].trim() + '$', 'i'); 
-								if (extensions[j].trim() != '' && regExp.test(this.files[i].name)) {
+								if (extensions[j].trim() && regExp.test(this.files[i].name)) {	
 									ok = true;
 									break;
 								}
-							} 
+							}
 							if(!ok) {
 								alert ('These files must have one of the following extensions: '+extensions);
 								this.value = null;
@@ -153,7 +153,7 @@
 						ok = false;
 						for (var i=0; i<extSize; i++) {
 							regExp = RegExp(extensions[i].trim() + '$', 'i');
-							if (extensions[i].trim() != '' && regExp.test(this.value)){
+							if (extensions[i].trim() && regExp.test(this.value)){
 								ok = true;
 								break;
 							}
@@ -251,6 +251,8 @@
 			 require 'app_assets/namd/default_namd_params.php';
 	?>
 	<div id="midsection2">
+
+	<div id="updateNotice"> Last update: <span> 02/25/2015 </span> </div>
 
 	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
