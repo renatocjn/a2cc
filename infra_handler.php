@@ -501,7 +501,7 @@ class infra_controller {
 		$h = @cluster_handler::get_allocated_handlers($user);
 		if($h) {
 			$r[] = $h;
-		} 
+		}
 		
 		return $r;
 	}
