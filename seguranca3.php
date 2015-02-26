@@ -123,8 +123,12 @@ function expulsaVisitante1()
 {
 	global $_SG;
 	// Remove as variáveis da sessão (caso elas existam)
-	unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);
-	$_SESSION['notice'] = "LOGIN ou SENHA incorreto!";
+	unset($_SESSION['usuarioID'], $_SESSION['usuarioNome'], $_SESSION['usuarioLogin'], $_SESSION['usuarioSenha']);	
+	if($_SESSION['lang'] == 'pt') {
+		$_SESSION['notice'] = "LOGIN ou SENHA incorreto!";
+	} else {
+		$_SESSION['notice'] = "Incorrect USERNAME or PASSWORD!";
+	}
 	http_redirect($_SESSION['lang'].'/login.php');
 	return true;
 }
