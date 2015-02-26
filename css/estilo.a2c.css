@@ -23,7 +23,8 @@ html {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	height: 26px
+	height: 26px;
+	clear: both;
 }
 
 a.whitelink { #
@@ -81,17 +82,11 @@ body {
 }
 
 .formLogin{
-	display:-ms-flexbox;
-	-ms-flex-pack:center;
-	-ms-flex-align:center;
-	display:-moz-box;
-	-moz-box-pack:center;
-	-moz-box-align:center;
-	display:-webkit-box;
-	-webkit-box-pack:center;
-	-webkit-box-align:center;
-	margin: 0 !important;
-	width: 75% !important;
+	border: 3px ridge silver;
+	margin: 10px;
+	float: right;
+	padding: 5px;
+	box-shadow: 0px 0px 20px 3px #d3d3d3;
 }
 
 .text-error {
@@ -161,7 +156,7 @@ color: #b94a48;
 	margin-bottom: 10px;
 	padding-top: 5px !important;
 	margin-top: 20px;
-	margin-left: 12%;
+	margin-left: 10px;
 /*	min-height: 450px;*/
 	line-height: 150%;
 /*	text-align: justify;*/
@@ -230,6 +225,9 @@ small {
 
 p {
 	text-align: inherit;
+	font-size: 10pt;
+	line-height: 15pt;
+	text-indent: 1em;
 }
 
 hr {
