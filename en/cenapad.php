@@ -130,7 +130,10 @@
 
 			$( function() {
 				$('input[type=file]').change(function () {
-					var extensions = this.accept.split(',');
+					if (this.accept.trim() == '') {
+						return
+					}
+					var extensions = this.accept.trim().split(',');
 					var extSize = extensions.length;					
 					if (this.multiple) {
 						var nFiles = this.files.length;	
@@ -138,7 +141,7 @@
 							ok = false;
 							for (var j=0; j<extSize; j++) {
 								regExp = RegExp(extensions[j].trim() + '$', 'i'); 
-								if (extensions[j].trim() && regExp.test(this.files[i].name)) {	
+								if (regExp.test(this.files[i].name)) {	
 									ok = true;
 									break;
 								}
@@ -153,7 +156,7 @@
 						ok = false;
 						for (var i=0; i<extSize; i++) {
 							regExp = RegExp(extensions[i].trim() + '$', 'i');
-							if (extensions[i].trim() && regExp.test(this.value)){
+							if (regExp.test(this.value)){
 								ok = true;
 								break;
 							}
@@ -290,7 +293,7 @@
 						<td> <input name="otherpdbqts[]" required type="file" accept=".pdbqt" multiple> </td>
 					</tr> <tr>
 						<td> Any other file </td>
-						<td> <input name="others[]" required type="file" multiple> </td>
+						<td> <input name="others[]" type="file" multiple> </td>
 					</tr> <tr>
 						<td> Number of runs of autodock </td>
 						<td> <input name="autodockRuns" type="number" value="1" min="1" max="10"> </td>
