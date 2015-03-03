@@ -322,12 +322,17 @@ class opennebula_handler implements infra_handler {
 		$this->connection->command("mkdir -p $outdir");
 		
 		$this->connection->command('echo '.$application.' > '.$outdir.'.app');
-
-		$r = run_app($params, $outdir, $this->connection);
 		
-		//$this->connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
-		//unset($params['user_description']);
-		$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
+		$user_description = $params['user_description'];
+		unset($params['user_description']);
+		
+		$r = run_app($params, $outdir, $this->connection);
+		if(empty($user_description)) {
+			$this->connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
+		} else {
+			$this->connection->command('echo '.$user_description.' > '.$outdir.'.params.txt');
+		}
+		
 		$this->connection->command('date +%s > '.$outdir.'.startDate');
 		
 		if (isset($r['cmd_dir'])) $this->connection->cd($r['cmd_dir']);
@@ -433,13 +438,19 @@ class cluster_handler implements infra_handler {
 		$outdir = $this->outdir.$id.'/';
 		$this->cluster_connection->command("mkdir -p $outdir");
 
-		/*$this->cluster_connection->command('echo '.$params['user_description'].' > '.$outdir.'.params.txt');
-		unset($params['user_description']);*/
 		$this->cluster_connection->command('echo '.$application.' > '.$outdir.'.app');
 		$this->cluster_connection->command('date +%s > '.$outdir.'.startDate');
-		$r = run_app($params, $outdir, $this->cluster_connection);
-		$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
 
+		$user_description = $params['user_description'];
+		unset($params['user_description']);
+		
+		$r = run_app($params, $outdir, $this->cluster_connection);
+		if(empty($user_description)) {
+			$this->cluster_connection->command('echo '.$r['params_description'].' > '.$outdir.'.params.txt');
+		} else {
+			$this->cluster_connection->command('echo '.$user_description.' > '.$outdir.'.params.txt');
+		}
+		
 		if (isset($r['cmd_dir'])) $this->cluster_connection->cd($r['cmd_dir']);
 
 		$cmdPreffix = 'nohup srun -v --partition=long ';		

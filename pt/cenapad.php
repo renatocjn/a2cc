@@ -257,7 +257,7 @@
 	?>
 	<div id="midsection2">
 
-	<div id="updateNotice"> Ultima atualização: <span> 25/02/2015 </span> </div>
+	<div id="updateNotice"> Ultima atualização: <span> 03/03/2015 </span> </div>
 
 	<form id="form1" class="tab validate formLogin" method="post" enctype="multipart/form-data"> <input type='hidden' value=''>
 		<ul>
@@ -701,10 +701,10 @@
 			</div>
 		</div>
 		<table width="100%">
-			<!--<tr width="100%">
+			<tr width="100%">
 				<td width="50%" align="right"> Descrição: </td>
-				<td width="50%"> <textarea name="user_description" rows="3" cols="20" > Não Funciona </textarea>  </td>
-			</tr>--> <tr width="100%">
+				<td width="50%"> <textarea placeholder="Descreva a execução aqui" name="user_description" rows="3" cols="20" ></textarea>  </td>
+			</tr> <tr width="100%">
 				<td width="50%"><input type="submit" id="submit_bttn" value="Simular" class="btn btnPrimary " id="enviar" /></td>
 				<td width="50%"><input type="reset" value="Cancelar" class="btn btnPrimary" /></td>
 			</tr>
@@ -722,7 +722,7 @@
 						<th>Inicio da Simulação</th>
 						<th>status</th>
 						<th>Programa</th>
-						<th>Parâmetros da simulação</th>
+						<th>Descrição da execução</th>
 						<th>Baixar</th>
 						<th>Excluir</th>
 					</tr>
